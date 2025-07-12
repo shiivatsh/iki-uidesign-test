@@ -18,6 +18,15 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'title': ['Lora', 'serif'],
+				'body': ['Montserrat', 'sans-serif'],
+				sans: ['Montserrat', 'sans-serif'],
+				serif: ['Lora', 'serif'],
+			},
+			borderWidth: {
+				'thin': '0.5px',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',

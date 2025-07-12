@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Send, Bot, User, Loader2, Sparkles, Mic, Paperclip, MoreHorizontal } from 'lucide-react';
+import { Send, Sparkles, Plus, Paperclip, Image, Mic } from 'lucide-react';
 
-// Use hardcoded API endpoint that works in Vite (removed process.env reference)
+// Use hardcoded API endpoint that works in Vite
 const API_ENDPOINTS = {
     askLLM: 'https://ikiru-backend-515600662686.us-central1.run.app/ask-llm'
 };
@@ -36,23 +36,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
     // Welcome message
     useEffect(() => {
         if (trackingCode) {
-            setMessages([
-                {
-                    id: 'welcome-1',
-                    sender: 'llm',
-                    content: `Hello ${userName?.split(' ')[0] || 'there'}! 👋 I'm your Ikiru AI assistant. I can help you:\n\n• Book new cleaning or maintenance services\n• Check your service history and upcoming appointments\n• Answer questions about your account\n• Update your preferences and settings\n\nWhat would you like to do today?`, 
-                    timestamp: new Date()
-                }
-            ]);
-        } else {
-            setMessages([
-                {
-                    id: 'prompt-enter-code',
-                    sender: 'llm',
-                    content: "Welcome to Ikiru! Please ensure you're properly authenticated to start our conversation.",
-                    timestamp: new Date()
-                }
-            ]);
+            setMessages([]);
         }
     }, [trackingCode, userName]);
 
@@ -97,7 +81,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             const errorMessage: Message = {
                 id: `error-${Date.now()}`,
                 sender: 'llm',
-                content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment, or contact support if the issue persists.",
+                content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, errorMessage]);
@@ -114,10 +98,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
         }
     };
 
-    const formatTimestamp = (timestamp: Date) => {
-        return timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    };
-
     const autoResize = () => {
         const textarea = inputRef.current;
         if (textarea) {
@@ -132,180 +112,198 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
 
     return (
         <div className="flex flex-col h-full bg-white">
-            {/* Chat Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-gradient-to-b from-slate-50/50 to-white">
-                {messages.map((msg) => (
-                    <div key={msg.id} className={`flex items-start space-x-3 ${msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                        {/* Avatar */}
-                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm ${
-                            msg.sender === 'user' 
-                                ? 'bg-gradient-to-br from-blue-500 to-indigo-500' 
-                                : 'bg-gradient-to-br from-emerald-500 to-teal-500'
-                        }`}>
-                            {msg.sender === 'user' ? (
-                                <User className="w-4 h-4 text-white" />
-                            ) : (
-                                <Sparkles className="w-4 h-4 text-white" />
-                            )}
-                        </div>
-
-                        {/* Message Bubble */}
-                        <div className={`flex flex-col max-w-[80%] ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                            {/* Sender Label */}
-                            <div className="flex items-center space-x-2 mb-1">
-                                <span className="text-xs font-medium text-slate-600">
-                                    {msg.sender === 'user' ? 'You' : 'Ikiru AI'}
-                                </span>
-                                <span className="text-xs text-slate-400">
-                                    {formatTimestamp(msg.timestamp)}
-                                </span>
-                            </div>
-
-                            {/* Message Content */}
-                            <div className={`px-4 py-3 rounded-2xl shadow-sm border ${
-                                msg.sender === 'user'
-                                    ? 'bg-gradient-to-br from-blue-500 to-indigo-500 text-white border-blue-200'
-                                    : 'bg-white text-slate-800 border-slate-200 shadow-md'
-                            }`}>
-                                <div className="text-sm leading-relaxed whitespace-pre-wrap">
-                                    {msg.content}
-                                </div>
-                            </div>
-                        </div>
+            {/* Empty State / Welcome */}
+            {messages.length === 0 && !isLoading && (
+                <div className="flex-1 flex flex-col items-center justify-center p-8">
+                    <div className="text-center max-w-2xl mx-auto">
+                        <h1 className="text-4xl font-title font-semibold text-gray-900 mb-3">
+                            Hello {userName?.split(' ')[0] || 'there'}
+                        </h1>
+                        <p className="text-xl font-body text-gray-500 mb-8">
+                            What can I do for you?
+                        </p>
                     </div>
-                ))}
 
-                {/* Loading Indicator */}
-                {isLoading && (
-                    <div className="flex items-start space-x-3">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-sm">
-                            <Sparkles className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="flex flex-col">
-                            <div className="flex items-center space-x-2 mb-1">
-                                <span className="text-xs font-medium text-slate-600">Ikiru AI</span>
-                                <span className="text-xs text-slate-400">typing...</span>
-                            </div>
-                            <div className="px-4 py-3 bg-white rounded-2xl shadow-md border border-slate-200">
-                                <div className="flex items-center space-x-2">
-                                    <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
-                                    <div className="flex space-x-1">
-                                        <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                        <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                        <div className="w-2 h-2 bg-slate-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    {/* Quick Actions Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8 max-w-2xl w-full">
+                        <button
+                            onClick={() => setInput("Book a cleaning service for next week")}
+                            className="p-4 border-thin border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left"
+                        >
+                            <div className="text-sm font-body font-medium text-gray-900 mb-1">📅 Book Service</div>
+                            <div className="text-xs font-body text-gray-500">Schedule cleaning</div>
+                        </button>
+                        
+                        <button
+                            onClick={() => setInput("Show me my service history")}
+                            className="p-4 border-thin border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left"
+                        >
+                            <div className="text-sm font-body font-medium text-gray-900 mb-1">📋 History</div>
+                            <div className="text-xs font-body text-gray-500">View past services</div>
+                        </button>
+                        
+                        <button
+                            onClick={() => setInput("Update my profile information")}
+                            className="p-4 border-thin border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left"
+                        >
+                            <div className="text-sm font-body font-medium text-gray-900 mb-1">👤 Profile</div>
+                            <div className="text-xs font-body text-gray-500">Manage account</div>
+                        </button>
+                        
+                        <button
+                            onClick={() => setInput("What services do you offer?")}
+                            className="p-4 border-thin border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left"
+                        >
+                            <div className="text-sm font-body font-medium text-gray-900 mb-1">🏠 Services</div>
+                            <div className="text-xs font-body text-gray-500">What we offer</div>
+                        </button>
+                        
+                        <button
+                            onClick={() => setInput("Help me with pricing")}
+                            className="p-4 border-thin border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left"
+                        >
+                            <div className="text-sm font-body font-medium text-gray-900 mb-1">💰 Pricing</div>
+                            <div className="text-xs font-body text-gray-500">Get quotes</div>
+                        </button>
+                        
+                        <button
+                            onClick={() => setInput("How do I contact support?")}
+                            className="p-4 border-thin border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left"
+                        >
+                            <div className="text-sm font-body font-medium text-gray-900 mb-1">📞 Support</div>
+                            <div className="text-xs font-body text-gray-500">Get help</div>
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Messages */}
+            {messages.length > 0 && (
+                <div className="flex-1 overflow-y-auto p-4">
+                    <div className="max-w-3xl mx-auto space-y-6">
+                        {messages.map((msg) => (
+                            <div key={msg.id} className={`flex items-start gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+                                {/* Avatar */}
+                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                                    msg.sender === 'user' 
+                                        ? 'bg-gray-900 text-white' 
+                                        : 'bg-orange-500 text-white'
+                                }`}>
+                                    {msg.sender === 'user' ? (
+                                        <span className="text-xs font-body font-medium">
+                                            {userName?.charAt(0)?.toUpperCase() || 'U'}
+                                        </span>
+                                    ) : (
+                                        <Sparkles className="w-4 h-4" />
+                                    )}
+                                </div>
+
+                                {/* Message */}
+                                <div className={`flex-1 ${msg.sender === 'user' ? 'text-right' : ''}`}>
+                                    <div className="text-sm font-body font-medium text-gray-900 mb-1">
+                                        {msg.sender === 'user' ? 'You' : 'Ikiru'}
+                                    </div>
+                                    <div className="text-gray-800 font-body text-sm leading-relaxed whitespace-pre-wrap">
+                                        {msg.content}
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        ))}
+
+                        {/* Loading */}
+                        {isLoading && (
+                            <div className="flex items-start gap-4">
+                                <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center">
+                                    <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                                </div>
+                                <div>
+                                    <div className="text-sm font-body font-medium text-gray-900 mb-1">Ikiru</div>
+                                    <div className="flex items-center gap-1 text-gray-500">
+                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        
+                        <div ref={messagesEndRef} />
                     </div>
-                )}
-
-                <div ref={messagesEndRef} />
-            </div>
-
-            {/* Error Message */}
-            {error && (
-                <div className="px-4 py-2 bg-red-50 border-t border-red-200">
-                    <p className="text-sm text-red-600 text-center">{error}</p>
                 </div>
             )}
 
             {/* Input Area */}
-            <div className="border-t border-slate-200 bg-white p-4">
-                <div className="max-w-4xl mx-auto">
-                    {/* Quick Actions */}
-                    <div className="flex items-center space-x-2 mb-3 overflow-x-auto pb-2">
-                        {trackingCode && (
-                            <>
-                                <button 
-                                    onClick={() => setInput("Book a cleaning service for next week")}
-                                    className="flex-shrink-0 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors duration-200"
-                                >
-                                    📅 Book Service
-                                </button>
-                                <button 
-                                    onClick={() => setInput("Show me my service history")}
-                                    className="flex-shrink-0 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors duration-200"
-                                >
-                                    📋 View History
-                                </button>
-                                <button 
-                                    onClick={() => setInput("Update my profile information")}
-                                    className="flex-shrink-0 px-3 py-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors duration-200"
-                                >
-                                    👤 Update Profile
-                                </button>
-                            </>
-                        )}
-                    </div>
-
-                    {/* Input Row */}
-                    <div className="flex items-end space-x-3">
-                        {/* Additional Action Buttons */}
-                        <div className="flex items-center space-x-1">
-                            <button 
+            <div className="border-t-thin border-gray-200 bg-white p-4">
+                <div className="max-w-3xl mx-auto">
+                    {error && (
+                        <div className="mb-4 p-3 bg-red-50 border-thin border-red-200 rounded-lg text-red-600 text-sm font-body">
+                            {error}
+                        </div>
+                    )}
+                    
+                    <div className="relative">
+                        {/* Input Field */}
+                        <textarea
+                            ref={inputRef}
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            placeholder={messages.length === 0 ? "Assign a task or ask anything" : "Type a message..."}
+                            className="w-full px-4 py-3 pr-20 border-thin border-gray-300 rounded-xl resize-none focus:outline-none focus:border-gray-400 transition-colors duration-200 bg-white font-body text-sm max-h-32 disabled:bg-gray-50"
+                            disabled={!trackingCode || isLoading}
+                            rows={1}
+                            style={{ minHeight: '48px' }}
+                        />
+                        
+                        {/* Action Buttons */}
+                        <div className="absolute right-2 bottom-2 flex items-center gap-1">
+                            <button
                                 disabled
-                                className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 disabled:opacity-40"
                                 title="Attach file (coming soon)"
                             >
                                 <Paperclip className="w-4 h-4" />
                             </button>
-                            <button 
+                            
+                            <button
                                 disabled
-                                className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                title="Voice input (coming soon)"
+                                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 disabled:opacity-40"
+                                title="Add image (coming soon)"
                             >
-                                <Mic className="w-4 h-4" />
+                                <Image className="w-4 h-4" />
+                            </button>
+
+                            <button
+                                onClick={handleSendMessage}
+                                disabled={isLoading || !trackingCode || input.trim() === ''}
+                                className="w-8 h-8 flex items-center justify-center bg-gray-900 text-white rounded-lg hover:bg-gray-800 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
+                                title="Send message"
+                            >
+                                <Send className="w-4 h-4" />
                             </button>
                         </div>
+                    </div>
 
-                        {/* Input Field */}
-                        <div className="flex-1 relative">
-                            <textarea
-                                ref={inputRef}
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                placeholder={trackingCode ? "Ask me anything about your home services..." : "Please authenticate to start chatting..."}
-                                className="w-full px-4 py-3 pr-12 border border-slate-300 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white shadow-sm max-h-[120px] disabled:bg-slate-50 disabled:text-slate-500"
-                                disabled={!trackingCode || isLoading}
-                                rows={1}
-                                style={{ minHeight: '48px' }}
-                            />
-                            
-                            {/* Character count for long messages */}
-                            {input.length > 100 && (
-                                <div className="absolute -top-6 right-0 text-xs text-slate-400">
-                                    {input.length}/500
-                                </div>
-                            )}
+                    {/* Additional Options */}
+                    {messages.length === 0 && (
+                        <div className="flex items-center justify-center gap-6 mt-4 text-sm text-gray-500 font-body">
+                            <button disabled className="flex items-center gap-2 opacity-50">
+                                <Plus className="w-4 h-4" />
+                                Slides
+                            </button>
+                            <button disabled className="flex items-center gap-2 opacity-50">
+                                <Image className="w-4 h-4" />
+                                Image
+                            </button>
+                            <button disabled className="flex items-center gap-2 opacity-50">
+                                <Mic className="w-4 h-4" />
+                                Audio
+                            </button>
+                            <button disabled className="flex items-center gap-2 opacity-50">
+                                📄 Webpage
+                            </button>
                         </div>
-
-                        {/* Send Button */}
-                        <button
-                            onClick={handleSendMessage}
-                            disabled={isLoading || !trackingCode || input.trim() === ''}
-                            className="w-10 h-10 flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none"
-                            title="Send message"
-                        >
-                            {isLoading ? (
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                                <Send className="w-4 h-4" />
-                            )}
-                        </button>
-                    </div>
-
-                    {/* Helper Text */}
-                    <div className="mt-2 text-center">
-                        <p className="text-xs text-slate-400">
-                            {trackingCode ? (
-                                <>Press <kbd className="px-1 py-0.5 text-xs bg-slate-100 border border-slate-300 rounded">Enter</kbd> to send, <kbd className="px-1 py-0.5 text-xs bg-slate-100 border border-slate-300 rounded">Shift + Enter</kbd> for new line</>
-                            ) : (
-                                "Authentication required to start chatting"
-                            )}
-                        </p>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>
