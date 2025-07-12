@@ -114,57 +114,57 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
         <div className="flex flex-col h-full bg-background">
             {/* Empty State / Welcome */}
             {messages.length === 0 && !isLoading && (
-                <div className="flex-1 flex flex-col items-center justify-center p-8">
-                    <div className="text-center max-w-4xl mx-auto">
-                        <h1 className="text-3xl font-title font-normal text-foreground mb-2">
+                <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
+                    <div className="text-center w-full max-w-4xl mx-auto">
+                        <h1 className="text-2xl md:text-3xl font-title font-normal text-foreground mb-2">
                             Hello {userName?.split(' ')[0] || 'there'}
                         </h1>
-                        <p className="text-lg font-body text-muted-foreground mb-16">
+                        <p className="text-base md:text-lg font-body text-muted-foreground mb-8 md:mb-16">
                             What can I do for you?
                         </p>
                         
-                        {/* ChatGPT Style Input Field */}
-                        <div className="relative max-w-4xl mx-auto mb-8">
-                            <div className="relative bg-background border border-input rounded-3xl shadow-sm">
+                        {/* Responsive Input Field */}
+                        <div className="relative w-full max-w-3xl mx-auto mb-6 md:mb-8">
+                            <div className="relative bg-background border border-input rounded-2xl md:rounded-3xl shadow-sm">
                                 <textarea
                                     ref={inputRef}
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="Assign a task or ask anything"
-                                    className="w-full px-6 py-4 pl-20 pr-16 border-0 bg-transparent rounded-3xl resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[64px]"
+                                    className="w-full px-4 md:px-6 py-3 md:py-4 pl-16 md:pl-20 pr-14 md:pr-16 border-0 bg-transparent rounded-2xl md:rounded-3xl resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[56px] md:min-h-[64px]"
                                     disabled={!trackingCode || isLoading}
                                     rows={1}
                                 />
                                 
                                 {/* Left Side - Plus and Tools */}
-                                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-3">
+                                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2 md:gap-3">
                                     <button
                                         disabled
-                                        className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
+                                        className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
                                         title="Add attachment"
                                     >
-                                        <Plus className="w-5 h-5" />
+                                        <Plus className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
-                                    <span className="text-sm text-muted-foreground font-body">Tools</span>
+                                    <span className="text-xs md:text-sm text-muted-foreground font-body hidden sm:inline">Tools</span>
                                 </div>
 
                                 {/* Right Side - Mic and Send */}
-                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                                <div className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-1 md:gap-2">
                                     <button
                                         disabled
-                                        className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
+                                        className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
                                         title="Voice input"
                                     >
-                                        <Mic className="w-5 h-5" />
+                                        <Mic className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
+                                        className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
                                         title="Send message"
                                     >
-                                        <Send className="w-4 h-4" />
+                                        <Send className="w-3 h-3 md:w-4 md:h-4" />
                                     </button>
                                 </div>
                             </div>
