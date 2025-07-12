@@ -115,79 +115,89 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {/* Empty State / Welcome */}
             {messages.length === 0 && !isLoading && (
                 <div className="flex-1 flex flex-col items-center justify-center p-8">
-                    <div className="text-center max-w-2xl mx-auto mb-12">
-                        <h1 className="text-4xl font-title font-semibold text-foreground mb-3">
+                    <div className="text-center max-w-3xl mx-auto">
+                        <h1 className="text-3xl font-title font-normal text-foreground mb-2">
                             Hello {userName?.split(' ')[0] || 'there'}
                         </h1>
-                        <p className="text-xl font-body text-muted-foreground mb-12">
+                        <p className="text-lg font-body text-muted-foreground mb-16">
                             What can I do for you?
                         </p>
                         
                         {/* Centered Input Field */}
-                        <div className="relative max-w-4xl mx-auto">
+                        <div className="relative max-w-2xl mx-auto mb-8">
                             <textarea
                                 ref={inputRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Assign a task or ask anything"
-                                className="w-full px-6 py-4 pr-20 border-thin border-input rounded-3xl resize-none focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 bg-background font-body text-base disabled:bg-muted text-foreground placeholder:text-muted-foreground shadow-sm"
+                                className="w-full px-4 py-3 pl-12 pr-12 border-thin border-input rounded-2xl resize-none focus:outline-none focus:ring-1 focus:ring-ring transition-all duration-200 bg-background font-body text-sm disabled:bg-muted text-foreground placeholder:text-muted-foreground"
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
-                                style={{ minHeight: '60px' }}
+                                style={{ minHeight: '48px' }}
                             />
                             
-                            {/* Action Buttons */}
-                            <div className="absolute left-4 bottom-4 flex items-center gap-2">
+                            {/* Left Actions */}
+                            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
                                 <button
                                     disabled
-                                    className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-40"
+                                    className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
                                     title="Attach file"
                                 >
-                                    <Paperclip className="w-5 h-5" />
-                                </button>
-                                
-                                <button
-                                    disabled
-                                    className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-40"
-                                    title="Add image"
-                                >
-                                    <Image className="w-5 h-5" />
-                                </button>
-                                
-                                <button
-                                    disabled
-                                    className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-40"
-                                    title="More options"
-                                >
-                                    <Plus className="w-5 h-5" />
+                                    <Paperclip className="w-4 h-4" />
                                 </button>
                             </div>
 
-                            <div className="absolute right-4 bottom-4 flex items-center gap-2">
+                            {/* Right Actions */}
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
                                 <button
                                     disabled
-                                    className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-40"
+                                    className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
                                     title="Voice input"
                                 >
-                                    <Mic className="w-5 h-5" />
-                                </button>
-                                
-                                <button
-                                    onClick={handleSendMessage}
-                                    disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
-                                    title="Send message"
-                                >
-                                    <Send className="w-4 h-4" />
+                                    <Mic className="w-4 h-4" />
                                 </button>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Quick Actions Grid - Hidden in main centered view */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-8 max-w-2xl w-full opacity-0 invisible">
-                        {/* Keep for functionality but hide visually */}
+                        
+                        {/* Quick Action Buttons */}
+                        <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground font-body">
+                            <button 
+                                disabled 
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
+                                onClick={() => setInput("Create slides for presentation")}
+                            >
+                                📊 Slides
+                            </button>
+                            <button 
+                                disabled 
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
+                                onClick={() => setInput("Generate an image")}
+                            >
+                                🖼️ Image
+                            </button>
+                            <button 
+                                disabled 
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
+                                onClick={() => setInput("Create a video")}
+                            >
+                                🎥 Video
+                            </button>
+                            <button 
+                                disabled 
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
+                                onClick={() => setInput("Generate audio content")}
+                            >
+                                🎵 Audio
+                            </button>
+                            <button 
+                                disabled 
+                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
+                                onClick={() => setInput("Analyze webpage")}
+                            >
+                                📄 Webpage
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
