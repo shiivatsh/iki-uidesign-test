@@ -115,88 +115,61 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {/* Empty State / Welcome */}
             {messages.length === 0 && !isLoading && (
                 <div className="flex-1 flex flex-col items-center justify-center p-8">
-                    <div className="text-center max-w-3xl mx-auto">
-                        <h1 className="text-3xl font-title font-normal text-foreground mb-2">
-                            Hello {userName?.split(' ')[0] || 'there'}
+                    <div className="text-center max-w-4xl mx-auto">
+                        <h1 className="text-2xl font-body font-normal text-foreground mb-12">
+                            What's on your mind today?
                         </h1>
-                        <p className="text-lg font-body text-muted-foreground mb-16">
-                            What can I do for you?
-                        </p>
                         
-                        {/* Centered Input Field */}
-                        <div className="relative max-w-2xl mx-auto mb-8">
-                            <textarea
-                                ref={inputRef}
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyPress={handleKeyPress}
-                                placeholder="Assign a task or ask anything"
-                                className="w-full px-4 py-3 pl-12 pr-12 border-thin border-input rounded-2xl resize-none focus:outline-none focus:ring-1 focus:ring-ring transition-all duration-200 bg-background font-body text-sm disabled:bg-muted text-foreground placeholder:text-muted-foreground"
-                                disabled={!trackingCode || isLoading}
-                                rows={1}
-                                style={{ minHeight: '48px' }}
-                            />
-                            
-                            {/* Left Actions */}
-                            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                                <button
-                                    disabled
-                                    className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
-                                    title="Attach file"
-                                >
-                                    <Paperclip className="w-4 h-4" />
-                                </button>
-                            </div>
+                        {/* ChatGPT Style Input Field */}
+                        <div className="relative max-w-4xl mx-auto mb-8">
+                            <div className="relative bg-background border-thin border-input rounded-3xl shadow-sm">
+                                <textarea
+                                    ref={inputRef}
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyPress={handleKeyPress}
+                                    placeholder="Ask anything"
+                                    className="w-full px-4 py-4 pl-16 pr-20 border-0 bg-transparent rounded-3xl resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground"
+                                    disabled={!trackingCode || isLoading}
+                                    rows={1}
+                                    style={{ minHeight: '56px' }}
+                                />
+                                
+                                {/* Left Side - Plus and Tools */}
+                                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                                    <button
+                                        disabled
+                                        className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
+                                        title="Add attachment"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                    </button>
+                                    <span className="text-sm text-muted-foreground font-body">Tools</span>
+                                </div>
 
-                            {/* Right Actions */}
-                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
-                                <button
-                                    disabled
-                                    className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
-                                    title="Voice input"
-                                >
-                                    <Mic className="w-4 h-4" />
-                                </button>
+                                {/* Right Side - Mic and Audio */}
+                                <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
+                                    <button
+                                        disabled
+                                        className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
+                                        title="Voice input"
+                                    >
+                                        <Mic className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={handleSendMessage}
+                                        disabled={isLoading || !trackingCode || input.trim() === ''}
+                                        className="w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
+                                        title="Send or audio visualization"
+                                    >
+                                        <div className="flex items-center gap-0.5">
+                                            <div className="w-1 h-2 bg-current rounded-full"></div>
+                                            <div className="w-1 h-3 bg-current rounded-full"></div>
+                                            <div className="w-1 h-2 bg-current rounded-full"></div>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        
-                        {/* Quick Action Buttons */}
-                        <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground font-body">
-                            <button 
-                                disabled 
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
-                                onClick={() => setInput("Create slides for presentation")}
-                            >
-                                📊 Slides
-                            </button>
-                            <button 
-                                disabled 
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
-                                onClick={() => setInput("Generate an image")}
-                            >
-                                🖼️ Image
-                            </button>
-                            <button 
-                                disabled 
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
-                                onClick={() => setInput("Create a video")}
-                            >
-                                🎥 Video
-                            </button>
-                            <button 
-                                disabled 
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
-                                onClick={() => setInput("Generate audio content")}
-                            >
-                                🎵 Audio
-                            </button>
-                            <button 
-                                disabled 
-                                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors duration-200 disabled:opacity-50"
-                                onClick={() => setInput("Analyze webpage")}
-                            >
-                                📄 Webpage
-                            </button>
                         </div>
                     </div>
                 </div>
