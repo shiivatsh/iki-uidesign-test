@@ -1,12 +1,10 @@
-'use client';
-
-import React, { useState, useEffect, Suspense, FunctionComponent, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState, useEffect, FunctionComponent, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import ServiceSidebar from '@/components/ServiceSidebar';
-import ChatInterface from '@/components/ChatInterface';
-import ProfileDropdown from '@/components/ProfileDropdown';
-import SettingsModal from '@/components/SettingsModal';
+import ServiceSidebar from '../components/ServiceSidebar';
+import ChatInterface from '../components/ChatInterface';
+import ProfileDropdown from '../components/ProfileDropdown';
+import SettingsModal from '../components/SettingsModal';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://ikiru-backend-515600662686.us-central1.run.app';
 
@@ -36,7 +34,7 @@ const LoadingFallback = () => (
 );
 
 function DashboardContent() {
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -482,11 +480,7 @@ function DashboardContent() {
 }
 
 const DashboardPage: FunctionComponent = () => {
-    return (
-        <Suspense fallback={<LoadingFallback />}>
-            <DashboardContent />
-        </Suspense>
-    );
+    return <DashboardContent />;
 };
 
 export default DashboardPage;
