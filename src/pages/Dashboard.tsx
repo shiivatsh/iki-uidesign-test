@@ -307,10 +307,33 @@ function DashboardContent() {
     }
 
     if (!currentUser) {
-        console.log('[Dashboard] No user authenticated, redirecting to main site.');
-        if (typeof window !== 'undefined') {
-            window.location.href = '/';
-        }
+        console.log('[Dashboard] No user authenticated, showing demo mode.');
+        // Demo mode - create a sample user for UI demonstration
+        const demoUser: User = {
+            tracking_code: 'DEMO123',
+            name: 'Demo User',
+            email: 'demo@ikiru.com',
+            address: '123 Demo Street, Demo City',
+            phone_number: '+1 (555) 123-4567',
+            bedrooms: 3,
+            bathrooms: 2,
+            service_history: [
+                {
+                    date: '2024-01-15',
+                    service_type: 'House Cleaning',
+                    notes: 'Deep cleaning service completed successfully'
+                },
+                {
+                    date: '2024-01-08',
+                    service_type: 'Plumbing Repair',
+                    notes: 'Fixed kitchen sink leak'
+                }
+            ],
+            preferences: {}
+        };
+        
+        // Set demo user and continue to render dashboard
+        setCurrentUser(demoUser);
         return <LoadingFallback />;
     }
 
