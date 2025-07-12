@@ -6,7 +6,7 @@ import ChatInterface from '../components/ChatInterface';
 import ProfileDropdown from '../components/ProfileDropdown';
 import SettingsModal from '../components/SettingsModal';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://ikiru-backend-515600662686.us-central1.run.app';
+const API_BASE_URL = 'https://ikiru-backend-515600662686.us-central1.run.app';
 
 interface User {
     tracking_code: string;
