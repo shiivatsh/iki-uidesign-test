@@ -143,7 +143,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
+                                        className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
                                         style={{ borderRadius: 'var(--squircle, 50%)' }}
                                         title="Send message"
                                     >
@@ -241,7 +241,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-8 h-8 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
+                                    className="w-7 h-7 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
                                     style={{ borderRadius: 'var(--squircle, 50%)' }}
                                     title="Send message"
                                 >
