@@ -20,9 +20,6 @@ const navigationItems = [
   { title: 'Chat', url: '/dashboard', icon: MessageSquare },
   { title: 'History', url: '/dashboard/history', icon: History },
   { title: 'Search', url: '/dashboard/search', icon: Search },
-];
-
-const bottomItems = [
   { title: 'Settings', url: '/dashboard/settings', icon: Settings },
 ];
 
@@ -274,28 +271,6 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
             </Dialog>
           </div>
 
-          {/* Settings - Fixed at bottom */}
-          <div className="px-6 pb-4">
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {bottomItems.map((item) => (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <NavLink 
-                          to={item.url}
-                          className={getNavCls({ isActive: isActive(item.url) })}
-                        >
-                          <item.icon className="w-4 h-4" />
-                          {!collapsed && <span>{item.title}</span>}
-                        </NavLink>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
-          </div>
         </div>
       </SidebarContent>
     </Sidebar>
