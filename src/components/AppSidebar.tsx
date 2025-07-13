@@ -17,8 +17,7 @@ import {
 } from '@/components/ui/sidebar';
 
 const navigationItems = [
-  { title: 'Chat', url: '/dashboard', icon: MessageSquare },
-  { title: 'History', url: '/dashboard/history', icon: History },
+  { title: 'Dashboard', url: '/dashboard', icon: Home },
   { title: 'Search', url: '/dashboard/search', icon: Search },
   { title: 'Settings', url: '/dashboard/settings', icon: Settings },
 ];
