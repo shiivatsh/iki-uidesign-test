@@ -11,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
 
@@ -50,7 +51,8 @@ export function AppSidebar({ onNewChat }: AppSidebarProps) {
     <Sidebar className={collapsed ? 'w-14' : 'w-64'} collapsible="icon">
       <SidebarContent className="flex flex-col h-full">
         {/* Header */}
-        <div className="p-4">
+        <div className="p-4 relative">
+          <SidebarTrigger className="absolute top-2 right-2 w-6 h-6" />
           {!collapsed && (
             <div className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">

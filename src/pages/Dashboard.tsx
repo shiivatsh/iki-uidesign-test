@@ -357,9 +357,8 @@ function DashboardContent() {
                     <header className="bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
                         <div className="px-6 py-4">
                             <div className="flex justify-between items-center">
-                                <div className="flex items-center space-x-4">
-                                    <SidebarTrigger />
-                                    <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-4">
+                                <div className="flex items-center space-x-3">
                                         {/* Ikiru Logo/Brand */}
                                         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg">
                                             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
