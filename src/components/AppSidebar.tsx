@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { MessageSquare, Settings, History, Plus, Home, Search, ChevronDown, ChevronRight, Star, Calendar, Building, Sparkles } from 'lucide-react';
+import { MessageSquare, Settings, History, Plus, Home, Search, ChevronDown, ChevronRight, Star, Calendar, Building, Sparkles, Waves, Recycle, Info } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 import {
   Sidebar,
@@ -203,8 +204,73 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
           </div>
         </div>
 
+        {/* Your Impact Section */}
+        <div className="px-6 mb-4">
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="w-full p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl hover:from-green-100 hover:to-blue-100 transition-all duration-200 group">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Waves className="w-4 h-4 text-white" />
+                  </div>
+                  {!collapsed && (
+                    <div className="flex-1 text-left">
+                      <p className="text-sm font-semibold text-green-700 mb-1">Your Impact</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-medium text-green-600">80g</span>
+                        <span className="text-xs text-green-600">Plastic Removed</span>
+                      </div>
+                    </div>
+                  )}
+                  {!collapsed && (
+                    <Info className="w-4 h-4 text-green-600 group-hover:text-green-700 transition-colors" />
+                  )}
+                </div>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-green-700">
+                  <Waves className="w-5 h-5" />
+                  Your Impact
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                {/* Main Impact Stats */}
+                <div className="text-center p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200">
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Waves className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-green-700 mb-2">80g</h3>
+                  <p className="text-sm text-green-600 font-medium">Plastic Removed</p>
+                  <p className="text-xs text-green-600 mt-1">(4 bottles)</p>
+                </div>
+
+                {/* Additional Stats */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="text-lg font-bold text-blue-700">1.5%</h4>
+                    <p className="text-xs text-blue-600">Of Your Booking</p>
+                  </div>
+                  <div className="text-center p-4 bg-teal-50 rounded-lg border border-teal-200">
+                    <h4 className="text-lg font-bold text-teal-700">4</h4>
+                    <p className="text-xs text-teal-600">Cleaner Ocean</p>
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className="p-4 bg-muted rounded-lg">
+                  <p className="text-sm text-muted-foreground text-center leading-relaxed">
+                    Together, we're working toward cleaner oceans. Thanks for being a part of it! 🌊
+                  </p>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
         {/* Bottom Items */}
-        <div className="mt-auto px-6">
+        <div className="px-6 pb-6">
           <SidebarGroup>
             <SidebarGroupContent>
               <SidebarMenu>
