@@ -175,24 +175,56 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             </div>
                         </div>
                         
-                        {/* Service Options Below */}
-                        <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
-                            {[
-                                "Schedule a house cleaning",
-                                "Find a reliable electrician", 
-                                "Book a plumbing service",
-                                "Request maintenance help"
-                            ].map((suggestion, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setInput(suggestion)}
-                                    className="p-4 text-left bg-card border border-border rounded-xl hover:bg-accent/50 transition-all duration-200 hover:scale-[1.02] group"
-                                >
-                                    <span className="font-body text-sm text-foreground group-hover:text-accent-foreground">
-                                        {suggestion}
-                                    </span>
+                        {/* Quick Action Service Options */}
+                        <div className="w-full max-w-[765px] mx-auto mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex-1"></div>
+                                <button className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center space-x-1 group">
+                                    <span>All services</span>
+                                    <svg className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12l-4.58 4.59z"/>
+                                    </svg>
                                 </button>
-                            ))}
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-3">
+                                {[
+                                    { text: "Schedule a house cleaning", icon: "🧹" },
+                                    { text: "Find a reliable electrician", icon: "⚡" }, 
+                                    { text: "Book a plumbing service", icon: "🚿" },
+                                    { text: "Request maintenance help", icon: "🔧" }
+                                ].map((suggestion, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setInput(suggestion.text)}
+                                        className="group relative p-5 text-left bg-white border border-border shadow-sm hover:shadow-md transition-all duration-300 hover:scale-[1.02] hover:border-primary/30"
+                                        style={{ 
+                                            '--squircle': '20px',
+                                            borderRadius: 'var(--squircle)',
+                                            clipPath: `inset(0 round var(--squircle))`
+                                        } as React.CSSProperties}
+                                    >
+                                        <div className="flex items-start space-x-3">
+                                            <div className="text-lg mt-0.5 group-hover:scale-110 transition-transform">
+                                                {suggestion.icon}
+                                            </div>
+                                            <div className="flex-1">
+                                                <span className="font-body text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                                                    {suggestion.text}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Subtle hover effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                                             style={{ 
+                                                 borderRadius: 'var(--squircle)',
+                                                 clipPath: `inset(0 round var(--squircle))`
+                                             }}>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

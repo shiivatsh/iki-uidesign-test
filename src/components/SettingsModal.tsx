@@ -131,24 +131,24 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-4xl h-full max-h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-white">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-              <User className="w-5 h-5 text-white" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
+      <div className="w-full max-w-5xl h-full max-h-[95vh] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/60">
+        {/* Enhanced Header */}
+        <div className="flex items-center justify-between p-8 border-b border-slate-200/60 bg-gradient-to-r from-blue-50/50 via-white to-indigo-50/50">
+          <div className="flex items-center space-x-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
+              <User className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-800">Account Settings</h2>
-              <p className="text-sm text-slate-500">Manage your profile and preferences</p>
+              <h2 className="text-2xl font-bold text-slate-800">Account Settings</h2>
+              <p className="text-sm text-slate-500 font-medium">Manage your profile and preferences</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200"
+            className="w-12 h-12 flex items-center justify-center rounded-2xl text-slate-400 hover:text-slate-600 hover:bg-slate-100/80 transition-all duration-200 hover:scale-105"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
@@ -171,22 +171,26 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
         )}
 
         <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <div className="w-64 bg-slate-50 border-r border-slate-200 p-4">
-            <nav className="space-y-2">
+          {/* Enhanced Sidebar */}
+          <div className="w-72 bg-gradient-to-b from-slate-50/80 to-blue-50/30 border-r border-slate-200/60 p-6">
+            <nav className="space-y-3">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    className={`w-full flex items-center space-x-4 px-5 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 transform ${
                       activeTab === tab.id
-                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
-                        : 'text-slate-600 hover:bg-white hover:text-slate-800 hover:shadow-sm'
+                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-xl scale-105'
+                        : 'text-slate-600 hover:bg-white/80 hover:text-slate-800 hover:shadow-lg hover:scale-105'
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                      activeTab === tab.id ? 'bg-white/20' : 'bg-slate-100'
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
                     <span>{tab.label}</span>
                   </button>
                 );

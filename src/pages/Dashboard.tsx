@@ -1,22 +1,25 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/AppSidebar';
 import ServiceSidebar from '../components/ServiceSidebar';
 import ChatInterface from '../components/ChatInterface';
 import ProfileDropdown from '../components/ProfileDropdown';
 import SettingsModal from '../components/SettingsModal';
-import { Menu } from 'lucide-react';
 
 const API_BASE_URL = 'https://ikiru-backend-515600662686.us-central1.run.app';
+
+interface Booking {
+    date: string;
+    service_type: string;
+    notes?: string;
+}
 
 interface User {
     tracking_code: string;
     name: string;
     email: string;
     address?: string;
-    service_history?: unknown[];
+    service_history: Booking[];
     preferences?: unknown;
     phone_number?: string;
     bedrooms?: number;
@@ -51,20 +54,9 @@ function DashboardContent() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    // State for profile dropdown and chat mode
+    // State for profile dropdown
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-    const [showChat, setShowChat] = useState(true); // Default to chat mode
-
-    const handleNewChat = () => {
-        setShowChat(true);
-        console.log('New chat started - switching to chat view');
-    };
-
-    const handleDashboardClick = () => {
-        setShowChat(false);
-        console.log('Dashboard clicked - switching to overview');
-    };
 
     const handleSettingsClick = () => {
         console.log('Settings clicked');
@@ -280,40 +272,6 @@ function DashboardContent() {
         }
     }, [searchParams]);
 
-    const handleSetPasswordSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setPasswordSetError(null);
-        setPasswordSetSuccess(null);
-
-        if (newPassword !== confirmPassword) {
-            setPasswordSetError("Passwords do not match.");
-            return;
-        }
-        if (newPassword.length < 8) {
-            setPasswordSetError("Password must be at least 8 characters long.");
-            return;
-        }
-        if (!currentUser?.email) {
-            setPasswordSetError("User email not found. Cannot set password.");
-            return;
-        }
-
-        try {
-            await axios.post(`${API_BASE_URL}/api/user/set-password`, {
-                email: currentUser.email,
-                new_password: newPassword
-            });
-            setPasswordSetSuccess("Password successfully updated!");
-            setShowPasswordModal(false);
-            setNewPassword('');
-            setConfirmPassword('');
-        } catch (err: unknown) {
-            const errorMessage = err && typeof err === 'object' && 'response' in err && err.response && typeof err.response === 'object' && 'data' in err.response && err.response.data && typeof err.response.data === 'object' && 'detail' in err.response.data ? String(err.response.data.detail) : 'Failed to set password. Please try again';
-            console.error("Error setting password:", errorMessage);
-            setPasswordSetError(errorMessage + ".");
-        }
-    };
-
     if (isLoadingToken || isCheckingSession) {
         console.log('[Dashboard] Rendering LoadingFallback, isLoadingToken, or isCheckingSession is true.');
         return <LoadingFallback />;
@@ -353,236 +311,79 @@ function DashboardContent() {
     console.log(`[Dashboard] Rendering main dashboard overview for user: ${currentUser.email}`);
     
     return (
-        <SidebarProvider>
-            <div className="min-h-screen flex w-full bg-background">
-                <AppSidebar onNewChat={handleNewChat} onDashboardClick={handleDashboardClick} userData={currentUser} />
+        <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+            {/* Enhanced Service Sidebar */}
+            <ServiceSidebar trackingCode={currentUser.tracking_code} userData={currentUser} />
+            
+            <main className="flex-1 flex flex-col overflow-hidden relative">
+                {/* Sleek Header */}
+                <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-8 relative z-10">
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <h1 className="text-lg font-semibold text-slate-800">
+                                Welcome back, {currentUser.name?.split(' ')[0] || 'User'}
+                            </h1>
+                        </div>
+                    </div>
+                    
+                    <div className="relative" ref={dropdownRef}>
+                        <button
+                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                            className="flex items-center space-x-3 p-2 rounded-xl hover:bg-slate-100/80 transition-all duration-200 group"
+                        >
+                            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-sm font-medium shadow-lg group-hover:shadow-xl transition-all duration-200">
+                                {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
+                            </div>
+                            <div className="text-left hidden sm:block">
+                                <div className="text-sm font-medium text-slate-800">
+                                    {currentUser.name || 'User'}
+                                </div>
+                                <div className="text-xs text-slate-500">
+                                    {currentUser.email || 'No email'}
+                                </div>
+                            </div>
+                        </button>
+                        
+                        {isProfileDropdownOpen && (
+                            <ProfileDropdown
+                                email={currentUser.email || 'No email'}
+                                onSettingsClick={handleSettingsClick}
+                                onLogoutClick={handleLogoutClick}
+                            />
+                        )}
+                    </div>
+                </header>
                 
-                <div className="flex-1 flex flex-col min-w-0">
-                    {/* Unified responsive header */}
-                    <header className="bg-background border-b-[0.5px] border-border sticky top-0 z-50 flex-shrink-0">
-                        <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6">
-                            {/* Left side - Mobile sidebar trigger and branding */}
-                            <div className="flex items-center gap-3 md:gap-4">
-                                <SidebarTrigger className="md:hidden" />
-                                <div className="md:hidden flex items-center gap-2">
-                                    <h1 className="text-lg font-semibold text-foreground">Ikiru</h1>
-                                </div>
-                                <div className="hidden md:block">
-                                    <h1 className="text-xl lg:text-2xl font-bold text-foreground">Dashboard</h1>
-                                </div>
-                            </div>
-                            
-                            {/* Right side - Actions and profile */}
-                            <div className="flex items-center gap-2 md:gap-3">
-                                {/* Security button */}
-                                {!showPasswordModal && (
-                                    <button 
-                                        onClick={() => { 
-                                            setShowPasswordModal(true); 
-                                            setPasswordSetError(null); 
-                                            setPasswordSetSuccess(null); 
-                                        }}
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border-[0.5px] border-border hover:bg-accent hover:text-accent-foreground transition-all duration-200"
-                                        style={{ borderRadius: 'var(--squircle, 8px)' }}
-                                    >
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                        </svg>
-                                        <span className="hidden sm:inline">Security</span>
-                                    </button>
-                                )}
-
-                                {/* Mobile menu for additional options */}
-                                <div className="md:hidden relative" ref={dropdownRef}>
-                                    <button
-                                        onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border-[0.5px] border-border hover:bg-accent hover:text-accent-foreground transition-all duration-200"
-                                        style={{ borderRadius: 'var(--squircle, 8px)' }}
-                                    >
-                                        <Menu className="w-4 h-4" />
-                                    </button>
-                                    
-                                    {isProfileDropdownOpen && (
-                                        <ProfileDropdown
-                                            email={currentUser.email}
-                                            onSettingsClick={handleSettingsClick}
-                                            onLogoutClick={handleLogoutClick}
-                                        />
-                                    )}
-                                </div>
-
-                                {/* Desktop profile section */}
-                                <div className="hidden md:flex items-center gap-3">
-                                    <div className="text-right">
-                                        <p className="text-sm font-medium text-foreground">{currentUser.name}</p>
-                                        <p className="text-xs text-muted-foreground">{currentUser.email}</p>
-                                    </div>
-                                    
-                                    <div className="relative" ref={dropdownRef}>
-                                        <button
-                                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                            className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-200"
-                                            style={{ borderRadius: 'var(--squircle, 50%)' }}
-                                        >
-                                            <span className="text-sm font-semibold">
-                                                {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
-                                            </span>
-                                        </button>
-                                        
-                                        {isProfileDropdownOpen && (
-                                            <ProfileDropdown
-                                                email={currentUser.email}
-                                                onSettingsClick={handleSettingsClick}
-                                                onLogoutClick={handleLogoutClick}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+                {/* Main Chat Interface */}
+                <div className="flex-1 flex overflow-hidden bg-transparent">
+                    <div className="flex-1 relative">
+                        <ChatInterface 
+                            trackingCode={currentUser.tracking_code} 
+                            userName={currentUser.name} 
+                        />
+                        
+                        {/* Subtle Background Pattern */}
+                        <div className="absolute inset-0 -z-10 opacity-30">
+                            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-indigo-50/50"></div>
+                            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+                            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl"></div>
                         </div>
-                    </header>
-
-                    {/* Main Dashboard Content */}
-                    {!showChat ? (
-                        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-                        {/* Quick Stats Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-card rounded-xl border p-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                                        <span className="text-xl">🏠</span>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-foreground">{currentUser.service_history?.length || 0}</h3>
-                                        <p className="text-sm text-muted-foreground">Total Services</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-card rounded-xl border p-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <span className="text-xl">🌊</span>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-foreground">80g</h3>
-                                        <p className="text-sm text-muted-foreground">Plastic Removed</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-card rounded-xl border p-6">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                        <span className="text-xl">⭐</span>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-lg font-semibold text-foreground">4.8</h3>
-                                        <p className="text-sm text-muted-foreground">Avg Rating</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Quick Action - Book Service */}
-                        <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl border border-primary/20 p-8">
-                            <div className="text-center">
-                                <h2 className="text-2xl font-bold text-foreground mb-2">Need a service?</h2>
-                                <p className="text-muted-foreground mb-6">Start a conversation to book your next home service</p>
-                                <button 
-                                    onClick={handleNewChat}
-                                    className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors font-medium text-lg"
-                                >
-                                    <span className="text-xl">💬</span>
-                                    Start Service Booking
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Recent Activity */}
-                        <div className="bg-card rounded-xl border p-6">
-                            <h3 className="text-lg font-semibold text-foreground mb-4">Recent Activity</h3>
-                            {currentUser.service_history && currentUser.service_history.length > 0 ? (
-                                <div className="space-y-4">
-                                    {currentUser.service_history.slice(0, 3).map((service: any, index: number) => (
-                                        <div key={index} className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors cursor-pointer">
-                                            <div className="text-2xl">
-                                                {service.service_type.toLowerCase().includes('clean') ? '🧹' : 
-                                                 service.service_type.toLowerCase().includes('plumb') ? '🚿' : 
-                                                 service.service_type.toLowerCase().includes('electric') ? '⚡' : '🏠'}
-                                            </div>
-                                            <div className="flex-1">
-                                                <h4 className="font-medium text-foreground capitalize">{service.service_type}</h4>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {new Date(service.date).toLocaleDateString('en-US', { 
-                                                        month: 'long', 
-                                                        day: 'numeric', 
-                                                        year: 'numeric' 
-                                                    })}
-                                                </p>
-                                            </div>
-                                            <div className="text-right">
-                                                <span className="text-sm text-primary font-medium">View Chat →</span>
-                                            </div>
-                                        </div>
-                                    ))
-                                    }
-                                </div>
-                            ) : (
-                                <div className="text-center py-8">
-                                    <div className="text-4xl mb-4">📝</div>
-                                    <p className="text-muted-foreground">No service history yet</p>
-                                    <p className="text-sm text-muted-foreground mt-1">Your completed services will appear here</p>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Your Impact Section */}
-                        <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-6">
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                                    <span className="text-xl text-white">🌊</span>
-                                </div>
-                                <div>
-                                    <h3 className="text-lg font-semibold text-blue-900">Your Environmental Impact</h3>
-                                    <p className="text-sm text-blue-700">Making a difference, one service at a time</p>
-                                </div>
-                            </div>
-                            
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="text-center p-4 bg-white/50 rounded-lg">
-                                    <div className="text-2xl font-bold text-blue-600">80g</div>
-                                    <div className="text-sm text-blue-700">Plastic Removed</div>
-                                </div>
-                                <div className="text-center p-4 bg-white/50 rounded-lg">
-                                    <div className="text-2xl font-bold text-blue-600">4</div>
-                                    <div className="text-sm text-blue-700">Bottles Worth</div>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                    ) : (
-                        <div className="flex-1 flex flex-col">
-                            <div className="flex-1 flex items-center justify-center p-6">
-                                <div className="w-full max-w-4xl h-full max-h-[calc(100vh-200px)] bg-background rounded-xl">
-                                    <ChatInterface 
-                                        trackingCode={currentUser.tracking_code}
-                                        userName={currentUser.name}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Settings Modal */}
-                    <SettingsModal 
-                        isOpen={isSettingsModalOpen}
-                        onClose={() => setIsSettingsModalOpen(false)}
-                        currentUser={currentUser}
-                    />
+                    </div>
                 </div>
-            </div>
-        </SidebarProvider>
+            </main>
+            
+            {/* Enhanced Settings Modal */}
+            <SettingsModal 
+                isOpen={isSettingsModalOpen} 
+                onClose={() => setIsSettingsModalOpen(false)} 
+                currentUser={currentUser}
+            />
+        </div>
     );
 }
 
