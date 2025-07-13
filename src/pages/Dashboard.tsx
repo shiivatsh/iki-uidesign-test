@@ -352,7 +352,7 @@ function DashboardContent() {
             <div className="min-h-screen flex w-full bg-background">
                 <AppSidebar onNewChat={handleNewChat} userData={currentUser} />
                 
-                <main className="flex-1 flex flex-col min-w-0">
+                <div className="flex-1 flex flex-col min-w-0">
                     {/* Unified responsive header */}
                     <header className="bg-background border-b-[0.5px] border-border sticky top-0 z-50 flex-shrink-0">
                         <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6">
@@ -493,7 +493,7 @@ function DashboardContent() {
                             userName={currentUser.name || currentUser.email} 
                         />
                     </div>
-                </main>
+                </div>
 
                 {/* Settings Modal */}
                 {currentUser && (
