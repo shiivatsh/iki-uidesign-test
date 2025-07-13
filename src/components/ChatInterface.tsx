@@ -138,14 +138,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 />
 
                                 {/* Right Side - Send Button */}
-                                <div className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2">
+                                <div className="absolute right-2 md:right-3 bottom-2">
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-primary text-primary-foreground rounded-full hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
+                                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-foreground text-background rounded-full hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
                                         title="Send message"
                                     >
-                                        <Send className="w-4 h-4 md:w-5 md:h-5" />
+                                        <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
@@ -237,10 +239,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-full hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
+                                    className="w-8 h-8 flex items-center justify-center bg-foreground text-background rounded-full hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
                                     title="Send message"
                                 >
-                                    <Send className="w-4 h-4" />
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
+                                    </svg>
                                 </button>
                             </div>
                         </div>

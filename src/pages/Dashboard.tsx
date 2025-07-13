@@ -358,7 +358,7 @@ function DashboardContent() {
                         <div className="px-6 py-4">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center space-x-4">
-                                    <SidebarTrigger className="md:hidden" />
+                                    <SidebarTrigger />
                                     <div className="flex items-center space-x-3">
                                         {/* Ikiru Logo/Brand */}
                                         <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg">
