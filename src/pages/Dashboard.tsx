@@ -494,11 +494,15 @@ function DashboardContent() {
                         </div>
                     </main>
                     ) : (
-                        <div className="flex-1 flex">
-                            <ChatInterface 
-                                trackingCode={currentUser.tracking_code}
-                                userName={currentUser.name}
-                            />
+                        <div className="flex-1 flex flex-col">
+                            <div className="flex-1 flex items-center justify-center p-6">
+                                <div className="w-full max-w-4xl h-full max-h-[calc(100vh-200px)] bg-background border rounded-xl shadow-sm">
+                                    <ChatInterface 
+                                        trackingCode={currentUser.tracking_code}
+                                        userName={currentUser.name}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     )}
 
