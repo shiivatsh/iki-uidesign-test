@@ -79,37 +79,14 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
           <SidebarTrigger className="absolute top-4 right-4 w-6 h-6" />
           
           {!collapsed && (
-            <>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg">
-                  <Home className="w-5 h-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold text-foreground">Ikiru</h1>
-                  <p className="text-xs text-muted-foreground">Your AI Assistant</p>
-                </div>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <Home className="w-4 h-4 text-primary-foreground" />
               </div>
-
-              {/* User Info Card */}
-              {userData && (
-                <div className="p-4 bg-muted/50 rounded-xl border">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground text-sm font-medium">
-                      {userData.name?.charAt(0)?.toUpperCase() || 'D'}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">
-                        {userData.name || 'Demo User'}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate flex items-center">
-                        <Building className="w-3 h-3 mr-1" />
-                        {userData.address || '123 Demo Street, Demo City'}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
+              <div>
+                <h1 className="text-base font-semibold text-foreground">Ikiru</h1>
+              </div>
+            </div>
           )}
           
           {/* New Chat Button */}
