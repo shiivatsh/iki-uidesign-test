@@ -1,10 +1,13 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
 import ServiceSidebar from '../components/ServiceSidebar';
 import ChatInterface from '../components/ChatInterface';
 import ProfileDropdown from '../components/ProfileDropdown';
 import SettingsModal from '../components/SettingsModal';
+import { Menu } from 'lucide-react';
 
 const API_BASE_URL = 'https://ikiru-backend-515600662686.us-central1.run.app';
 
@@ -52,6 +55,11 @@ function DashboardContent() {
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     // State for Settings Modal
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+
+    const handleNewChat = () => {
+        // Reset any chat state if needed
+        console.log('New chat started');
+    };
 
     const handleSettingsClick = () => {
         console.log('Settings clicked');
@@ -340,165 +348,156 @@ function DashboardContent() {
     console.log(`[Dashboard] Rendering main dashboard with ChatInterface for user: ${currentUser.email}`);
     
     return (
-        <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-            <ServiceSidebar 
-                trackingCode={currentUser.tracking_code} 
-                userData={{
-                    tracking_code: currentUser.tracking_code,
-                    name: currentUser.name || currentUser.email,
-                    email: currentUser.email,
-                    phone_number: currentUser.phone_number,
-                    address: currentUser.address,
-                    bedrooms: currentUser.bedrooms,
-                    bathrooms: currentUser.bathrooms,
-                    service_history: (currentUser.service_history || []) as Array<{date: string; service_type: string; notes?: string}>,
-                    preferences: currentUser.preferences
-                }}
-            />
-            <main className="flex-1 flex flex-col overflow-hidden">
-                {/* Enhanced Header */}
-                <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm sticky top-0 z-40">
-                    <div className="px-6 py-4">
-                        <div className="flex justify-between items-center">
-                            <div className="flex items-center space-x-4">
+        <SidebarProvider>
+            <div className="flex h-screen w-full bg-background">
+                <AppSidebar onNewChat={handleNewChat} />
+                
+                <main className="flex-1 flex flex-col overflow-hidden">
+                    {/* Enhanced Header */}
+                    <header className="bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
+                        <div className="px-6 py-4">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center space-x-4">
+                                    <SidebarTrigger className="md:hidden" />
+                                    <div className="flex items-center space-x-3">
+                                        {/* Ikiru Logo/Brand */}
+                                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h1 className="text-xl font-bold text-foreground">
+                                                Welcome back, {currentUser.name?.split(' ')[0] || currentUser.email?.split('@')[0]}
+                                            </h1>
+                                            <p className="text-sm text-muted-foreground">Your AI home service assistant</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className="flex items-center space-x-3">
-                                    {/* Ikiru Logo/Brand */}
-                                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                        </svg>
+                                    {!showPasswordModal && (
+                                        <button 
+                                            onClick={() => { 
+                                                setShowPasswordModal(true); 
+                                                setPasswordSetError(null); 
+                                                setPasswordSetSuccess(null); 
+                                            }}
+                                            className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-medium text-muted-foreground bg-background border border-border rounded-full hover:bg-accent hover:text-accent-foreground transition-all duration-200 shadow-sm hover:shadow-md"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                            </svg>
+                                            <span>Security</span>
+                                        </button>
+                                    )}
+                                    {/* Enhanced Profile Avatar */}
+                                    <div className="relative" ref={dropdownRef}>
+                                        <button
+                                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                            className="flex items-center justify-center w-10 h-10 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-3 focus:ring-ring transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                                        >
+                                            <span className="text-sm font-semibold">
+                                                {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
+                                            </span>
+                                        </button>
+                                        {isProfileDropdownOpen && currentUser && (
+                                            <ProfileDropdown
+                                                email={currentUser.email}
+                                                onSettingsClick={handleSettingsClick}
+                                                onLogoutClick={handleLogoutClick}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Status Messages */}
+                            {passwordSetSuccess && (
+                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
+                                    <p className="text-sm text-green-800">{passwordSetSuccess}</p>
+                                </div>
+                            )}
+                            {passwordSetError && (
+                                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+                                    <p className="text-sm text-red-800">{passwordSetError}</p>
+                                </div>
+                            )}
+                        </div>
+                    </header>
+
+                    {/* Password Modal */}
+                    {showPasswordModal && (
+                        <div className="bg-background/90 backdrop-blur-sm border-b border-border shadow-sm">
+                            <div className="p-6 max-w-md mx-auto">
+                                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                    Set Your Password
+                                </h3>
+                                <form onSubmit={handleSetPasswordSubmit} className="space-y-4">
+                                    <div>
+                                        <label htmlFor="newPassword" className="block text-sm font-medium text-foreground mb-1">New Password</label>
+                                        <input 
+                                            type="password" 
+                                            id="newPassword"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            className="w-full px-4 py-3 border border-input rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
+                                            placeholder="Enter a secure password"
+                                            required
+                                        />
                                     </div>
                                     <div>
-                                        <h1 className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                                            Welcome back, {currentUser.name?.split(' ')[0] || currentUser.email?.split('@')[0]}
-                                        </h1>
-                                        <p className="text-sm text-slate-600">Your AI home service assistant</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                {!showPasswordModal && (
-                                    <button 
-                                        onClick={() => { 
-                                            setShowPasswordModal(true); 
-                                            setPasswordSetError(null); 
-                                            setPasswordSetSuccess(null); 
-                                        }}
-                                        className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-medium text-slate-700 bg-white/60 border border-slate-200 rounded-full hover:bg-white/80 hover:border-slate-300 transition-all duration-200 shadow-sm hover:shadow-md"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                        </svg>
-                                        <span>Security</span>
-                                    </button>
-                                )}
-                                {/* Enhanced Profile Avatar */}
-                                <div className="relative" ref={dropdownRef}>
-                                    <button
-                                        onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                        className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full text-white hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-3 focus:ring-blue-500/30 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-                                    >
-                                        <span className="text-sm font-semibold">
-                                            {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
-                                        </span>
-                                    </button>
-                                    {isProfileDropdownOpen && currentUser && (
-                                        <ProfileDropdown
-                                            email={currentUser.email}
-                                            onSettingsClick={handleSettingsClick}
-                                            onLogoutClick={handleLogoutClick}
+                                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-1">Confirm Password</label>
+                                        <input 
+                                            type="password" 
+                                            id="confirmPassword"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            className="w-full px-4 py-3 border border-input rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
+                                            placeholder="Confirm your password"
+                                            required
                                         />
-                                    )}
-                                </div>
+                                    </div>
+                                    <div className="flex items-center space-x-3 pt-2">
+                                        <button 
+                                            type="submit"
+                                            className="flex-1 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-md hover:shadow-lg"
+                                        >
+                                            Save Password
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            onClick={() => { setShowPasswordModal(false); setPasswordSetError(null); setNewPassword(''); setConfirmPassword(''); }}
+                                            className="px-4 py-3 text-muted-foreground bg-secondary rounded-lg font-medium hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        {/* Status Messages */}
-                        {passwordSetSuccess && (
-                            <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-lg animate-fade-in">
-                                <p className="text-sm text-emerald-800">{passwordSetSuccess}</p>
-                            </div>
-                        )}
-                        {passwordSetError && (
-                            <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
-                                <p className="text-sm text-red-800">{passwordSetError}</p>
-                            </div>
-                        )}
-                    </div>
-                </header>
+                    )}
 
-                {/* Password Modal */}
-                {showPasswordModal && (
-                    <div className="bg-white/90 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-                        <div className="p-6 max-w-md mx-auto">
-                            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                </svg>
-                                Set Your Password
-                            </h3>
-                            <form onSubmit={handleSetPasswordSubmit} className="space-y-4">
-                                <div>
-                                    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                                    <input 
-                                        type="password" 
-                                        id="newPassword"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                        placeholder="Enter a secure password"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                                    <input 
-                                        type="password" 
-                                        id="confirmPassword"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-                                        placeholder="Confirm your password"
-                                        required
-                                    />
-                                </div>
-                                <div className="flex items-center space-x-3 pt-2">
-                                    <button 
-                                        type="submit"
-                                        className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-md hover:shadow-lg"
-                                    >
-                                        Save Password
-                                    </button>
-                                    <button 
-                                        type="button"
-                                        onClick={() => { setShowPasswordModal(false); setPasswordSetError(null); setNewPassword(''); setConfirmPassword(''); }}
-                                        className="px-4 py-3 text-gray-700 bg-gray-100 rounded-lg font-medium hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    {/* Chat Interface */}
+                    <div className="flex-1 overflow-hidden">
+                        <ChatInterface 
+                            trackingCode={currentUser.tracking_code} 
+                            userName={currentUser.name || currentUser.email} 
+                        />
                     </div>
-                )}
+                </main>
 
-                {/* Chat Interface */}
-                <div className="flex-1 overflow-hidden">
-                    <ChatInterface 
-                        trackingCode={currentUser.tracking_code} 
-                        userName={currentUser.name || currentUser.email} 
+                {/* Settings Modal */}
+                {currentUser && (
+                    <SettingsModal 
+                        isOpen={isSettingsModalOpen}
+                        onClose={() => setIsSettingsModalOpen(false)}
+                        currentUser={currentUser}
                     />
-                </div>
-            </main>
-
-            {/* Settings Modal */}
-            {currentUser && (
-                <SettingsModal 
-                    isOpen={isSettingsModalOpen}
-                    onClose={() => setIsSettingsModalOpen(false)}
-                    currentUser={currentUser}
-                />
-            )}
-        </div>
+                )}
+            </div>
+        </SidebarProvider>
     );
 }
 
