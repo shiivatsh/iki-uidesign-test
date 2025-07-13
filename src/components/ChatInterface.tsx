@@ -139,7 +139,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 />
 
                                 {/* Right Side - Send Button */}
-                                <div className="absolute right-4 bottom-4">
+                                <div className="absolute right-3 bottom-3">
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={isLoading || !trackingCode || input.trim() === ''}
@@ -237,7 +237,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             />
                             
                             {/* Send Button */}
-                            <div className="absolute right-4 bottom-4">
+                            <div className="absolute right-3 bottom-3">
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !trackingCode || input.trim() === ''}
