@@ -354,7 +354,7 @@ function DashboardContent() {
                 
                 <main className="flex-1 flex flex-col min-w-0">
                     {/* Unified responsive header */}
-                    <header className="bg-background border-b border-border sticky top-0 z-50 flex-shrink-0">
+                    <header className="bg-background border-b-[0.5px] border-border sticky top-0 z-50 flex-shrink-0">
                         <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6">
                             {/* Left side - Mobile sidebar trigger and branding */}
                             <div className="flex items-center gap-3 md:gap-4">
@@ -377,7 +377,8 @@ function DashboardContent() {
                                             setPasswordSetError(null); 
                                             setPasswordSetSuccess(null); 
                                         }}
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border border-border rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border-[0.5px] border-border hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                                        style={{ borderRadius: 'var(--squircle, 12px)' }}
                                         aria-label="Security settings"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -391,7 +392,8 @@ function DashboardContent() {
                                 <div className="relative" ref={dropdownRef}>
                                     <button
                                         onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                        className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
+                                        className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
+                                        style={{ borderRadius: 'var(--squircle, 50%)' }}
                                     >
                                         <span className="text-xs md:text-sm font-semibold">
                                             {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
@@ -410,15 +412,15 @@ function DashboardContent() {
                         
                         {/* Status Messages */}
                         {passwordSetSuccess && (
-                            <div className="mx-4 md:mx-6 pb-3 border-t border-border">
-                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
+                            <div className="mx-4 md:mx-6 pb-3 border-t-[0.5px] border-border">
+                                <div className="mt-3 p-3 bg-green-50 border-[0.5px] border-green-200 animate-fade-in" style={{ borderRadius: 'var(--squircle, 8px)' }}>
                                     <p className="text-sm text-green-800">{passwordSetSuccess}</p>
                                 </div>
                             </div>
                         )}
                         {passwordSetError && (
-                            <div className="mx-4 md:mx-6 pb-3 border-t border-border">
-                                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+                            <div className="mx-4 md:mx-6 pb-3 border-t-[0.5px] border-border">
+                                <div className="mt-3 p-3 bg-red-50 border-[0.5px] border-red-200 animate-fade-in" style={{ borderRadius: 'var(--squircle, 8px)' }}>
                                     <p className="text-sm text-red-800">{passwordSetError}</p>
                                 </div>
                             </div>
@@ -426,8 +428,8 @@ function DashboardContent() {
                     </header>
 
                     {/* Password Modal */}
-                    {showPasswordModal && (
-                        <div className="bg-background/90 backdrop-blur-sm border-b border-border shadow-sm">
+                        {showPasswordModal && (
+                            <div className="bg-background/90 backdrop-blur-sm border-b-[0.5px] border-border shadow-sm">
                             <div className="p-4 md:p-6 max-w-md mx-auto">
                                 <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -443,7 +445,8 @@ function DashboardContent() {
                                             id="newPassword"
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
-                                            className="w-full px-4 py-3 border border-input rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
+                                            className="w-full px-4 py-3 border-[0.5px] border-input shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
+                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
                                             placeholder="Enter a secure password"
                                             required
                                         />
@@ -455,7 +458,8 @@ function DashboardContent() {
                                             id="confirmPassword"
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
-                                            className="w-full px-4 py-3 border border-input rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
+                                            className="w-full px-4 py-3 border-[0.5px] border-input shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
+                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
                                             placeholder="Confirm your password"
                                             required
                                         />
@@ -463,14 +467,16 @@ function DashboardContent() {
                                     <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 pt-2">
                                         <button 
                                             type="submit"
-                                            className="w-full sm:flex-1 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-md hover:shadow-lg"
+                                            className="w-full sm:flex-1 bg-primary text-primary-foreground px-4 py-3 font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-md hover:shadow-lg"
+                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
                                         >
                                             Save Password
                                         </button>
                                         <button 
                                             type="button"
                                             onClick={() => { setShowPasswordModal(false); setPasswordSetError(null); setNewPassword(''); setConfirmPassword(''); }}
-                                            className="w-full sm:w-auto px-4 py-3 text-muted-foreground bg-secondary rounded-lg font-medium hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
+                                            className="w-full sm:w-auto px-4 py-3 text-muted-foreground bg-secondary font-medium hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
+                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
                                         >
                                             Cancel
                                         </button>

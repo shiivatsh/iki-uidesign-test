@@ -125,14 +125,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         
                         {/* Responsive Input Field */}
                         <div className="relative w-full max-w-3xl mx-auto mb-6 md:mb-8">
-                            <div className="relative bg-background border border-input rounded-2xl md:rounded-3xl shadow-sm">
+                            <div className="relative bg-background border-[0.5px] border-input shadow-sm" style={{ borderRadius: '20px' }}>
                                 <textarea
                                     ref={inputRef}
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="Assign a task or ask anything"
-                                    className="w-full px-4 md:px-6 py-4 md:py-6 pr-14 md:pr-16 border-0 bg-transparent rounded-2xl md:rounded-3xl resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[80px] md:min-h-[96px]"
+                                    className="w-full px-4 md:px-6 py-4 md:py-6 pr-14 md:pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[80px] md:min-h-[96px]"
+                                    style={{ borderRadius: '20px' }}
                                     disabled={!trackingCode || isLoading}
                                     rows={1}
                                 />
@@ -142,7 +143,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-foreground text-background rounded-full hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
+                                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
+                                        style={{ borderRadius: 'var(--squircle, 50%)' }}
                                         title="Send message"
                                     >
                                         <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,11 +165,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         {messages.map((msg) => (
                             <div key={msg.id} className={`flex items-start gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
                                 {/* Avatar */}
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center ${
                                     msg.sender === 'user' 
                                         ? 'bg-primary text-primary-foreground' 
                                         : 'bg-secondary text-secondary-foreground'
-                                }`}>
+                                }`} style={{ borderRadius: 'var(--squircle, 50%)' }}>
                                     {msg.sender === 'user' ? (
                                         <span className="text-xs font-body font-medium">
                                             {userName?.charAt(0)?.toUpperCase() || 'U'}
@@ -192,7 +194,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         {/* Loading */}
                         {isLoading && (
                             <div className="flex items-start gap-4">
-                                <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                                <div className="w-8 h-8 bg-secondary flex items-center justify-center" style={{ borderRadius: 'var(--squircle, 50%)' }}>
                                     <Sparkles className="w-4 h-4 text-secondary-foreground animate-pulse" />
                                 </div>
                                 <div>
@@ -213,10 +215,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
 
             {/* Input Area - Only shown when there are messages */}
             {messages.length > 0 && (
-                <div className="border-t-thin border-border bg-background p-4">
+                <div className="border-t-[0.5px] border-border bg-background p-4">
                     <div className="max-w-3xl mx-auto">
                         {error && (
-                            <div className="mb-4 p-3 bg-destructive/10 border-thin border-destructive/20 rounded-lg text-destructive text-sm font-body">
+                            <div className="mb-4 p-3 bg-destructive/10 border-[0.5px] border-destructive/20 text-destructive text-sm font-body" style={{ borderRadius: 'var(--squircle, 8px)' }}>
                                 {error}
                             </div>
                         )}
@@ -228,10 +230,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Type a message..."
-                                className="w-full px-4 py-3 pr-20 border-thin border-input rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 bg-background font-body text-sm max-h-32 disabled:bg-muted text-foreground placeholder:text-muted-foreground"
+                                className="w-full px-4 py-3 pr-20 border-[0.5px] border-input resize-none focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 bg-background font-body text-sm max-h-32 disabled:bg-muted text-foreground placeholder:text-muted-foreground"
+                                style={{ borderRadius: '16px', minHeight: '48px' }}
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
-                                style={{ minHeight: '48px' }}
                             />
                             
                             {/* Send Button */}
@@ -239,7 +241,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-8 h-8 flex items-center justify-center bg-foreground text-background rounded-full hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
+                                    className="w-8 h-8 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
+                                    style={{ borderRadius: 'var(--squircle, 50%)' }}
                                     title="Send message"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
