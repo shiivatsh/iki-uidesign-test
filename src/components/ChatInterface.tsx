@@ -115,55 +115,54 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {/* Empty State / Welcome */}
             {messages.length === 0 && !isLoading && (
                 <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
-                    <div className="text-center w-full max-w-2xl mx-auto animate-fade-in">
+                    <div className="text-center w-full max-w-4xl mx-auto animate-fade-in">
                         {/* Welcome Text */}
                         <h1 className="text-3xl md:text-4xl font-title font-medium text-foreground mb-3">
                             Hello {userName?.split(' ')[0] || 'Shiva'}
                         </h1>
-                        <p className="text-lg font-body text-muted-foreground mb-8">
-                            How can I help you today?
-                        </p>
                         
                         {/* Centered Chat Input */}
-                        <div className="mb-8">
-                            <div className="flex items-center gap-3 bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 max-w-2xl mx-auto">
-                                <textarea
-                                    ref={inputRef}
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    onKeyPress={handleKeyPress}
-                                    placeholder="Type your message..."
-                                    className="flex-1 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
-                                    disabled={!trackingCode || isLoading}
-                                    rows={1}
-                                />
-                                
-                                {/* Activity Indicator */}
-                                {isLoading && (
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                                )}
-                                
-                                {/* Send Button */}
-                                <button
-                                    onClick={handleSendMessage}
-                                    disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
-                                    title="Send message"
-                                >
-                                    {isLoading ? (
-                                        <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                                    ) : (
-                                        <Send className="w-5 h-5" />
+                        <div className="mb-12">
+                            <div className="relative max-w-4xl mx-auto">
+                                <div className="flex items-center bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+                                    <textarea
+                                        ref={inputRef}
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        onKeyPress={handleKeyPress}
+                                        placeholder="Assign a task or ask anything"
+                                        className="flex-1 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
+                                        disabled={!trackingCode || isLoading}
+                                        rows={1}
+                                    />
+                                    
+                                    {/* Activity Indicator */}
+                                    {isLoading && (
+                                        <div className="w-2 h-2 bg-primary rounded-full animate-pulse mr-3" />
                                     )}
-                                </button>
-                            </div>
-                            
-                            {/* Error Message */}
-                            {error && (
-                                <div className="mt-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive text-sm font-body rounded-xl animate-fade-in max-w-2xl mx-auto">
-                                    {error}
+                                    
+                                    {/* Send Button */}
+                                    <button
+                                        onClick={handleSendMessage}
+                                        disabled={isLoading || !trackingCode || input.trim() === ''}
+                                        className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
+                                        title="Send message"
+                                    >
+                                        {isLoading ? (
+                                            <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                                        ) : (
+                                            <Send className="w-5 h-5" />
+                                        )}
+                                    </button>
                                 </div>
-                            )}
+                                
+                                {/* Error Message */}
+                                {error && (
+                                    <div className="mt-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive text-sm font-body rounded-xl animate-fade-in">
+                                        {error}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         
                         {/* Service Options Below */}
@@ -286,19 +285,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                 </div>
             )}
 
-            {/* Input Area */}
-            <div className="border-t border-border bg-background">
-                <div className="max-w-4xl mx-auto px-6 py-6">
-                    {/* Error Message */}
-                    {error && (
-                        <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive text-sm font-body rounded-xl animate-fade-in">
-                            {error}
-                        </div>
-                    )}
-                    
-                    {/* Simple Input Field Container */}
-                    <div className="relative">
-                        <div className="flex items-center gap-3 bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+            {/* Fixed Input at Bottom for Active Conversations */}
+            {messages.length > 0 && (
+                <div className="border-t border-border bg-background">
+                    <div className="max-w-4xl mx-auto px-6 py-6">
+                        <div className="flex items-center bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
                             <textarea
                                 ref={inputRef}
                                 value={input}
@@ -312,7 +303,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             
                             {/* Activity Indicator */}
                             {isLoading && (
-                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse mr-3" />
                             )}
                             
                             {/* Send Button */}
@@ -331,7 +322,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
