@@ -51,14 +51,14 @@ function DashboardContent() {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    // State for profile dropdown
+    // State for profile dropdown and chat mode
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-    // State for Settings Modal
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    const [showChat, setShowChat] = useState(false);
 
     const handleNewChat = () => {
-        // Reset any chat state if needed
-        console.log('New chat started');
+        setShowChat(true);
+        console.log('New chat started - switching to chat view');
     };
 
     const handleSettingsClick = () => {
@@ -375,7 +375,8 @@ function DashboardContent() {
                     </header>
 
                     {/* Main Dashboard Content */}
-                    <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+                    {!showChat ? (
+                        <main className="flex-1 p-6 space-y-6 overflow-y-auto">
                         {/* Quick Stats Cards */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div className="bg-card rounded-xl border p-6">
@@ -492,6 +493,25 @@ function DashboardContent() {
                             </div>
                         </div>
                     </main>
+                    ) : (
+                        <div className="flex-1 flex">
+                            <div className="flex-1 flex flex-col">
+                                <div className="flex-1 flex items-center justify-center p-6">
+                                    <div className="text-center max-w-md">
+                                        <div className="text-6xl mb-4">💬</div>
+                                        <h2 className="text-2xl font-bold text-foreground mb-2">Chat Interface</h2>
+                                        <p className="text-muted-foreground mb-6">This is where the ChatInterface component will be rendered for service booking.</p>
+                                        <button 
+                                            onClick={() => setShowChat(false)}
+                                            className="inline-flex items-center gap-2 px-6 py-3 bg-muted text-muted-foreground rounded-lg hover:bg-muted/80 transition-colors"
+                                        >
+                                            ← Back to Dashboard
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Settings Modal */}
                     <SettingsModal 
