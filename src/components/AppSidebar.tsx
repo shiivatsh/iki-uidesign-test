@@ -72,7 +72,7 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
   };
 
   return (
-    <Sidebar className={collapsed ? 'w-14' : 'w-80'} collapsible="icon">
+    <Sidebar className={collapsed ? 'w-14' : 'w-80 md:w-64 lg:w-80'} collapsible="icon">
       <SidebarContent className="flex flex-col h-full">
         {/* Header */}
         <div className="p-6 relative">

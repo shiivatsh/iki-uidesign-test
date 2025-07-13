@@ -349,13 +349,13 @@ function DashboardContent() {
     
     return (
         <SidebarProvider>
-            <div className="flex min-h-screen w-full bg-background">
+            <div className="min-h-screen flex w-full bg-background">
                 <AppSidebar onNewChat={handleNewChat} userData={currentUser} />
                 
                 <main className="flex-1 flex flex-col min-w-0">
                     {/* Unified responsive header */}
-                    <header className="bg-background border-b border-border sticky top-0 z-50">
-                        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
+                    <header className="bg-background border-b border-border sticky top-0 z-50 flex-shrink-0">
+                        <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6">
                             {/* Left side - Mobile sidebar trigger and branding */}
                             <div className="flex items-center gap-3 md:gap-4">
                                 <SidebarTrigger className="md:hidden" />
@@ -377,10 +377,10 @@ function DashboardContent() {
                                             setPasswordSetError(null); 
                                             setPasswordSetSuccess(null); 
                                         }}
-                                        className="md:flex md:items-center md:gap-2 md:px-3 md:py-2 md:text-sm md:font-medium md:bg-background md:border md:border-border md:rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-200 p-2 text-muted-foreground"
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border border-border rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-200"
                                         aria-label="Security settings"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
                                         <span className="hidden md:inline">Security</span>
@@ -391,7 +391,7 @@ function DashboardContent() {
                                 <div className="relative" ref={dropdownRef}>
                                     <button
                                         onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                        className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
+                                        className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
                                     >
                                         <span className="text-xs md:text-sm font-semibold">
                                             {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
@@ -410,13 +410,17 @@ function DashboardContent() {
                         
                         {/* Status Messages */}
                         {passwordSetSuccess && (
-                            <div className="mx-4 md:mx-6 mb-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
-                                <p className="text-sm text-green-800">{passwordSetSuccess}</p>
+                            <div className="mx-4 md:mx-6 pb-3 border-t border-border">
+                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
+                                    <p className="text-sm text-green-800">{passwordSetSuccess}</p>
+                                </div>
                             </div>
                         )}
                         {passwordSetError && (
-                            <div className="mx-4 md:mx-6 mb-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
-                                <p className="text-sm text-red-800">{passwordSetError}</p>
+                            <div className="mx-4 md:mx-6 pb-3 border-t border-border">
+                                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+                                    <p className="text-sm text-red-800">{passwordSetError}</p>
+                                </div>
                             </div>
                         )}
                     </header>
