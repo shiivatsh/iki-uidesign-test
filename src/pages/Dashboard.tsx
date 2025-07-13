@@ -355,24 +355,8 @@ function DashboardContent() {
                 <main className="flex-1 flex flex-col overflow-hidden">
                     {/* Enhanced Header */}
                     <header className="bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
-                        <div className="px-6 py-4">
-                            <div className="flex justify-between items-center">
-                            <div className="flex items-center space-x-4">
-                                <div className="flex items-center space-x-3">
-                                        {/* Ikiru Logo/Brand */}
-                                        <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-lg">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <h1 className="text-xl font-bold text-foreground">
-                                                Welcome back, {currentUser.name?.split(' ')[0] || currentUser.email?.split('@')[0]}
-                                            </h1>
-                                            <p className="text-sm text-muted-foreground">Your AI home service assistant</p>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div className="px-4 md:px-6 py-3">
+                            <div className="flex justify-end items-center">
                                 <div className="flex items-center space-x-3">
                                     {!showPasswordModal && (
                                         <button 
