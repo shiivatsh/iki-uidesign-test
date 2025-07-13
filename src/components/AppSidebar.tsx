@@ -101,6 +101,28 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
             </button>
           </div>
 
+          {/* Quick Actions */}
+          <div className="px-6 mb-6">
+            {!collapsed && (
+              <div className="w-full flex items-center justify-between py-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                <span>Quick Actions</span>
+              </div>
+            )}
+            <div className="space-y-3">
+              <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm">
+                <Plus className="w-4 h-4" />
+                {!collapsed && <span>Book New Service</span>}
+              </button>
+              
+              {!collapsed && (
+                <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-muted-foreground bg-muted rounded-xl hover:bg-muted/80 transition-colors">
+                  <Star className="w-4 h-4" />
+                  <span>Rate Last Service</span>
+                </button>
+              )}
+            </div>
+          </div>
+
           {/* Main Navigation */}
           <div className="px-6">
             <SidebarGroup className="flex-1">
@@ -181,27 +203,6 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
             </div>
           )}
 
-          {/* Quick Actions */}
-          <div className="px-6 mb-6">
-            {!collapsed && (
-              <div className="w-full flex items-center justify-between py-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-                <span>Quick Actions</span>
-              </div>
-            )}
-            <div className="space-y-3">
-              <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm">
-                <Plus className="w-4 h-4" />
-                {!collapsed && <span>Book New Service</span>}
-              </button>
-              
-              {!collapsed && (
-                <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-muted-foreground bg-muted rounded-xl hover:bg-muted/80 transition-colors">
-                  <Star className="w-4 h-4" />
-                  <span>Rate Last Service</span>
-                </button>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Fixed Bottom Section */}
