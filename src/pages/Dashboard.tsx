@@ -349,13 +349,57 @@ function DashboardContent() {
     
     return (
         <SidebarProvider>
-            <div className="flex h-screen w-full bg-background">
+            <div className="flex min-h-screen w-full bg-background">
                 <AppSidebar onNewChat={handleNewChat} userData={currentUser} />
                 
-                <main className="flex-1 flex flex-col overflow-hidden">
-                    {/* Enhanced Header */}
-                    <header className="bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
-                        <div className="px-4 md:px-6 py-3">
+                <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+                    {/* Mobile Header with Sidebar Trigger */}
+                    <header className="md:hidden bg-background border-b border-border sticky top-0 z-50">
+                        <div className="flex items-center justify-between px-4 py-3">
+                            <div className="flex items-center space-x-3">
+                                <SidebarTrigger />
+                                <h1 className="text-lg font-semibold text-foreground">Ikiru</h1>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                {!showPasswordModal && (
+                                    <button 
+                                        onClick={() => { 
+                                            setShowPasswordModal(true); 
+                                            setPasswordSetError(null); 
+                                            setPasswordSetSuccess(null); 
+                                        }}
+                                        className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                                        aria-label="Security settings"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                        </svg>
+                                    </button>
+                                )}
+                                <div className="relative" ref={dropdownRef}>
+                                    <button
+                                        onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                        className="flex items-center justify-center w-8 h-8 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
+                                    >
+                                        <span className="text-xs font-semibold">
+                                            {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
+                                        </span>
+                                    </button>
+                                    {isProfileDropdownOpen && currentUser && (
+                                        <ProfileDropdown
+                                            email={currentUser.email}
+                                            onSettingsClick={handleSettingsClick}
+                                            onLogoutClick={handleLogoutClick}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Desktop Header */}
+                    <header className="hidden md:block bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
+                        <div className="px-4 lg:px-6 py-3">
                             <div className="flex justify-end items-center">
                                 <div className="flex items-center space-x-3">
                                     {!showPasswordModal && (
@@ -365,7 +409,7 @@ function DashboardContent() {
                                                 setPasswordSetError(null); 
                                                 setPasswordSetSuccess(null); 
                                             }}
-                                            className="hidden md:flex items-center space-x-2 px-4 py-2 text-sm font-medium text-muted-foreground bg-background border border-border rounded-full hover:bg-accent hover:text-accent-foreground transition-all duration-200 shadow-sm hover:shadow-md"
+                                            className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-muted-foreground bg-background border border-border rounded-full hover:bg-accent hover:text-accent-foreground transition-all duration-200 shadow-sm hover:shadow-md"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -373,7 +417,6 @@ function DashboardContent() {
                                             <span>Security</span>
                                         </button>
                                     )}
-                                    {/* Enhanced Profile Avatar */}
                                     <div className="relative" ref={dropdownRef}>
                                         <button
                                             onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
@@ -393,6 +436,7 @@ function DashboardContent() {
                                     </div>
                                 </div>
                             </div>
+                            
                             {/* Status Messages */}
                             {passwordSetSuccess && (
                                 <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
@@ -410,7 +454,7 @@ function DashboardContent() {
                     {/* Password Modal */}
                     {showPasswordModal && (
                         <div className="bg-background/90 backdrop-blur-sm border-b border-border shadow-sm">
-                            <div className="p-6 max-w-md mx-auto">
+                            <div className="p-4 md:p-6 max-w-md mx-auto">
                                 <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -442,17 +486,17 @@ function DashboardContent() {
                                             required
                                         />
                                     </div>
-                                    <div className="flex items-center space-x-3 pt-2">
+                                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 pt-2">
                                         <button 
                                             type="submit"
-                                            className="flex-1 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-md hover:shadow-lg"
+                                            className="w-full sm:flex-1 bg-primary text-primary-foreground px-4 py-3 rounded-lg font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-md hover:shadow-lg"
                                         >
                                             Save Password
                                         </button>
                                         <button 
                                             type="button"
                                             onClick={() => { setShowPasswordModal(false); setPasswordSetError(null); setNewPassword(''); setConfirmPassword(''); }}
-                                            className="px-4 py-3 text-muted-foreground bg-secondary rounded-lg font-medium hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
+                                            className="w-full sm:w-auto px-4 py-3 text-muted-foreground bg-secondary rounded-lg font-medium hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
                                         >
                                             Cancel
                                         </button>
