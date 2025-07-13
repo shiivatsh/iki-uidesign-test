@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Send, Sparkles, Plus, Paperclip, Image, Mic } from 'lucide-react';
+import { Send, Sparkles, User, Bot } from 'lucide-react';
 
 // Use hardcoded API endpoint that works in Vite
 const API_ENDPOINTS = {
@@ -114,124 +114,161 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
         <div className="flex flex-col h-full bg-background">
             {/* Empty State / Welcome */}
             {messages.length === 0 && !isLoading && (
-                <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
-                    <div className="text-center w-full max-w-4xl mx-auto">
-                        <h1 className="text-2xl md:text-3xl font-title font-normal text-foreground mb-2">
+                <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 md:px-8">
+                    <div className="text-center w-full max-w-2xl mx-auto animate-fade-in">
+                        {/* Welcome Icon */}
+                        <div className="w-16 h-16 mx-auto mb-6 bg-primary/10 rounded-xl flex items-center justify-center">
+                            <Sparkles className="w-8 h-8 text-primary" />
+                        </div>
+                        
+                        {/* Welcome Text */}
+                        <h1 className="text-3xl md:text-4xl font-title font-medium text-foreground mb-3">
                             Hello {userName?.split(' ')[0] || 'there'}
                         </h1>
-                        <p className="text-base md:text-lg font-body text-muted-foreground mb-8 md:mb-16">
-                            What can I do for you?
+                        <p className="text-lg font-body text-muted-foreground mb-12">
+                            I'm your AI assistant for home services. How can I help you today?
                         </p>
                         
-                        {/* Responsive Input Field */}
-                        <div className="relative w-full max-w-3xl mx-auto mb-6 md:mb-8">
-                            <div className="relative bg-background border-[0.5px] border-input shadow-sm" style={{ borderRadius: '32px' }}>
-                                <textarea
-                                    ref={inputRef}
-                                    value={input}
-                                    onChange={(e) => setInput(e.target.value)}
-                                    onKeyPress={handleKeyPress}
-                                    placeholder="Assign a task or ask anything"
-                                    className="w-full px-4 md:px-6 py-4 md:py-6 pr-14 md:pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[80px] md:min-h-[96px]"
-                                    style={{ borderRadius: '32px' }}
-                                    disabled={!trackingCode || isLoading}
-                                    rows={1}
-                                />
-
-                                {/* Right Side - Send Button */}
-                                <div className="absolute right-3 bottom-3">
-                                    <button
-                                        onClick={handleSendMessage}
-                                        disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-7 h-7 md:w-9 md:h-9 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
-                                        style={{ borderRadius: 'var(--squircle, 50%)' }}
-                                        title="Send message"
-                                    >
-                                        <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
+                        {/* Starter Suggestions */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-12 max-w-xl mx-auto">
+                            {[
+                                "Schedule a house cleaning",
+                                "Book a plumbing service",
+                                "Find a reliable electrician",
+                                "Request maintenance help"
+                            ].map((suggestion, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setInput(suggestion)}
+                                    className="p-4 text-left bg-card border border-border rounded-xl hover:bg-accent/50 transition-all duration-200 hover:scale-[1.02] group"
+                                >
+                                    <span className="font-body text-sm text-foreground group-hover:text-accent-foreground">
+                                        {suggestion}
+                                    </span>
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>
             )}
 
-            {/* Messages */}
+            {/* Messages Area */}
             {messages.length > 0 && (
-                <div className="flex-1 overflow-y-auto p-4">
-                    <div className="max-w-3xl mx-auto space-y-6">
-                        {messages.map((msg) => (
-                            <div key={msg.id} className={`flex items-start gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                                {/* Avatar */}
-                                <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center ${
-                                    msg.sender === 'user' 
-                                        ? 'bg-primary text-primary-foreground' 
-                                        : 'bg-secondary text-secondary-foreground'
-                                }`} style={{ borderRadius: 'var(--squircle, 50%)' }}>
-                                    {msg.sender === 'user' ? (
-                                        <span className="text-xs font-body font-medium">
-                                            {userName?.charAt(0)?.toUpperCase() || 'U'}
-                                        </span>
-                                    ) : (
-                                        <Sparkles className="w-4 h-4" />
-                                    )}
-                                </div>
+                <div className="flex-1 overflow-y-auto">
+                    <div className="max-w-4xl mx-auto px-4 py-8">
+                        <div className="space-y-8">
+                            {messages.map((msg, index) => (
+                                <div
+                                    key={msg.id}
+                                    className={`group transition-all duration-300 animate-fade-in ${
+                                        msg.sender === 'user' ? 'ml-auto' : 'mr-auto'
+                                    }`}
+                                    style={{ animationDelay: `${index * 100}ms` }}
+                                >
+                                    <div className={`flex items-start gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+                                        {/* Avatar */}
+                                        <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center shadow-sm ${
+                                            msg.sender === 'user' 
+                                                ? 'bg-primary text-primary-foreground' 
+                                                : 'bg-accent text-accent-foreground'
+                                        }`}>
+                                            {msg.sender === 'user' ? (
+                                                <User className="w-5 h-5" />
+                                            ) : (
+                                                <Bot className="w-5 h-5" />
+                                            )}
+                                        </div>
 
-                                {/* Message */}
-                                <div className={`flex-1 ${msg.sender === 'user' ? 'text-right' : ''}`}>
-                                    <div className="text-sm font-body font-medium text-foreground mb-1">
-                                        {msg.sender === 'user' ? 'You' : 'Ikiru'}
-                                    </div>
-                                    <div className="text-foreground font-body text-sm leading-relaxed whitespace-pre-wrap">
-                                        {msg.content}
+                                        {/* Message Bubble */}
+                                        <div className={`flex-1 max-w-2xl ${msg.sender === 'user' ? 'text-right' : ''}`}>
+                                            {/* Sender Name */}
+                                            <div className={`text-xs font-body font-medium text-muted-foreground mb-2 ${
+                                                msg.sender === 'user' ? 'text-right' : 'text-left'
+                                            }`}>
+                                                {msg.sender === 'user' ? 'You' : 'Ikiru AI'}
+                                            </div>
+                                            
+                                            {/* Message Content */}
+                                            <div className={`inline-block px-6 py-4 rounded-2xl shadow-sm ${
+                                                msg.sender === 'user'
+                                                    ? 'bg-primary text-primary-foreground rounded-br-md'
+                                                    : 'bg-card border border-border rounded-bl-md'
+                                            }`}>
+                                                <div className={`font-body text-sm leading-relaxed whitespace-pre-wrap ${
+                                                    msg.sender === 'user' ? 'text-primary-foreground' : 'text-card-foreground'
+                                                }`}>
+                                                    {msg.content}
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Timestamp */}
+                                            <div className={`text-xs font-body text-muted-foreground mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
+                                                msg.sender === 'user' ? 'text-right' : 'text-left'
+                                            }`}>
+                                                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
 
-                        {/* Loading */}
-                        {isLoading && (
-                            <div className="flex items-start gap-4">
-                                <div className="w-8 h-8 bg-secondary flex items-center justify-center" style={{ borderRadius: 'var(--squircle, 50%)' }}>
-                                    <Sparkles className="w-4 h-4 text-secondary-foreground animate-pulse" />
-                                </div>
-                                <div>
-                                    <div className="text-sm font-body font-medium text-foreground mb-1">Ikiru</div>
-                                    <div className="flex items-center gap-1 text-muted-foreground">
-                                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            {/* Typing Indicator */}
+                            {isLoading && (
+                                <div className="animate-fade-in">
+                                    <div className="flex items-start gap-4">
+                                        {/* AI Avatar */}
+                                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-sm">
+                                            <Bot className="w-5 h-5" />
+                                        </div>
+
+                                        {/* Typing Animation */}
+                                        <div className="flex-1 max-w-2xl">
+                                            <div className="text-xs font-body font-medium text-muted-foreground mb-2">
+                                                Ikiru AI
+                                            </div>
+                                            <div className="inline-block px-6 py-4 bg-card border border-border rounded-2xl rounded-bl-md shadow-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-1">
+                                                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                                    </div>
+                                                    <span className="text-xs font-body text-muted-foreground ml-2">
+                                                        Thinking...
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                        
-                        <div ref={messagesEndRef} />
+                            )}
+                            
+                            <div ref={messagesEndRef} />
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* Input Area - Only shown when there are messages */}
-            {messages.length > 0 && (
-                <div className="border-t-[0.5px] border-border bg-background p-4">
-                    <div className="max-w-3xl mx-auto">
-                        {error && (
-                            <div className="mb-4 p-3 bg-destructive/10 border-[0.5px] border-destructive/20 text-destructive text-sm font-body" style={{ borderRadius: 'var(--squircle, 8px)' }}>
-                                {error}
-                            </div>
-                        )}
-                        
-                        <div className="relative">
-                            {/* Input Field */}
+            {/* Input Area */}
+            <div className="border-t border-border bg-background/80 backdrop-blur-sm">
+                <div className="max-w-4xl mx-auto px-4 py-4">
+                    {/* Error Message */}
+                    {error && (
+                        <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive text-sm font-body rounded-xl animate-fade-in">
+                            {error}
+                        </div>
+                    )}
+                    
+                    {/* Input Field Container */}
+                    <div className="relative">
+                        <div className="relative bg-card border border-border rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:border-ring transition-all duration-200">
                             <textarea
+                                ref={inputRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder="Type a message..."
-                                className="w-full px-4 py-3 pr-20 border-[0.5px] border-input resize-none focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 bg-background font-body text-sm max-h-32 disabled:bg-muted text-foreground placeholder:text-muted-foreground"
-                                style={{ borderRadius: '32px', minHeight: '48px' }}
+                                placeholder={messages.length === 0 ? "Start your conversation..." : "Type your message..."}
+                                className="w-full px-6 py-4 pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground rounded-2xl min-h-[56px] max-h-32"
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
                             />
@@ -241,19 +278,32 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-7 h-7 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200 shadow-lg"
-                                    style={{ borderRadius: 'var(--squircle, 50%)' }}
+                                    className="w-10 h-10 flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-xl shadow-sm hover:scale-105 active:scale-95"
                                     title="Send message"
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11l5-5m0 0l5 5m-5-5v12" />
-                                    </svg>
+                                    {isLoading ? (
+                                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                                    ) : (
+                                        <Send className="w-5 h-5" />
+                                    )}
                                 </button>
                             </div>
                         </div>
+                        
+                        {/* Input Helper Text */}
+                        <div className="flex items-center justify-between mt-2 px-2">
+                            <span className="text-xs font-body text-muted-foreground">
+                                Press Enter to send, Shift + Enter for new line
+                            </span>
+                            {input.length > 0 && (
+                                <span className="text-xs font-body text-muted-foreground">
+                                    {input.length}/2000
+                                </span>
+                            )}
+                        </div>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 };
