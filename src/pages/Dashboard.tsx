@@ -352,15 +352,24 @@ function DashboardContent() {
             <div className="flex min-h-screen w-full bg-background">
                 <AppSidebar onNewChat={handleNewChat} userData={currentUser} />
                 
-                <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-                    {/* Mobile Header with Sidebar Trigger */}
-                    <header className="md:hidden bg-background border-b border-border sticky top-0 z-50">
-                        <div className="flex items-center justify-between px-4 py-3">
-                            <div className="flex items-center space-x-3">
-                                <SidebarTrigger />
-                                <h1 className="text-lg font-semibold text-foreground">Ikiru</h1>
+                <main className="flex-1 flex flex-col min-w-0">
+                    {/* Unified responsive header */}
+                    <header className="bg-background border-b border-border sticky top-0 z-50">
+                        <div className="flex items-center justify-between px-4 md:px-6 py-3 md:py-4">
+                            {/* Left side - Mobile sidebar trigger and branding */}
+                            <div className="flex items-center gap-3 md:gap-4">
+                                <SidebarTrigger className="md:hidden" />
+                                <div className="md:hidden flex items-center gap-2">
+                                    <h1 className="text-lg font-semibold text-foreground">Ikiru</h1>
+                                </div>
+                                <div className="hidden md:block">
+                                    <h1 className="text-xl lg:text-2xl font-bold text-foreground">Dashboard</h1>
+                                </div>
                             </div>
-                            <div className="flex items-center space-x-3">
+                            
+                            {/* Right side - Actions and profile */}
+                            <div className="flex items-center gap-2 md:gap-3">
+                                {/* Security button */}
                                 {!showPasswordModal && (
                                     <button 
                                         onClick={() => { 
@@ -368,20 +377,23 @@ function DashboardContent() {
                                             setPasswordSetError(null); 
                                             setPasswordSetSuccess(null); 
                                         }}
-                                        className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+                                        className="md:flex md:items-center md:gap-2 md:px-3 md:py-2 md:text-sm md:font-medium md:bg-background md:border md:border-border md:rounded-lg hover:bg-accent hover:text-accent-foreground transition-all duration-200 p-2 text-muted-foreground"
                                         aria-label="Security settings"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                         </svg>
+                                        <span className="hidden md:inline">Security</span>
                                     </button>
                                 )}
+                                
+                                {/* Profile dropdown */}
                                 <div className="relative" ref={dropdownRef}>
                                     <button
                                         onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                        className="flex items-center justify-center w-8 h-8 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
+                                        className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
                                     >
-                                        <span className="text-xs font-semibold">
+                                        <span className="text-xs md:text-sm font-semibold">
                                             {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
                                         </span>
                                     </button>
@@ -395,60 +407,18 @@ function DashboardContent() {
                                 </div>
                             </div>
                         </div>
-                    </header>
-
-                    {/* Desktop Header */}
-                    <header className="hidden md:block bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
-                        <div className="px-4 lg:px-6 py-3">
-                            <div className="flex justify-end items-center">
-                                <div className="flex items-center space-x-3">
-                                    {!showPasswordModal && (
-                                        <button 
-                                            onClick={() => { 
-                                                setShowPasswordModal(true); 
-                                                setPasswordSetError(null); 
-                                                setPasswordSetSuccess(null); 
-                                            }}
-                                            className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-muted-foreground bg-background border border-border rounded-full hover:bg-accent hover:text-accent-foreground transition-all duration-200 shadow-sm hover:shadow-md"
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                            </svg>
-                                            <span>Security</span>
-                                        </button>
-                                    )}
-                                    <div className="relative" ref={dropdownRef}>
-                                        <button
-                                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                            className="flex items-center justify-center w-10 h-10 bg-primary rounded-full text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-3 focus:ring-ring transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-                                        >
-                                            <span className="text-sm font-semibold">
-                                                {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
-                                            </span>
-                                        </button>
-                                        {isProfileDropdownOpen && currentUser && (
-                                            <ProfileDropdown
-                                                email={currentUser.email}
-                                                onSettingsClick={handleSettingsClick}
-                                                onLogoutClick={handleLogoutClick}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
+                        
+                        {/* Status Messages */}
+                        {passwordSetSuccess && (
+                            <div className="mx-4 md:mx-6 mb-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
+                                <p className="text-sm text-green-800">{passwordSetSuccess}</p>
                             </div>
-                            
-                            {/* Status Messages */}
-                            {passwordSetSuccess && (
-                                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg animate-fade-in">
-                                    <p className="text-sm text-green-800">{passwordSetSuccess}</p>
-                                </div>
-                            )}
-                            {passwordSetError && (
-                                <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
-                                    <p className="text-sm text-red-800">{passwordSetError}</p>
-                                </div>
-                            )}
-                        </div>
+                        )}
+                        {passwordSetError && (
+                            <div className="mx-4 md:mx-6 mb-3 p-3 bg-red-50 border border-red-200 rounded-lg animate-fade-in">
+                                <p className="text-sm text-red-800">{passwordSetError}</p>
+                            </div>
+                        )}
                     </header>
 
                     {/* Password Modal */}
