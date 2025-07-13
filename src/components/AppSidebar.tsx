@@ -89,16 +89,6 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
               </div>
             )}
             
-            {/* New Chat Button */}
-            <button
-              onClick={onNewChat}
-              className={`w-full flex items-center gap-3 px-4 py-3 mt-4 rounded-xl border border-input hover:bg-accent hover:text-accent-foreground transition-colors ${
-                collapsed ? 'justify-center' : 'justify-start'
-              }`}
-            >
-              <Plus className="w-4 h-4" />
-              {!collapsed && <span className="font-medium">New Chat</span>}
-            </button>
           </div>
 
           {/* Quick Actions */}
