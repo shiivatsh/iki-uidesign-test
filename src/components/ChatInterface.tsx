@@ -132,39 +132,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="Assign a task or ask anything"
-                                    className="w-full px-4 md:px-6 py-3 md:py-4 pl-16 md:pl-20 pr-14 md:pr-16 border-0 bg-transparent rounded-2xl md:rounded-3xl resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[56px] md:min-h-[64px]"
+                                    className="w-full px-4 md:px-6 py-4 md:py-6 pr-14 md:pr-16 border-0 bg-transparent rounded-2xl md:rounded-3xl resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[80px] md:min-h-[96px]"
                                     disabled={!trackingCode || isLoading}
                                     rows={1}
                                 />
-                                
-                                {/* Left Side - Plus and Tools */}
-                                <div className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2 md:gap-3">
-                                    <button
-                                        disabled
-                                        className="w-5 h-5 md:w-6 md:h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
-                                        title="Add attachment"
-                                    >
-                                        <Plus className="w-4 h-4 md:w-5 md:h-5" />
-                                    </button>
-                                    <span className="text-xs md:text-sm text-muted-foreground font-body hidden sm:inline">Tools</span>
-                                </div>
 
-                                {/* Right Side - Mic and Send */}
-                                <div className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-1 md:gap-2">
-                                    <button
-                                        disabled
-                                        className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors duration-200 disabled:opacity-40"
-                                        title="Voice input"
-                                    >
-                                        <Mic className="w-4 h-4 md:w-5 md:h-5" />
-                                    </button>
+                                {/* Right Side - Send Button */}
+                                <div className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2">
                                     <button
                                         onClick={handleSendMessage}
                                         disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-6 h-6 md:w-8 md:h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
+                                        className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-primary text-primary-foreground rounded-full hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
                                         title="Send message"
                                     >
-                                        <Send className="w-3 h-3 md:w-4 md:h-4" />
+                                        <Send className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
                                 </div>
                             </div>
@@ -251,28 +232,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 style={{ minHeight: '48px' }}
                             />
                             
-                            {/* Action Buttons */}
-                            <div className="absolute right-2 bottom-2 flex items-center gap-1">
-                                <button
-                                    disabled
-                                    className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-40"
-                                    title="Attach file"
-                                >
-                                    <Paperclip className="w-4 h-4" />
-                                </button>
-                                
-                                <button
-                                    disabled
-                                    className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors duration-200 disabled:opacity-40"
-                                    title="Add image"
-                                >
-                                    <Image className="w-4 h-4" />
-                                </button>
-
+                            {/* Send Button */}
+                            <div className="absolute right-2 bottom-2">
                                 <button
                                     onClick={handleSendMessage}
                                     disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
+                                    className="w-8 h-8 flex items-center justify-center bg-primary text-primary-foreground rounded-full hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-200"
                                     title="Send message"
                                 >
                                     <Send className="w-4 h-4" />
