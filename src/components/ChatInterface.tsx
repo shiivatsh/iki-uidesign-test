@@ -123,11 +123,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         
                         {/* Centered Chat Input */}
                         <div className="mb-12">
-                            <div className="relative max-w-4xl mx-auto">
+                            <div className="relative w-full max-w-[765px] mx-auto">
                                 <div 
-                                    className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4"
+                                    className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4 w-full h-[116px]"
                                     style={{ 
-                                        '--squircle': '32px',
+                                        '--squircle': '20px',
                                         borderRadius: 'var(--squircle)',
                                         clipPath: `inset(0 round var(--squircle))`
                                     } as React.CSSProperties}
@@ -138,7 +138,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                         onChange={(e) => setInput(e.target.value)}
                                         onKeyPress={handleKeyPress}
                                         placeholder="Assign a task or ask anything"
-                                        className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
+                                        className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground h-full"
                                         disabled={!trackingCode || isLoading}
                                         rows={1}
                                     />
@@ -154,7 +154,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                             {isLoading ? (
                                                 <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
                                             ) : (
-                                                <Send className="w-5 h-5" />
+                                                <svg 
+                                                    className="w-5 h-5" 
+                                                    fill="currentColor" 
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M12 2L12 22M12 2L5 9M12 2L19 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                                                </svg>
                                             )}
                                         </button>
                                     </div>
@@ -292,11 +298,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {/* Fixed Input at Bottom for Active Conversations */}
             {messages.length > 0 && (
                 <div className="border-t border-border bg-background">
-                    <div className="max-w-4xl mx-auto px-6 py-6">
+                    <div className="w-full max-w-[765px] mx-auto px-6 py-6">
                         <div 
-                            className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4"
+                            className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4 w-full h-[116px]"
                             style={{ 
-                                '--squircle': '32px',
+                                '--squircle': '20px',
                                 borderRadius: 'var(--squircle)',
                                 clipPath: `inset(0 round var(--squircle))`
                             } as React.CSSProperties}
@@ -307,7 +313,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Type your message..."
-                                className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
+                                className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground h-full"
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
                             />
@@ -323,7 +329,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     {isLoading ? (
                                         <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
                                     ) : (
-                                        <Send className="w-5 h-5" />
+                                        <svg 
+                                            className="w-5 h-5" 
+                                            fill="currentColor" 
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path d="M12 2L12 22M12 2L5 9M12 2L19 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                                        </svg>
                                     )}
                                 </button>
                             </div>
