@@ -355,21 +355,84 @@ function DashboardContent() {
                 <div className="flex-1 flex flex-col min-w-0">
                     {/* Unified responsive header */}
                     <header className="bg-background border-b-[0.5px] border-border sticky top-0 z-50 flex-shrink-0">
-                        <div className="px-6 py-4 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <SidebarTrigger className="lg:hidden" />
-                                <div>
-                                    <h1 className="text-xl font-semibold text-foreground">Welcome back, {currentUser.name}</h1>
-                                    <p className="text-sm text-muted-foreground">Manage your home services and track your impact</p>
+                        <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6">
+                            {/* Left side - Mobile sidebar trigger and branding */}
+                            <div className="flex items-center gap-3 md:gap-4">
+                                <SidebarTrigger className="md:hidden" />
+                                <div className="md:hidden flex items-center gap-2">
+                                    <h1 className="text-lg font-semibold text-foreground">Ikiru</h1>
+                                </div>
+                                <div className="hidden md:block">
+                                    <h1 className="text-xl lg:text-2xl font-bold text-foreground">Dashboard</h1>
                                 </div>
                             </div>
                             
-                            <div className="flex items-center gap-2" ref={dropdownRef}>
-                                <ProfileDropdown
-                                    email={currentUser.email}
-                                    onSettingsClick={handleSettingsClick}
-                                    onLogoutClick={handleLogoutClick}
-                                />
+                            {/* Right side - Actions and profile */}
+                            <div className="flex items-center gap-2 md:gap-3">
+                                {/* Security button */}
+                                {!showPasswordModal && (
+                                    <button 
+                                        onClick={() => { 
+                                            setShowPasswordModal(true); 
+                                            setPasswordSetError(null); 
+                                            setPasswordSetSuccess(null); 
+                                        }}
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border-[0.5px] border-border hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                                        style={{ borderRadius: 'var(--squircle, 8px)' }}
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                        </svg>
+                                        <span className="hidden sm:inline">Security</span>
+                                    </button>
+                                )}
+
+                                {/* Mobile menu for additional options */}
+                                <div className="md:hidden relative" ref={dropdownRef}>
+                                    <button
+                                        onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border-[0.5px] border-border hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+                                        style={{ borderRadius: 'var(--squircle, 8px)' }}
+                                    >
+                                        <Menu className="w-4 h-4" />
+                                    </button>
+                                    
+                                    {isProfileDropdownOpen && (
+                                        <ProfileDropdown
+                                            email={currentUser.email}
+                                            onSettingsClick={handleSettingsClick}
+                                            onLogoutClick={handleLogoutClick}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* Desktop profile section */}
+                                <div className="hidden md:flex items-center gap-3">
+                                    <div className="text-right">
+                                        <p className="text-sm font-medium text-foreground">{currentUser.name}</p>
+                                        <p className="text-xs text-muted-foreground">{currentUser.email}</p>
+                                    </div>
+                                    
+                                    <div className="relative" ref={dropdownRef}>
+                                        <button
+                                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                            className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white hover:from-blue-600 hover:to-indigo-700 transition-all duration-200"
+                                            style={{ borderRadius: 'var(--squircle, 50%)' }}
+                                        >
+                                            <span className="text-sm font-semibold">
+                                                {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
+                                            </span>
+                                        </button>
+                                        
+                                        {isProfileDropdownOpen && (
+                                            <ProfileDropdown
+                                                email={currentUser.email}
+                                                onSettingsClick={handleSettingsClick}
+                                                onLogoutClick={handleLogoutClick}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </header>
