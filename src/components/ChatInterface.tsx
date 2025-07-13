@@ -125,7 +125,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         
                         {/* Responsive Input Field */}
                         <div className="relative w-full max-w-3xl mx-auto mb-6 md:mb-8">
-                            <div className="relative bg-background border-[0.5px] border-input shadow-sm" style={{ borderRadius: '20px' }}>
+                            <div className="relative bg-background border-[0.5px] border-input shadow-sm" style={{ borderRadius: '32px' }}>
                                 <textarea
                                     ref={inputRef}
                                     value={input}
@@ -133,7 +133,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     onKeyPress={handleKeyPress}
                                     placeholder="Assign a task or ask anything"
                                     className="w-full px-4 md:px-6 py-4 md:py-6 pr-14 md:pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-sm md:text-base text-foreground placeholder:text-muted-foreground min-h-[80px] md:min-h-[96px]"
-                                    style={{ borderRadius: '20px' }}
+                                    style={{ borderRadius: '32px' }}
                                     disabled={!trackingCode || isLoading}
                                     rows={1}
                                 />
@@ -231,7 +231,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 onKeyPress={handleKeyPress}
                                 placeholder="Type a message..."
                                 className="w-full px-4 py-3 pr-20 border-[0.5px] border-input resize-none focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200 bg-background font-body text-sm max-h-32 disabled:bg-muted text-foreground placeholder:text-muted-foreground"
-                                style={{ borderRadius: '16px', minHeight: '48px' }}
+                                style={{ borderRadius: '32px', minHeight: '48px' }}
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
                             />
