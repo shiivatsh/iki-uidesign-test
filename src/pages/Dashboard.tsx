@@ -54,11 +54,16 @@ function DashboardContent() {
     // State for profile dropdown and chat mode
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-    const [showChat, setShowChat] = useState(false);
+    const [showChat, setShowChat] = useState(true); // Default to chat mode
 
     const handleNewChat = () => {
         setShowChat(true);
         console.log('New chat started - switching to chat view');
+    };
+
+    const handleDashboardClick = () => {
+        setShowChat(false);
+        console.log('Dashboard clicked - switching to overview');
     };
 
     const handleSettingsClick = () => {
@@ -350,7 +355,7 @@ function DashboardContent() {
     return (
         <SidebarProvider>
             <div className="min-h-screen flex w-full bg-background">
-                <AppSidebar onNewChat={handleNewChat} userData={currentUser} />
+                <AppSidebar onNewChat={handleNewChat} onDashboardClick={handleDashboardClick} userData={currentUser} />
                 
                 <div className="flex-1 flex flex-col min-w-0">
                     {/* Unified responsive header */}

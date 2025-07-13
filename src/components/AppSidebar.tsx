@@ -24,10 +24,11 @@ const navigationItems = [
 
 interface AppSidebarProps {
   onNewChat?: () => void;
+  onDashboardClick?: () => void;
   userData?: any;
 }
 
-export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
+export function AppSidebar({ onNewChat, onDashboardClick, userData }: AppSidebarProps) {
   const { state } = useSidebar();
   const collapsed = state === 'collapsed';
   const location = useLocation();
@@ -92,7 +93,10 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
 
           <div className="px-6 mb-6">
             <div className="space-y-3">
-              <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm">
+              <button 
+                onClick={onNewChat}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm"
+              >
                 <Plus className="w-4 h-4" />
                 {!collapsed && <span>Book New Service</span>}
               </button>
@@ -112,7 +116,21 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
               {!collapsed && <SidebarGroupLabel className="px-0">Navigation</SidebarGroupLabel>}
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {navigationItems.map((item) => (
+                  {/* Dashboard button */}
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild>
+                      <button 
+                        onClick={onDashboardClick}
+                        className={getNavCls({ isActive: currentPath === '/dashboard' })}
+                      >
+                        <Home className="w-4 h-4" />
+                        {!collapsed && <span>Dashboard</span>}
+                      </button>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  
+                  {/* Other navigation items */}
+                  {navigationItems.slice(1).map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
                         <NavLink 
