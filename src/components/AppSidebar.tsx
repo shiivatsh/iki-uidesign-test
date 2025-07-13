@@ -184,9 +184,9 @@ export function AppSidebar({ onNewChat, userData }: AppSidebarProps) {
         {/* Quick Actions */}
         <div className="px-6 mb-6">
           {!collapsed && (
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-              Quick Actions
-            </h3>
+            <div className="w-full flex items-center justify-between py-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+              <span>Quick Actions</span>
+            </div>
           )}
           <div className="space-y-3">
             <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-primary-foreground bg-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm">
