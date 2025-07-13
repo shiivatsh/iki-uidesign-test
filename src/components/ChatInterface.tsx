@@ -124,36 +124,33 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         {/* Centered Chat Input */}
                         <div className="mb-12">
                             <div className="relative max-w-4xl mx-auto">
-                                <div className="flex items-center bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+                                <div className="relative bg-white border border-border rounded-[32px] px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
                                     <textarea
                                         ref={inputRef}
                                         value={input}
                                         onChange={(e) => setInput(e.target.value)}
                                         onKeyPress={handleKeyPress}
                                         placeholder="Assign a task or ask anything"
-                                        className="flex-1 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
+                                        className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
                                         disabled={!trackingCode || isLoading}
                                         rows={1}
                                     />
                                     
-                                    {/* Activity Indicator */}
-                                    {isLoading && (
-                                        <div className="w-2 h-2 bg-primary rounded-full animate-pulse mr-3" />
-                                    )}
-                                    
                                     {/* Send Button */}
-                                    <button
-                                        onClick={handleSendMessage}
-                                        disabled={isLoading || !trackingCode || input.trim() === ''}
-                                        className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
-                                        title="Send message"
-                                    >
-                                        {isLoading ? (
-                                            <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                                        ) : (
-                                            <Send className="w-5 h-5" />
-                                        )}
-                                    </button>
+                                    <div className="absolute right-3 bottom-3">
+                                        <button
+                                            onClick={handleSendMessage}
+                                            disabled={isLoading || !trackingCode || input.trim() === ''}
+                                            className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
+                                            title="Send message"
+                                        >
+                                            {isLoading ? (
+                                                <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                                            ) : (
+                                                <Send className="w-5 h-5" />
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 {/* Error Message */}
@@ -289,36 +286,33 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {messages.length > 0 && (
                 <div className="border-t border-border bg-background">
                     <div className="max-w-4xl mx-auto px-6 py-6">
-                        <div className="flex items-center bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+                        <div className="relative bg-white border border-border rounded-[32px] px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
                             <textarea
                                 ref={inputRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
                                 placeholder="Type your message..."
-                                className="flex-1 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
+                                className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
                             />
                             
-                            {/* Activity Indicator */}
-                            {isLoading && (
-                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse mr-3" />
-                            )}
-                            
                             {/* Send Button */}
-                            <button
-                                onClick={handleSendMessage}
-                                disabled={isLoading || !trackingCode || input.trim() === ''}
-                                className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
-                                title="Send message"
-                            >
-                                {isLoading ? (
-                                    <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                                ) : (
-                                    <Send className="w-5 h-5" />
-                                )}
-                            </button>
+                            <div className="absolute right-3 bottom-3">
+                                <button
+                                    onClick={handleSendMessage}
+                                    disabled={isLoading || !trackingCode || input.trim() === ''}
+                                    className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
+                                    title="Send message"
+                                >
+                                    {isLoading ? (
+                                        <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                                    ) : (
+                                        <Send className="w-5 h-5" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
