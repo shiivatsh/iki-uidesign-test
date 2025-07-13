@@ -345,7 +345,7 @@ function DashboardContent() {
         return <LoadingFallback />;
     }
 
-    console.log(`[Dashboard] Rendering main dashboard with ChatInterface for user: ${currentUser.email}`);
+    console.log(`[Dashboard] Rendering main dashboard overview for user: ${currentUser.email}`);
     
     return (
         <SidebarProvider>
@@ -355,161 +355,156 @@ function DashboardContent() {
                 <div className="flex-1 flex flex-col min-w-0">
                     {/* Unified responsive header */}
                     <header className="bg-background border-b-[0.5px] border-border sticky top-0 z-50 flex-shrink-0">
-                        <div className="flex items-center justify-between h-14 md:h-16 px-4 md:px-6">
-                            {/* Left side - Mobile sidebar trigger and branding */}
-                            <div className="flex items-center gap-3 md:gap-4">
-                                <SidebarTrigger className="md:hidden" />
-                                <div className="md:hidden flex items-center gap-2">
-                                    <h1 className="text-lg font-semibold text-foreground">Ikiru</h1>
-                                </div>
-                                <div className="hidden md:block">
-                                    <h1 className="text-xl lg:text-2xl font-bold text-foreground">Dashboard</h1>
+                        <div className="px-6 py-4 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                                <SidebarTrigger className="lg:hidden" />
+                                <div>
+                                    <h1 className="text-xl font-semibold text-foreground">Welcome back, {currentUser.name}</h1>
+                                    <p className="text-sm text-muted-foreground">Manage your home services and track your impact</p>
                                 </div>
                             </div>
                             
-                            {/* Right side - Actions and profile */}
-                            <div className="flex items-center gap-2 md:gap-3">
-                                {/* Security button */}
-                                {!showPasswordModal && (
-                                    <button 
-                                        onClick={() => { 
-                                            setShowPasswordModal(true); 
-                                            setPasswordSetError(null); 
-                                            setPasswordSetSuccess(null); 
-                                        }}
-                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground bg-background border-[0.5px] border-border hover:bg-accent hover:text-accent-foreground transition-all duration-200"
-                                        style={{ borderRadius: 'var(--squircle, 12px)' }}
-                                        aria-label="Security settings"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                        </svg>
-                                        <span className="hidden md:inline">Security</span>
-                                    </button>
-                                )}
-                                
-                                {/* Profile dropdown */}
-                                <div className="relative" ref={dropdownRef}>
-                                    <button
-                                        onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                                        className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring transition-all duration-200"
-                                        style={{ borderRadius: 'var(--squircle, 50%)' }}
-                                    >
-                                        <span className="text-xs md:text-sm font-semibold">
-                                            {(currentUser.name?.charAt(0) || currentUser.email?.charAt(0) || 'U').toUpperCase()}
-                                        </span>
-                                    </button>
-                                    {isProfileDropdownOpen && currentUser && (
-                                        <ProfileDropdown
-                                            email={currentUser.email}
-                                            onSettingsClick={handleSettingsClick}
-                                            onLogoutClick={handleLogoutClick}
-                                        />
-                                    )}
-                                </div>
+                            <div className="flex items-center gap-2" ref={dropdownRef}>
+                                <ProfileDropdown
+                                    email={currentUser.email}
+                                    onSettingsClick={handleSettingsClick}
+                                    onLogoutClick={handleLogoutClick}
+                                />
                             </div>
                         </div>
-                        
-                        {/* Status Messages */}
-                        {passwordSetSuccess && (
-                            <div className="mx-4 md:mx-6 pb-3 border-t-[0.5px] border-border">
-                                <div className="mt-3 p-3 bg-green-50 border-[0.5px] border-green-200 animate-fade-in" style={{ borderRadius: 'var(--squircle, 8px)' }}>
-                                    <p className="text-sm text-green-800">{passwordSetSuccess}</p>
-                                </div>
-                            </div>
-                        )}
-                        {passwordSetError && (
-                            <div className="mx-4 md:mx-6 pb-3 border-t-[0.5px] border-border">
-                                <div className="mt-3 p-3 bg-red-50 border-[0.5px] border-red-200 animate-fade-in" style={{ borderRadius: 'var(--squircle, 8px)' }}>
-                                    <p className="text-sm text-red-800">{passwordSetError}</p>
-                                </div>
-                            </div>
-                        )}
                     </header>
 
-                    {/* Password Modal */}
-                        {showPasswordModal && (
-                            <div className="bg-background/90 backdrop-blur-sm border-b-[0.5px] border-border shadow-sm">
-                            <div className="p-4 md:p-6 max-w-md mx-auto">
-                                <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                    </svg>
-                                    Set Your Password
-                                </h3>
-                                <form onSubmit={handleSetPasswordSubmit} className="space-y-4">
-                                    <div>
-                                        <label htmlFor="newPassword" className="block text-sm font-medium text-foreground mb-1">New Password</label>
-                                        <input 
-                                            type="password" 
-                                            id="newPassword"
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
-                                            className="w-full px-4 py-3 border-[0.5px] border-input shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
-                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
-                                            placeholder="Enter a secure password"
-                                            required
-                                        />
+                    {/* Main Dashboard Content */}
+                    <main className="flex-1 p-6 space-y-6 overflow-y-auto">
+                        {/* Quick Stats Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="bg-card rounded-xl border p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                        <span className="text-xl">🏠</span>
                                     </div>
                                     <div>
-                                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-1">Confirm Password</label>
-                                        <input 
-                                            type="password" 
-                                            id="confirmPassword"
-                                            value={confirmPassword}
-                                            onChange={(e) => setConfirmPassword(e.target.value)}
-                                            className="w-full px-4 py-3 border-[0.5px] border-input shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-colors bg-background text-foreground"
-                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
-                                            placeholder="Confirm your password"
-                                            required
-                                        />
+                                        <h3 className="text-lg font-semibold text-foreground">{currentUser.service_history?.length || 0}</h3>
+                                        <p className="text-sm text-muted-foreground">Total Services</p>
                                     </div>
-                                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 pt-2">
-                                        <button 
-                                            type="submit"
-                                            className="w-full sm:flex-1 bg-primary text-primary-foreground px-4 py-3 font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-all duration-200 shadow-md hover:shadow-lg"
-                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
-                                        >
-                                            Save Password
-                                        </button>
-                                        <button 
-                                            type="button"
-                                            onClick={() => { setShowPasswordModal(false); setPasswordSetError(null); setNewPassword(''); setConfirmPassword(''); }}
-                                            className="w-full sm:w-auto px-4 py-3 text-muted-foreground bg-secondary font-medium hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring transition-colors"
-                                            style={{ borderRadius: 'var(--squircle, 8px)' }}
-                                        >
-                                            Cancel
-                                        </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-card rounded-xl border p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <span className="text-xl">🌊</span>
                                     </div>
-                                </form>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-foreground">80g</h3>
+                                        <p className="text-sm text-muted-foreground">Plastic Removed</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-card rounded-xl border p-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <span className="text-xl">⭐</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-foreground">4.8</h3>
+                                        <p className="text-sm text-muted-foreground">Avg Rating</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    )}
 
-                    {/* Chat Interface */}
-                    <div className="flex-1 overflow-hidden">
-                        <ChatInterface 
-                            trackingCode={currentUser.tracking_code} 
-                            userName={currentUser.name || currentUser.email} 
-                        />
-                    </div>
-                </div>
+                        {/* Quick Action - Book Service */}
+                        <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-xl border border-primary/20 p-8">
+                            <div className="text-center">
+                                <h2 className="text-2xl font-bold text-foreground mb-2">Need a service?</h2>
+                                <p className="text-muted-foreground mb-6">Start a conversation to book your next home service</p>
+                                <button 
+                                    onClick={handleNewChat}
+                                    className="inline-flex items-center gap-3 px-8 py-4 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors font-medium text-lg"
+                                >
+                                    <span className="text-xl">💬</span>
+                                    Start Service Booking
+                                </button>
+                            </div>
+                        </div>
 
-                {/* Settings Modal */}
-                {currentUser && (
+                        {/* Recent Activity */}
+                        <div className="bg-card rounded-xl border p-6">
+                            <h3 className="text-lg font-semibold text-foreground mb-4">Recent Activity</h3>
+                            {currentUser.service_history && currentUser.service_history.length > 0 ? (
+                                <div className="space-y-4">
+                                    {currentUser.service_history.slice(0, 3).map((service: any, index: number) => (
+                                        <div key={index} className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors cursor-pointer">
+                                            <div className="text-2xl">
+                                                {service.service_type.toLowerCase().includes('clean') ? '🧹' : 
+                                                 service.service_type.toLowerCase().includes('plumb') ? '🚿' : 
+                                                 service.service_type.toLowerCase().includes('electric') ? '⚡' : '🏠'}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-medium text-foreground capitalize">{service.service_type}</h4>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {new Date(service.date).toLocaleDateString('en-US', { 
+                                                        month: 'long', 
+                                                        day: 'numeric', 
+                                                        year: 'numeric' 
+                                                    })}
+                                                </p>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className="text-sm text-primary font-medium">View Chat →</span>
+                                            </div>
+                                        </div>
+                                    ))
+                                    }
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="text-4xl mb-4">📝</div>
+                                    <p className="text-muted-foreground">No service history yet</p>
+                                    <p className="text-sm text-muted-foreground mt-1">Your completed services will appear here</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Your Impact Section */}
+                        <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-6">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                                    <span className="text-xl text-white">🌊</span>
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-semibold text-blue-900">Your Environmental Impact</h3>
+                                    <p className="text-sm text-blue-700">Making a difference, one service at a time</p>
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="text-center p-4 bg-white/50 rounded-lg">
+                                    <div className="text-2xl font-bold text-blue-600">80g</div>
+                                    <div className="text-sm text-blue-700">Plastic Removed</div>
+                                </div>
+                                <div className="text-center p-4 bg-white/50 rounded-lg">
+                                    <div className="text-2xl font-bold text-blue-600">4</div>
+                                    <div className="text-sm text-blue-700">Bottles Worth</div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Settings Modal */}
                     <SettingsModal 
                         isOpen={isSettingsModalOpen}
                         onClose={() => setIsSettingsModalOpen(false)}
                         currentUser={currentUser}
                     />
-                )}
+                </div>
             </div>
         </SidebarProvider>
     );
 }
 
-const DashboardPage: FunctionComponent = () => {
+export default function Dashboard() {
     return <DashboardContent />;
-};
-
-export default DashboardPage;
+}
