@@ -250,8 +250,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             )}
 
             {/* Input Area */}
-            <div className="border-t border-border bg-background/80 backdrop-blur-sm">
-                <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="border-t border-border bg-background">
+                <div className="max-w-4xl mx-auto px-6 py-6">
                     {/* Error Message */}
                     {error && (
                         <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive text-sm font-body rounded-xl animate-fade-in">
@@ -259,47 +259,38 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         </div>
                     )}
                     
-                    {/* Input Field Container */}
+                    {/* Simple Input Field Container */}
                     <div className="relative">
-                        <div className="relative bg-card border border-border rounded-2xl shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:border-ring transition-all duration-200">
+                        <div className="flex items-center gap-3 bg-white border border-border rounded-full px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
                             <textarea
                                 ref={inputRef}
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={handleKeyPress}
-                                placeholder={messages.length === 0 ? "Start your conversation..." : "Type your message..."}
-                                className="w-full px-6 py-4 pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground rounded-2xl min-h-[56px] max-h-32"
+                                placeholder="Type your message..."
+                                className="flex-1 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground min-h-[24px] max-h-32"
                                 disabled={!trackingCode || isLoading}
                                 rows={1}
                             />
                             
-                            {/* Send Button */}
-                            <div className="absolute right-3 bottom-3">
-                                <button
-                                    onClick={handleSendMessage}
-                                    disabled={isLoading || !trackingCode || input.trim() === ''}
-                                    className="w-10 h-10 flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-xl shadow-sm hover:scale-105 active:scale-95"
-                                    title="Send message"
-                                >
-                                    {isLoading ? (
-                                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                                    ) : (
-                                        <Send className="w-5 h-5" />
-                                    )}
-                                </button>
-                            </div>
-                        </div>
-                        
-                        {/* Input Helper Text */}
-                        <div className="flex items-center justify-between mt-2 px-2">
-                            <span className="text-xs font-body text-muted-foreground">
-                                Press Enter to send, Shift + Enter for new line
-                            </span>
-                            {input.length > 0 && (
-                                <span className="text-xs font-body text-muted-foreground">
-                                    {input.length}/2000
-                                </span>
+                            {/* Activity Indicator */}
+                            {isLoading && (
+                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
                             )}
+                            
+                            {/* Send Button */}
+                            <button
+                                onClick={handleSendMessage}
+                                disabled={isLoading || !trackingCode || input.trim() === ''}
+                                className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
+                                title="Send message"
+                            >
+                                {isLoading ? (
+                                    <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                                ) : (
+                                    <Send className="w-5 h-5" />
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>
