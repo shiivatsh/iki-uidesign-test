@@ -350,7 +350,7 @@ function DashboardContent() {
     return (
         <SidebarProvider>
             <div className="flex h-screen w-full bg-background">
-                <AppSidebar onNewChat={handleNewChat} />
+                <AppSidebar onNewChat={handleNewChat} userData={currentUser} />
                 
                 <main className="flex-1 flex flex-col overflow-hidden">
                     {/* Enhanced Header */}
