@@ -124,7 +124,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         {/* Centered Chat Input */}
                         <div className="mb-12">
                             <div className="relative max-w-4xl mx-auto">
-                                <div className="relative bg-white border border-border rounded-[32px] px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+                                <div 
+                                    className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4"
+                                    style={{ 
+                                        '--squircle': '32px',
+                                        borderRadius: 'var(--squircle)',
+                                        clipPath: `inset(0 round var(--squircle))`
+                                    } as React.CSSProperties}
+                                >
                                     <textarea
                                         ref={inputRef}
                                         value={input}
@@ -286,7 +293,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {messages.length > 0 && (
                 <div className="border-t border-border bg-background">
                     <div className="max-w-4xl mx-auto px-6 py-6">
-                        <div className="relative bg-white border border-border rounded-[32px] px-6 py-4 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200">
+                        <div 
+                            className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4"
+                            style={{ 
+                                '--squircle': '32px',
+                                borderRadius: 'var(--squircle)',
+                                clipPath: `inset(0 round var(--squircle))`
+                            } as React.CSSProperties}
+                        >
                             <textarea
                                 ref={inputRef}
                                 value={input}
