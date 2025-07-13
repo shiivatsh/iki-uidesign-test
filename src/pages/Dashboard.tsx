@@ -356,10 +356,7 @@ function DashboardContent() {
                     {/* Enhanced Header */}
                     <header className="bg-background/80 backdrop-blur-xl border-b border-border shadow-sm sticky top-0 z-40">
                         <div className="px-4 md:px-6 py-3">
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center">
-                                    <SidebarTrigger className="mr-4" />
-                                </div>
+                            <div className="flex justify-end items-center">
                                 <div className="flex items-center space-x-3">
                                     {!showPasswordModal && (
                                         <button 
