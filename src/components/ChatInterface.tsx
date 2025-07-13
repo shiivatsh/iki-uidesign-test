@@ -127,7 +127,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 <div 
                                     className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4 w-full h-[116px]"
                                     style={{ 
-                                        '--squircle': '20px',
+                                        '--squircle': '32px',
                                         borderRadius: 'var(--squircle)',
                                         clipPath: `inset(0 round var(--squircle))`
                                     } as React.CSSProperties}
@@ -155,7 +155,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                                 <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
                                             ) : (
                                                 <svg 
-                                                    className="w-5 h-5" 
+                                                    className="w-4 h-4" 
                                                     fill="currentColor" 
                                                     viewBox="0 0 24 24"
                                                 >
@@ -302,7 +302,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                         <div 
                             className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4 w-full h-[116px]"
                             style={{ 
-                                '--squircle': '20px',
+                                '--squircle': '32px',
                                 borderRadius: 'var(--squircle)',
                                 clipPath: `inset(0 round var(--squircle))`
                             } as React.CSSProperties}
@@ -330,7 +330,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                         <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
                                     ) : (
                                         <svg 
-                                            className="w-5 h-5" 
+                                            className="w-4 h-4"
                                             fill="currentColor" 
                                             viewBox="0 0 24 24"
                                         >
