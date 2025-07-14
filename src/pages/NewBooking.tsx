@@ -1,5 +1,5 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Menu } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import ServiceSidebar from '../components/ServiceSidebar';
@@ -51,6 +51,9 @@ function NewBookingContent() {
     // State for profile dropdown
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    
+    // State for mobile sidebar
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     const handleSettingsClick = () => {
         console.log('Settings clicked');
@@ -129,20 +132,34 @@ function NewBookingContent() {
     return (
         <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
             {/* Enhanced Service Sidebar */}
-            <ServiceSidebar trackingCode={currentUser.tracking_code} userData={currentUser} />
+            <ServiceSidebar 
+                trackingCode={currentUser.tracking_code} 
+                userData={currentUser}
+                isOpen={isMobileSidebarOpen}
+                onClose={() => setIsMobileSidebarOpen(false)}
+            />
             
-            <main className="flex-1 flex flex-col overflow-hidden relative">
-                {/* Sleek Header */}
-                <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-8 relative z-10">
+            <main className="flex-1 flex flex-col overflow-hidden relative lg:ml-0">
+                {/* Responsive Header */}
+                <header className="h-16 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 flex items-center justify-between px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="flex items-center space-x-4">
+                        {/* Mobile Hamburger Menu */}
+                        <button
+                            onClick={() => setIsMobileSidebarOpen(true)}
+                            className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                        >
+                            <Menu className="w-5 h-5 text-slate-600" />
+                        </button>
+                        
                         <div className="flex items-center space-x-3">
                             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
                                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M13 10V3L4 14h7v7l9-11h-7z" />
                                 </svg>
                             </div>
-                            <h1 className="text-lg font-semibold text-slate-800">
-                                New Booking - Chat with AI Assistant
+                            <h1 className="text-sm sm:text-lg font-semibold text-slate-800 truncate">
+                                <span className="hidden sm:inline">New Booking - Chat with AI Assistant</span>
+                                <span className="sm:hidden">New Booking</span>
                             </h1>
                         </div>
                     </div>

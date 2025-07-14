@@ -114,7 +114,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
         <div className="flex flex-col h-full bg-background">
             {/* Empty State / Welcome */}
             {messages.length === 0 && !isLoading && (
-                <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+                <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center w-full max-w-4xl mx-auto animate-fade-in">
                         {/* Welcome Text */}
                         <h1 className="text-3xl md:text-4xl font-title font-medium text-foreground mb-3">
@@ -187,7 +187,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 </button>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 {[
                                     { text: "Schedule a house cleaning", icon: "🧹" },
                                     { text: "Find a reliable electrician", icon: "⚡" }, 
@@ -233,8 +233,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {/* Messages Area */}
             {messages.length > 0 && (
                 <div className="flex-1 overflow-y-auto">
-                    <div className="max-w-4xl mx-auto px-4 py-8">
-                        <div className="space-y-8">
+                    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <div className="space-y-6 sm:space-y-8">
                             {messages.map((msg, index) => (
                                 <div
                                     key={msg.id}
@@ -243,22 +243,22 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     }`}
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
-                                    <div className={`flex items-start gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+                                    <div className={`flex items-start gap-3 sm:gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
                                         {/* Avatar */}
-                                        <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center shadow-sm ${
+                                        <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-sm ${
                                             msg.sender === 'user' 
                                                 ? 'bg-primary text-primary-foreground' 
                                                 : 'bg-accent text-accent-foreground'
                                         }`}>
                                             {msg.sender === 'user' ? (
-                                                <User className="w-5 h-5" />
+                                                <User className="w-4 h-4 sm:w-5 sm:h-5" />
                                             ) : (
-                                                <Bot className="w-5 h-5" />
+                                                <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
                                             )}
                                         </div>
 
                                         {/* Message Bubble */}
-                                        <div className={`flex-1 max-w-2xl ${msg.sender === 'user' ? 'text-right' : ''}`}>
+                                        <div className={`flex-1 max-w-xs sm:max-w-2xl ${msg.sender === 'user' ? 'text-right' : ''}`}>
                                             {/* Sender Name */}
                                             <div className={`text-xs font-body font-medium text-muted-foreground mb-2 ${
                                                 msg.sender === 'user' ? 'text-right' : 'text-left'
@@ -267,7 +267,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                             </div>
                                             
                                             {/* Message Content */}
-                                            <div className={`inline-block px-6 py-4 rounded-2xl shadow-sm ${
+                                            <div className={`inline-block px-4 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-sm ${
                                                 msg.sender === 'user'
                                                     ? 'bg-primary text-primary-foreground rounded-br-md'
                                                     : 'bg-card border border-border rounded-bl-md'
@@ -293,18 +293,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             {/* Typing Indicator */}
                             {isLoading && (
                                 <div className="animate-fade-in">
-                                    <div className="flex items-start gap-4">
+                                    <div className="flex items-start gap-3 sm:gap-4">
                                         {/* AI Avatar */}
-                                        <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-sm">
-                                            <Bot className="w-5 h-5" />
+                                        <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-accent text-accent-foreground flex items-center justify-center shadow-sm">
+                                            <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
                                         </div>
 
                                         {/* Typing Animation */}
-                                        <div className="flex-1 max-w-2xl">
+                                        <div className="flex-1 max-w-xs sm:max-w-2xl">
                                             <div className="text-xs font-body font-medium text-muted-foreground mb-2">
                                                 Ikiru AI
                                             </div>
-                                            <div className="inline-block px-6 py-4 bg-card border border-border rounded-2xl rounded-bl-md shadow-sm">
+                                            <div className="inline-block px-4 py-3 sm:px-6 sm:py-4 bg-card border border-border rounded-2xl rounded-bl-md shadow-sm">
                                                 <div className="flex items-center gap-2">
                                                     <div className="flex items-center gap-1">
                                                         <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -330,7 +330,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             {/* Fixed Input at Bottom for Active Conversations */}
             {messages.length > 0 && (
                 <div className="border-t border-border bg-background">
-                    <div className="w-full max-w-[765px] mx-auto px-6 py-6">
+                    <div className="w-full max-w-[765px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
                         <div 
                             className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4 w-full h-[116px]"
                             style={{ 

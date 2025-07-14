@@ -9,7 +9,7 @@ interface ProfileDropdownProps {
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ email, onSettingsClick, onLogoutClick }) => {
   return (
-    <div className="absolute right-0 mt-3 w-80 bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-2xl overflow-hidden z-50 animate-fade-in rounded-2xl">
+    <div className="absolute right-0 mt-3 w-72 sm:w-80 bg-white/95 backdrop-blur-xl border border-slate-200/60 shadow-2xl overflow-hidden z-50 animate-fade-in rounded-2xl">
       {/* Enhanced Header */}
       <div className="bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 px-5 py-4 border-b border-slate-200/60">
         <div className="flex items-center space-x-4">

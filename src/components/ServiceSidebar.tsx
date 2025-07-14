@@ -41,9 +41,11 @@ interface ServiceSidebarProps {
   trackingCode: string | null;
   userData?: UserData | null;
   onToggleCollapse?: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData, onToggleCollapse }) => {
+const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData, onToggleCollapse, isOpen = true, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(true);
@@ -112,7 +114,24 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-20' : 'w-80'} bg-white/95 backdrop-blur-xl border-r border-slate-200/60 h-screen flex flex-col shadow-2xl transition-all duration-300`}>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden" 
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        ${isCollapsed ? 'w-20' : 'w-80'} 
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} 
+        fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto
+        bg-white/95 backdrop-blur-xl border-r border-slate-200/60 h-screen 
+        flex flex-col shadow-2xl transition-all duration-300
+        lg:${isCollapsed ? 'w-20' : 'w-80'}
+      `}>
       {/* Header */}
       <div className={`${isCollapsed ? 'p-3' : 'p-6'} border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white`}>
         {/* Header with Logo and Close Button */}
@@ -372,8 +391,9 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
             </div>
         </div>,
         document.body
-      )}
-    </div>
+       )}
+      </div>
+    </>
   );
 };
 
