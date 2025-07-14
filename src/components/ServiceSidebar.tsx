@@ -106,19 +106,9 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
     <div className="w-80 bg-white/95 backdrop-blur-xl border-r border-slate-200/60 h-screen flex flex-col shadow-2xl">
       {/* Header */}
       <div className="p-6 border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white">
-        <div className="flex items-center space-x-3 mb-1">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
-            <Sparkles className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-slate-800">Ikiru</h1>
-            <p className="text-xs text-slate-500 font-medium">AI Home Assistant</p>
-          </div>
-        </div>
-        
         {/* Enhanced User Info Card */}
         {userData && (
-          <div className="mt-5 p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 rounded-2xl border border-blue-100/60 shadow-sm">
+          <div className="p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 rounded-2xl border border-blue-100/60 shadow-sm">
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-sm font-medium shadow-lg">
                 {userData.name?.charAt(0)?.toUpperCase() || 'U'}
@@ -254,20 +244,12 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
             <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
               <Star className="w-5 h-5" />
               <span>Rate Last Service</span>
-            </button>
+          </button>
           </div>
-        </div>
-      </div>
-
-      {/* Enhanced Footer */}
-      <div className="p-5 border-t border-slate-200/60 bg-gradient-to-r from-white via-blue-50/20 to-white">
-        <div className="text-center">
-          <p className="text-xs font-semibold text-slate-400">Ikiru Dashboard</p>
-          <p className="text-xs text-slate-300 mt-1 font-medium">v2.1.0 • AI Powered</p>
         </div>
 
         {/* Your Impact Section */}
-        <div className="mt-auto mb-6">
+        <div className="mt-6">
           <button
             onClick={() => setShowImpactPopup(true)}
             className="w-full p-4 bg-gradient-to-r from-green-50/80 via-blue-50/40 to-green-50/80 rounded-2xl border border-green-100/60 hover:border-green-200 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
@@ -283,6 +265,11 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
               <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-green-500 transition-colors" />
             </div>
           </button>
+          
+          {/* Version Text */}
+          <div className="mt-3 text-center">
+            <p className="text-xs text-slate-400 font-medium">v2.1.0 • AI Powered</p>
+          </div>
         </div>
       </div>
 
