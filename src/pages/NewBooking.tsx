@@ -152,7 +152,7 @@ function NewBookingContent() {
                         <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
                             <Bell className="w-5 h-5 text-slate-600" />
                             {/* Notification Badge */}
-                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                            <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></span>
                         </button>
                         
                         {/* User Profile Circle */}
