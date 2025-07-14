@@ -74,7 +74,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
   const navigationItems = [
     { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/new-booking', count: null },
     { id: 'history', icon: History, label: 'Service History', path: '/service-history', count: userData?.service_history?.length || 0 },
-    { id: 'settings', icon: Settings, label: 'Account & Settings', path: null, count: null },
+    { id: 'settings', icon: Settings, label: 'Account & Settings', path: '/account-settings', count: null },
   ];
 
   const handleNavigation = (item: any) => {
