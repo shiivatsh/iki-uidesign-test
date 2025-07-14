@@ -201,51 +201,51 @@ const ServiceHistory: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
       {/* Header */}
       <div className="bg-white/95 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleBackNavigation}
-                className="hover:bg-slate-100"
+                className="hover:bg-slate-100 p-1 sm:p-2"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                <ArrowLeft className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Back</span>
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-slate-800 font-title">Service History</h1>
-                <p className="text-sm text-slate-600">View all your past services and active conversations</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-slate-800 font-title">Service History</h1>
+                <p className="text-xs sm:text-sm text-slate-600 hidden sm:block">View all your past services and active conversations</p>
               </div>
             </div>
             
-            <div className="flex items-center space-x-3">
-              <Button variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Export
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                <Download className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Export</span>
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         {/* Search and Filters */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 mb-4 sm:mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
               <Input
                 placeholder="Search services, providers, or notes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 text-sm"
               />
             </div>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full sm:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto text-sm">
                   <Filter className="w-4 h-4 mr-2" />
                   Filter by Status
                 </Button>
@@ -262,10 +262,19 @@ const ServiceHistory: React.FC = () => {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-3">
-              <TabsTrigger value="all">All Records ({mockServiceHistory.length})</TabsTrigger>
-              <TabsTrigger value="service">Completed Services ({mockServiceHistory.filter(item => item.type === 'service').length})</TabsTrigger>
-              <TabsTrigger value="chat">Active Chats ({mockServiceHistory.filter(item => item.type === 'chat').length})</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto">
+              <TabsTrigger value="all" className="text-xs sm:text-sm py-2">
+                <span className="hidden sm:inline">All Records ({mockServiceHistory.length})</span>
+                <span className="sm:hidden">All ({mockServiceHistory.length})</span>
+              </TabsTrigger>
+              <TabsTrigger value="service" className="text-xs sm:text-sm py-2">
+                <span className="hidden sm:inline">Completed Services ({mockServiceHistory.filter(item => item.type === 'service').length})</span>
+                <span className="sm:hidden">Services ({mockServiceHistory.filter(item => item.type === 'service').length})</span>
+              </TabsTrigger>
+              <TabsTrigger value="chat" className="text-xs sm:text-sm py-2">
+                <span className="hidden sm:inline">Active Chats ({mockServiceHistory.filter(item => item.type === 'chat').length})</span>
+                <span className="sm:hidden">Chats ({mockServiceHistory.filter(item => item.type === 'chat').length})</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value={activeTab} className="mt-6">
@@ -278,58 +287,60 @@ const ServiceHistory: React.FC = () => {
                     
                     return (
                       <Card key={record.id} className="hover:shadow-lg transition-all duration-300 border-slate-200/60">
-                        <CardContent className="p-6">
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-start space-x-4 flex-1">
+                        <CardContent className="p-4 sm:p-6">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                            <div className="flex items-start space-x-3 sm:space-x-4 flex-1">
                               {/* Service Icon */}
-                              <div className="text-2xl mt-1">
+                              <div className="text-xl sm:text-2xl mt-1 flex-shrink-0">
                                 {getServiceIcon(record.service_type)}
                               </div>
                               
                               {/* Main Content */}
                               <div className="flex-1 min-w-0">
-                                <div className="flex items-center space-x-3 mb-2">
-                                  <h3 className="text-lg font-semibold text-slate-800 capitalize">
+                                <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-3">
+                                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 capitalize">
                                     {record.service_type}
                                   </h3>
-                                  <Badge className={`${statusBadge.color} border-0`}>
-                                    <StatusIcon className="w-3 h-3 mr-1" />
-                                    {statusBadge.text}
-                                  </Badge>
-                                  {record.type === 'service' && (
-                                    <Badge variant="outline" className="text-blue-600 border-blue-200">
-                                      Service
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <Badge className={`${statusBadge.color} border-0 text-xs`}>
+                                      <StatusIcon className="w-3 h-3 mr-1" />
+                                      {statusBadge.text}
                                     </Badge>
-                                  )}
-                                  {record.type === 'chat' && (
-                                    <Badge variant="outline" className="text-purple-600 border-purple-200">
-                                      Chat
-                                    </Badge>
-                                  )}
+                                    {record.type === 'service' && (
+                                      <Badge variant="outline" className="text-blue-600 border-blue-200 text-xs">
+                                        Service
+                                      </Badge>
+                                    )}
+                                    {record.type === 'chat' && (
+                                      <Badge variant="outline" className="text-purple-600 border-purple-200 text-xs">
+                                        Chat
+                                      </Badge>
+                                    )}
+                                  </div>
                                 </div>
                                 
                                 {/* Service Details */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-3">
-                                  <div className="flex items-center space-x-2 text-sm text-slate-600">
-                                    <Calendar className="w-4 h-4" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-3">
+                                  <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-600">
+                                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
                                     <span>{formatDate(record.date)}</span>
                                   </div>
                                   
                                   {record.type === 'service' && record.duration && (
-                                    <div className="flex items-center space-x-2 text-sm text-slate-600">
-                                      <Clock className="w-4 h-4" />
+                                    <div className="flex items-center space-x-2 text-xs sm:text-sm text-slate-600">
+                                      <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
                                       <span>{record.duration}</span>
                                     </div>
                                   )}
                                   
                                   {record.type === 'service' && record.cost && (
-                                    <div className="flex items-center space-x-2 text-sm font-medium text-green-600">
+                                    <div className="flex items-center space-x-2 text-xs sm:text-sm font-medium text-green-600">
                                       <span>{formatCurrency(record.cost)}</span>
                                     </div>
                                   )}
                                   
                                   {record.type === 'service' && record.provider && (
-                                    <div className="text-sm text-slate-600">
+                                    <div className="text-xs sm:text-sm text-slate-600">
                                       by {record.provider}
                                     </div>
                                   )}
@@ -341,13 +352,13 @@ const ServiceHistory: React.FC = () => {
                                     <div className="flex space-x-1">
                                       {renderStars(record.rating)}
                                     </div>
-                                    <span className="text-sm text-slate-600">({record.rating}/5)</span>
+                                    <span className="text-xs sm:text-sm text-slate-600">({record.rating}/5)</span>
                                   </div>
                                 )}
                                 
                                 {/* Notes */}
                                 {record.notes && (
-                                  <p className="text-sm text-slate-600 leading-relaxed">
+                                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                                     {record.notes}
                                   </p>
                                 )}
@@ -355,15 +366,15 @@ const ServiceHistory: React.FC = () => {
                             </div>
                             
                             {/* Actions */}
-                            <div className="flex items-center space-x-2 ml-4">
+                            <div className="flex items-center justify-end space-x-2 mt-4 sm:mt-0 sm:ml-4">
                               {record.type === 'chat' && (
                                 <Button
                                   size="sm"
                                   onClick={() => handleResumeChat(record.id)}
-                                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white"
+                                  className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white text-xs sm:text-sm"
                                 >
-                                  <PlayCircle className="w-4 h-4 mr-2" />
-                                  Resume
+                                  <PlayCircle className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                                  <span className="hidden sm:inline">Resume</span>
                                 </Button>
                               )}
                               
