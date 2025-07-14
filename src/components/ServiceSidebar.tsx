@@ -42,19 +42,40 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
   const navigate = useNavigate();
   const location = useLocation();
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(true);
+  const [activeSection, setActiveSection] = useState('new-booking');
 
   const navigationItems = [
     { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/new-booking', count: null },
-    { id: 'history', icon: History, label: 'Service History', path: '/dashboard', count: userData?.service_history?.length || 0 },
-    { id: 'profile', icon: User, label: 'My Profile', path: '/dashboard', count: null },
-    { id: 'settings', icon: Settings, label: 'Settings', path: '/dashboard', count: null },
+    { id: 'history', icon: History, label: 'Service History', path: null, count: userData?.service_history?.length || 0 },
+    { id: 'profile', icon: User, label: 'My Profile', path: null, count: null },
+    { id: 'settings', icon: Settings, label: 'Settings', path: null, count: null },
   ];
 
   const handleNavigation = (item: any) => {
     if (item.path) {
       navigate(item.path);
+      setActiveSection(item.id);
+    } else {
+      // For items without paths, just set active section (future functionality)
+      setActiveSection(item.id);
+      // You could show modals, different content, etc. here
+      if (item.id === 'settings') {
+        // Could trigger settings modal here
+        console.log('Settings clicked - could open settings modal');
+      } else if (item.id === 'profile') {
+        console.log('Profile clicked - could show profile editor');
+      } else if (item.id === 'history') {
+        console.log('History clicked - could show detailed history view');
+      }
     }
   };
+
+  // Update active section based on current route
+  React.useEffect(() => {
+    if (location.pathname === '/new-booking') {
+      setActiveSection('new-booking');
+    }
+  }, [location.pathname]);
 
   const getServiceIcon = (serviceType: string) => {
     const type = serviceType.toLowerCase();
@@ -131,7 +152,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
           
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive = activeSection === item.id;
             
             return (
               <button
