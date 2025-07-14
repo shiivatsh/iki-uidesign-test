@@ -24,7 +24,14 @@ import {
   Pause,
   X,
   Calendar,
-  DollarSign
+  DollarSign,
+  Eye,
+  EyeOff,
+  Key,
+  Smartphone,
+  Monitor,
+  AlertTriangle,
+  Download
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -74,6 +81,24 @@ interface RecurringBooking {
   address: string;
   lastBookingDate?: string;
   totalBookings: number;
+}
+
+interface SecuritySettings {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  twoFactorEnabled: boolean;
+  passwordVisible: boolean;
+  newPasswordVisible: boolean;
+}
+
+interface LoginSession {
+  id: string;
+  device: string;
+  location: string;
+  loginTime: string;
+  ipAddress: string;
+  isCurrent: boolean;
 }
 
 const AccountSettings: React.FC = () => {
@@ -171,6 +196,44 @@ const AccountSettings: React.FC = () => {
       address: '123 Main Street, Apt 4B',
       lastBookingDate: '2024-01-01',
       totalBookings: 4
+    }
+  ]);
+
+  // Security settings state
+  const [securitySettings, setSecuritySettings] = useState<SecuritySettings>({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+    twoFactorEnabled: false,
+    passwordVisible: false,
+    newPasswordVisible: false
+  });
+
+  // Mock login sessions data
+  const [loginSessions] = useState<LoginSession[]>([
+    {
+      id: '1',
+      device: 'Chrome on Windows',
+      location: 'New York, NY',
+      loginTime: '2 hours ago',
+      ipAddress: '192.168.1.100',
+      isCurrent: true
+    },
+    {
+      id: '2',
+      device: 'Safari on iPhone',
+      location: 'New York, NY',
+      loginTime: '1 day ago',
+      ipAddress: '192.168.1.101',
+      isCurrent: false
+    },
+    {
+      id: '3',
+      device: 'Chrome on MacBook',
+      location: 'New York, NY',
+      loginTime: '3 days ago',
+      ipAddress: '192.168.1.102',
+      isCurrent: false
     }
   ]);
 
@@ -307,6 +370,58 @@ const AccountSettings: React.FC = () => {
     }
   };
 
+  // Security handlers
+  const handlePasswordChange = () => {
+    // Validate passwords
+    if (securitySettings.newPassword !== securitySettings.confirmPassword) {
+      toast({
+        title: "Password Mismatch",
+        description: "New password and confirmation don't match.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (securitySettings.newPassword.length < 8) {
+      toast({
+        title: "Weak Password",
+        description: "Password must be at least 8 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Reset form
+    setSecuritySettings({
+      ...securitySettings,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+
+    toast({
+      title: "Password Updated",
+      description: "Your password has been changed successfully.",
+    });
+  };
+
+  const handleToggle2FA = (enabled: boolean) => {
+    setSecuritySettings({ ...securitySettings, twoFactorEnabled: enabled });
+    toast({
+      title: enabled ? "2FA Enabled" : "2FA Disabled",
+      description: enabled 
+        ? "Two-factor authentication has been enabled for your account."
+        : "Two-factor authentication has been disabled.",
+    });
+  };
+
+  const handleLogoutSession = (sessionId: string) => {
+    toast({
+      title: "Session Terminated",
+      description: "The selected session has been logged out.",
+    });
+  };
+
   const timeSlotOptions = [
     { value: 'early-morning', label: 'Early Morning (7AM-9AM)' },
     { value: 'morning', label: 'Morning (9AM-12PM)' },
@@ -341,7 +456,7 @@ const AccountSettings: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="w-4 h-4" />
               <span>Profile</span>
@@ -354,6 +469,10 @@ const AccountSettings: React.FC = () => {
               <Repeat className="w-4 h-4" />
               <span>Recurring</span>
             </TabsTrigger>
+            <TabsTrigger value="security" className="flex items-center space-x-2">
+              <Shield className="w-4 h-4" />
+              <span>Security</span>
+            </TabsTrigger>
             <TabsTrigger value="payment" className="flex items-center space-x-2">
               <CreditCard className="w-4 h-4" />
               <span>Payment</span>
@@ -363,7 +482,7 @@ const AccountSettings: React.FC = () => {
               <span>Notifications</span>
             </TabsTrigger>
             <TabsTrigger value="preferences" className="flex items-center space-x-2">
-              <Shield className="w-4 h-4" />
+              <Palette className="w-4 h-4" />
               <span>Preferences</span>
             </TabsTrigger>
           </TabsList>
@@ -748,6 +867,267 @@ const AccountSettings: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Security Tab */}
+          <TabsContent value="security" className="mt-6">
+            <div className="space-y-6">
+              {/* Password Change Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Key className="w-5 h-5" />
+                    <span>Change Password</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="currentPassword">Current Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="currentPassword"
+                        type={securitySettings.passwordVisible ? "text" : "password"}
+                        value={securitySettings.currentPassword}
+                        onChange={(e) => setSecuritySettings({ ...securitySettings, currentPassword: e.target.value })}
+                        placeholder="Enter your current password"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setSecuritySettings({ 
+                          ...securitySettings, 
+                          passwordVisible: !securitySettings.passwordVisible 
+                        })}
+                      >
+                        {securitySettings.passwordVisible ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="newPassword">New Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="newPassword"
+                        type={securitySettings.newPasswordVisible ? "text" : "password"}
+                        value={securitySettings.newPassword}
+                        onChange={(e) => setSecuritySettings({ ...securitySettings, newPassword: e.target.value })}
+                        placeholder="Enter new password (min. 8 characters)"
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setSecuritySettings({ 
+                          ...securitySettings, 
+                          newPasswordVisible: !securitySettings.newPasswordVisible 
+                        })}
+                      >
+                        {securitySettings.newPasswordVisible ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type="password"
+                      value={securitySettings.confirmPassword}
+                      onChange={(e) => setSecuritySettings({ ...securitySettings, confirmPassword: e.target.value })}
+                      placeholder="Confirm your new password"
+                    />
+                  </div>
+
+                  <div className="pt-4">
+                    <Button onClick={handlePasswordChange} className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600">
+                      <Lock className="w-4 h-4 mr-2" />
+                      Update Password
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Two-Factor Authentication Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Smartphone className="w-5 h-5" />
+                    <span>Two-Factor Authentication</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 border border-slate-200 rounded-lg">
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-slate-800">Authenticator App</h4>
+                        <p className="text-sm text-slate-600 mt-1">
+                          Add an extra layer of security using an authenticator app like Google Authenticator or Authy.
+                        </p>
+                        {securitySettings.twoFactorEnabled && (
+                          <Badge className="bg-green-100 text-green-700 mt-2">
+                            <Check className="w-3 h-3 mr-1" />
+                            Enabled
+                          </Badge>
+                        )}
+                      </div>
+                      <Switch
+                        checked={securitySettings.twoFactorEnabled}
+                        onCheckedChange={handleToggle2FA}
+                      />
+                    </div>
+
+                    {!securitySettings.twoFactorEnabled && (
+                      <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                        <div className="flex items-start space-x-3">
+                          <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-orange-800">Security Recommendation</h4>
+                            <p className="text-sm text-orange-700 mt-1">
+                              Enable two-factor authentication to significantly improve your account security. 
+                              This adds an extra verification step when logging in.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {securitySettings.twoFactorEnabled && (
+                      <div className="space-y-3">
+                        <Button variant="outline" size="sm">
+                          <Download className="w-4 h-4 mr-2" />
+                          Download Backup Codes
+                        </Button>
+                        <p className="text-xs text-slate-500">
+                          Download backup codes in case you lose access to your authenticator app
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent Login Activity Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Monitor className="w-5 h-5" />
+                    <span>Recent Login Activity</span>
+                  </CardTitle>
+                  <p className="text-sm text-slate-600 mt-2">
+                    Monitor recent access to your account for any suspicious activity
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {loginSessions.map((session) => (
+                      <div key={session.id} className="p-4 border border-slate-200 rounded-lg">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h4 className="font-semibold text-slate-800">{session.device}</h4>
+                              {session.isCurrent && (
+                                <Badge className="bg-green-100 text-green-700">
+                                  Current Session
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="space-y-1 text-sm text-slate-600">
+                              <p className="flex items-center space-x-2">
+                                <MapPin className="w-3 h-3" />
+                                <span>{session.location}</span>
+                              </p>
+                              <p className="flex items-center space-x-2">
+                                <Clock className="w-3 h-3" />
+                                <span>{session.loginTime}</span>
+                              </p>
+                              <p className="flex items-center space-x-2">
+                                <Monitor className="w-3 h-3" />
+                                <span>{session.ipAddress}</span>
+                              </p>
+                            </div>
+                          </div>
+                          {!session.isCurrent && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleLogoutSession(session.id)}
+                              className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                            >
+                              <X className="w-4 h-4 mr-1" />
+                              Logout
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Account Recovery Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Shield className="w-5 h-5" />
+                    <span>Account Recovery</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-4 border border-slate-200 rounded-lg">
+                      <h4 className="font-semibold text-slate-800 mb-2">Recovery Email</h4>
+                      <p className="text-sm text-slate-600 mb-3">
+                        Your current email ({profile.email}) is used for account recovery. 
+                        Make sure you have access to this email.
+                      </p>
+                      <Button variant="outline" size="sm">
+                        <Mail className="w-4 h-4 mr-2" />
+                        Update Recovery Email
+                      </Button>
+                    </div>
+
+                    <div className="p-4 border border-slate-200 rounded-lg">
+                      <h4 className="font-semibold text-slate-800 mb-2">Account Deletion</h4>
+                      <p className="text-sm text-slate-600 mb-3">
+                        Permanently delete your account and all associated data. This action cannot be undone.
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete Account
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Security Notice */}
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-start space-x-3">
+                  <Lock className="w-5 h-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-blue-800">Backend Integration Required</h4>
+                    <p className="text-sm text-blue-700 mt-1">
+                      For full security functionality including secure password changes, 2FA verification, 
+                      and session management, integration with Supabase Auth or similar authentication service is required.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </TabsContent>
 
           {/* Payment Tab */}
