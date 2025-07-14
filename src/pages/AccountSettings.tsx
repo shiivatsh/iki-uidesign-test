@@ -433,57 +433,57 @@ const AccountSettings: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
       {/* Header */}
       <div className="bg-white/95 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleBackNavigation}
-                className="hover:bg-slate-100"
+                className="hover:bg-slate-100 p-1 sm:p-2"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+                <ArrowLeft className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Back</span>
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-slate-800 font-title">Account & Settings</h1>
-                <p className="text-sm text-slate-600">Manage your profile, addresses, and preferences</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-slate-800 font-title">Account & Settings</h1>
+                <p className="text-xs sm:text-sm text-slate-600 hidden sm:block">Manage your profile, addresses, and preferences</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="profile" className="flex items-center space-x-2">
-              <User className="w-4 h-4" />
-              <span>Profile</span>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-1">
+            <TabsTrigger value="profile" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <User className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Profile</span>
             </TabsTrigger>
-            <TabsTrigger value="addresses" className="flex items-center space-x-2">
-              <MapPin className="w-4 h-4" />
-              <span>Addresses</span>
+            <TabsTrigger value="addresses" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Addresses</span>
             </TabsTrigger>
-            <TabsTrigger value="recurring" className="flex items-center space-x-2">
-              <Repeat className="w-4 h-4" />
-              <span>Recurring</span>
+            <TabsTrigger value="recurring" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <Repeat className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Recurring</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center space-x-2">
-              <Shield className="w-4 h-4" />
-              <span>Security</span>
+            <TabsTrigger value="security" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Security</span>
             </TabsTrigger>
-            <TabsTrigger value="payment" className="flex items-center space-x-2">
-              <CreditCard className="w-4 h-4" />
-              <span>Payment</span>
+            <TabsTrigger value="payment" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Payment</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center space-x-2">
-              <Bell className="w-4 h-4" />
-              <span>Notifications</span>
+            <TabsTrigger value="notifications" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <Bell className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Notify</span>
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="flex items-center space-x-2">
-              <Palette className="w-4 h-4" />
-              <span>Preferences</span>
+            <TabsTrigger value="preferences" className="flex items-center space-x-1 text-xs sm:text-sm">
+              <Palette className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Prefs</span>
             </TabsTrigger>
           </TabsList>
 
@@ -507,7 +507,7 @@ const AccountSettings: React.FC = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
@@ -590,7 +590,7 @@ const AccountSettings: React.FC = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="bedrooms">Number of Bedrooms</Label>
                     <Input
@@ -748,17 +748,17 @@ const AccountSettings: React.FC = () => {
                   ) : (
                     <div className="space-y-4">
                       {recurringBookings.map((booking) => (
-                        <div key={booking.id} className="p-6 border border-slate-200 rounded-lg bg-gradient-to-br from-white to-slate-50">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-3 mb-3">
+                        <div key={booking.id} className="p-4 sm:p-6 border border-slate-200 rounded-lg bg-gradient-to-br from-white to-slate-50">
+                          <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                            <div className="flex-1 w-full">
+                              <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-3">
                                 <h4 className="text-lg font-semibold text-slate-800">{booking.serviceName}</h4>
                                 <Badge className={getStatusColor(booking.status)}>
                                   {booking.status}
                                 </Badge>
                               </div>
                               
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 text-sm">
                                 <div className="flex items-center space-x-2">
                                   <Clock className="w-4 h-4 text-slate-400" />
                                   <span className="text-slate-600">Frequency:</span>
@@ -794,16 +794,16 @@ const AccountSettings: React.FC = () => {
                               </div>
                             </div>
                             
-                            <div className="flex items-center space-x-2 ml-4">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 w-full sm:w-auto sm:ml-4">
                               {booking.status === 'active' && (
                                 <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handlePauseRecurringBooking(booking.id)}
-                                  className="text-yellow-600 hover:text-yellow-700 border-yellow-300 hover:bg-yellow-50"
+                                  className="text-yellow-600 hover:text-yellow-700 border-yellow-300 hover:bg-yellow-50 text-xs sm:text-sm"
                                 >
-                                  <Pause className="w-4 h-4 mr-1" />
-                                  Pause
+                                  <Pause className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                  <span className="hidden xs:inline">Pause</span>
                                 </Button>
                               )}
                               {booking.status === 'paused' && (
@@ -811,10 +811,10 @@ const AccountSettings: React.FC = () => {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleResumeRecurringBooking(booking.id)}
-                                  className="text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50"
+                                  className="text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50 text-xs sm:text-sm"
                                 >
-                                  <Play className="w-4 h-4 mr-1" />
-                                  Resume
+                                  <Play className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                  <span className="hidden xs:inline">Resume</span>
                                 </Button>
                               )}
                               {booking.status !== 'cancelled' && (
@@ -822,16 +822,16 @@ const AccountSettings: React.FC = () => {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleCancelRecurringBooking(booking.id)}
-                                  className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                                  className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50 text-xs sm:text-sm"
                                 >
-                                  <X className="w-4 h-4 mr-1" />
-                                  Cancel
+                                  <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                  <span className="hidden xs:inline">Cancel</span>
                                 </Button>
                               )}
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-slate-600 hover:text-slate-700"
+                                className="text-slate-600 hover:text-slate-700 text-xs sm:text-sm"
                               >
                                 <Edit2 className="w-4 h-4" />
                               </Button>
