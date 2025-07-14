@@ -273,12 +273,11 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
         </div>
       </div>
 
-      {/* Impact Popup Modal - Fixed to cover full page */}
+      {/* Impact Popup Modal - Portal to body to avoid sidebar constraints */}
       {showImpactPopup && (
-        <>
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999]" onClick={() => setShowImpactPopup(false)} />
-          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 pointer-events-none">
-            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden pointer-events-auto">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowImpactPopup(false)} />
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden z-10">
               {/* Header */}
               <div className="p-6 text-white relative" style={{background: 'linear-gradient(135deg, #0067E5, #4F46E5)'}}>
                 <button
@@ -325,10 +324,9 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
                     Together, we're working toward cleaner oceans. Thanks for being a part of it! 🌊
                   </p>
                 </div>
-              </div>
+               </div>
             </div>
-          </div>
-        </>
+        </div>
       )}
     </div>
   );
