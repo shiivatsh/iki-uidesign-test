@@ -1,12 +1,9 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import { Calendar, Clock, Home, TrendingUp, CheckCircle, MapPin, Phone, User as UserIcon } from 'lucide-react';
 import ServiceSidebar from '../components/ServiceSidebar';
-import ChatInterface from '../components/ChatInterface';
 import ProfileDropdown from '../components/ProfileDropdown';
 import SettingsModal from '../components/SettingsModal';
-
-const API_BASE_URL = 'https://ikiru-backend-515600662686.us-central1.run.app';
 
 interface Booking {
     date: string;
@@ -34,7 +31,7 @@ const LoadingFallback = () => (
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
             </div>
-            <p className="text-slate-600 font-medium">Loading your Ikiru dashboard...</p>
+            <p className="text-slate-600 font-medium">Loading your dashboard...</p>
         </div>
     </div>
 );
@@ -47,13 +44,6 @@ function DashboardContent() {
     const [isLoadingToken, setIsLoadingToken] = useState(true);
     const [isCheckingSession, setIsCheckingSession] = useState(true);
 
-    // State for password management
-    const [showPasswordModal, setShowPasswordModal] = useState(false);
-    const [passwordSetSuccess, setPasswordSetSuccess] = useState<string | null>(null);
-    const [passwordSetError, setPasswordSetError] = useState<string | null>(null);
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-
     // State for profile dropdown
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
@@ -63,8 +53,6 @@ function DashboardContent() {
         setIsSettingsModalOpen(true);
         setIsProfileDropdownOpen(false);
     };
-
-    console.log(`[Dashboard] Rendering. currentUser: ${JSON.stringify(currentUser?.email)}. isLoadingToken: ${isLoadingToken}.`);
 
     const handleLogoutClick = () => {
         console.log('[Dashboard] Logout clicked');
@@ -81,234 +69,88 @@ function DashboardContent() {
     };
 
     useEffect(() => {
-        console.log(`[Dashboard] useEffect triggered. Starting authentication check...`);
-        
-        const urlToken = searchParams.get('token');
-        const urlTokenFromWindow = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('token') : null;
-        const actualToken = urlToken || urlTokenFromWindow;
-        
-        console.log(`[Dashboard] Token sources - searchParams: ${urlToken ? 'found' : 'not found'}, window: ${urlTokenFromWindow ? 'found' : 'not found'}`);
-        console.log(`[Dashboard] Using token: ${actualToken ? 'found' : 'not found'}`);
-
+        // Check for stored user session first
         const storedUserSession = typeof window !== 'undefined' ? localStorage.getItem('ikiru_user_session') : null;
         if (storedUserSession && !currentUser) {
             try {
                 const userData = JSON.parse(storedUserSession);
-                console.log("\"[Dashboard] Restored user session from localStorage:\"", userData.email);
-                console.log("\"[Dashboard] Restored user session complete data:\"", JSON.stringify(userData, null, 2));
                 setCurrentUser(userData);
                 setIsLoadingToken(false);
                 setIsCheckingSession(false);
-                
-                if (!userData.phone_number && !userData.bedrooms && !userData.bathrooms && !userData.address) {
-                    console.log("\"[Dashboard] Stored session missing profile data, fetching fresh data from backend\"");
-                    
-                    axios.get(`${API_BASE_URL}/user/${userData.tracking_code}`)
-                        .then(response => {
-                            console.log("\"[Dashboard] Fresh user data fetched:\"", JSON.stringify(response.data, null, 2));
-                            const updatedUserData = {
-                                ...userData,
-                                phone_number: response.data.phone_number,
-                                address: response.data.address,
-                                bedrooms: response.data.bedrooms,
-                                bathrooms: response.data.bathrooms,
-                                service_history: response.data.service_history || [],
-                                preferences: response.data.preferences || {}
-                            };
-                            
-                            setCurrentUser(updatedUserData);
-                            localStorage.setItem('ikiru_user_session', JSON.stringify(updatedUserData));
-                            console.log("\"[Dashboard] User session updated with fresh profile data\"");
-                        })
-                        .catch(error => {
-                            console.log("\"[Dashboard] Failed to fetch fresh profile data:\"", error);
-                        });
-                }
-                
-                if (actualToken && typeof window !== 'undefined') {
-                    console.log("\"[Dashboard] Cleaning URL after session restoration (magic link token found)\"");
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('token');
-                    url.searchParams.delete('email');
-                    window.history.replaceState({}, '', url.toString());
-                }
-                
                 return;
             } catch (e) {
-                console.log("\"[Dashboard] Invalid stored session, removing:\"", e);
                 localStorage.removeItem('ikiru_user_session');
             }
         }
 
-        const storedToken = typeof window !== 'undefined' ? localStorage.getItem('ikiru_dashboard_token') : null;
-        const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('ikiru_user_email') : null;
-        
-        console.log(`[Dashboard] Stored token: ${storedToken ? 'found' : 'not found'}, stored email: ${storedEmail ? 'found' : 'not found'}`);
-
-        const token = storedToken || actualToken;
-        
+        // Demo mode fallback
+        setIsLoadingToken(false);
         setIsCheckingSession(false);
-
-        if (token) {
-            console.log(`[Dashboard] Authenticating with ${storedToken ? 'stored' : 'URL'} token...`);
-            console.log(`[Dashboard] Token value: ${token.substring(0, 20)}...`);
-            setIsLoadingToken(true);
-            
-            if (storedToken) {
-                localStorage.removeItem('ikiru_dashboard_token');
-                console.log("\"[Dashboard] Cleared stored token after use\"");
-            }
-            
-            axios.post(`${API_BASE_URL}/api/dashboard/verify-token`, { token })
-                .then(response => {
-                    console.log("\"[Dashboard] Token verification successful. User data received:\"", response.data.user?.email);
-                    console.log("\"[Dashboard] Complete user data:\"", JSON.stringify(response.data.user, null, 2));
-                    
-                    const userData = response.data.user;
-                    
-                    if (!userData.phone_number && !userData.bedrooms && !userData.bathrooms && !userData.address) {
-                        console.log("\"[Dashboard] Token verified but missing profile data, fetching fresh data from backend\"");
-                        
-                        axios.get(`${API_BASE_URL}/user/${userData.tracking_code}`)
-                            .then(profileResponse => {
-                                console.log("\"[Dashboard] Fresh profile data fetched:\"", JSON.stringify(profileResponse.data, null, 2));
-                                const updatedUserData = {
-                                    ...userData,
-                                    phone_number: profileResponse.data.phone_number,
-                                    address: profileResponse.data.address,
-                                    bedrooms: profileResponse.data.bedrooms,
-                                    bathrooms: profileResponse.data.bathrooms,
-                                    service_history: profileResponse.data.service_history || [],
-                                    preferences: profileResponse.data.preferences || {}
-                                };
-                                
-                                setCurrentUser(updatedUserData);
-                                
-                                if (typeof window !== 'undefined') {
-                                    localStorage.setItem('ikiru_user_session', JSON.stringify(updatedUserData));
-                                    console.log("\"[Dashboard] User session stored with fresh profile data\"");
-                                }
-                            })
-                            .catch(error => {
-                                console.log("\"[Dashboard] Failed to fetch fresh profile data after token verification:\"", error);
-                                setCurrentUser(userData);
-                                
-                                if (typeof window !== 'undefined') {
-                                    localStorage.setItem('ikiru_user_session', JSON.stringify(userData));
-                                    console.log("\"[Dashboard] User session stored (profile fetch failed)\"");
-                                }
-                            });
-                    } else {
-                        setCurrentUser(userData);
-                        
-                        if (typeof window !== 'undefined') {
-                            localStorage.setItem('ikiru_user_session', JSON.stringify(userData));
-                            console.log("\"[Dashboard] User session stored for persistent login\"");
-                        }
+        
+        if (!currentUser) {
+            const demoUser: User = {
+                tracking_code: 'DEMO123',
+                name: 'Demo User',
+                email: 'demo@ikiru.com',
+                address: '123 Demo Street, Demo City',
+                phone_number: '+1 (555) 123-4567',
+                bedrooms: 3,
+                bathrooms: 2,
+                service_history: [
+                    {
+                        date: '2024-01-15',
+                        service_type: 'House Cleaning',
+                        notes: 'Deep cleaning service completed successfully'
+                    },
+                    {
+                        date: '2024-01-08',
+                        service_type: 'Plumbing Repair',
+                        notes: 'Fixed kitchen sink leak'
+                    },
+                    {
+                        date: '2024-01-05',
+                        service_type: 'Electrical Repair',
+                        notes: 'Fixed kitchen outlet'
                     }
-                    
-                    if (actualToken && typeof window !== 'undefined') {
-                        console.log("\"[Dashboard] Cleaning URL by removing token parameter\"");
-                        const url = new URL(window.location.href);
-                        url.searchParams.delete('token');
-                        url.searchParams.delete('email');
-                        console.log("\"[Dashboard] URL before cleaning:\"", window.location.href);
-                        console.log("\"[Dashboard] URL after cleaning:\"", url.toString());
-                        window.history.replaceState({}, '', url.toString());
-                        console.log("\"[Dashboard] URL cleaning completed\"");
-                    }
-                })
-                .catch(error => {
-                    console.error("\"[Dashboard] Token verification failed:\"", error);
-                    console.error("\"[Dashboard] Error details:\"", error.response?.data || error.message);
-                    
-                    if (actualToken && typeof window !== 'undefined') {
-                        console.log("\"[Dashboard] Cleaning URL after authentication failure\"");
-                        const url = new URL(window.location.href);
-                        url.searchParams.delete('token');
-                        url.searchParams.delete('email');
-                        window.history.replaceState({}, '', url.toString());
-                    }
-                })
-                .finally(() => {
-                    setIsLoadingToken(false);
-                });
-        } else {
-            console.log("\"[Dashboard] No token found. Checking for existing user session and stored email.\"");
-            
-            if (storedEmail && !currentUser) {
-                console.log("\"[Dashboard] Found stored email from button click, bypassing tracking code...\"");
-                setIsLoadingToken(true);
-                
-                axios.post(`${API_BASE_URL}/api/send-magic-link`, { email: storedEmail })
-                    .then(async (magicResponse) => {
-                        console.log("\"[Dashboard] Fresh Magic Link requested successfully\"");
-                        if (magicResponse.data.token) {
-                            console.log("\"[Dashboard] Got fresh token, verifying...\"");
-                            return axios.post(`${API_BASE_URL}/api/dashboard/verify-token`, { token: magicResponse.data.token });
-                        } else {
-                            console.log("\"[Dashboard] No immediate token available, but Magic Link sent to email\"");
-                            throw new Error("No immediate token available");
-                        }
-                    })
-                    .then(response => {
-                        console.log("\"[Dashboard] Fresh token verification successful:\"", response.data.user?.email);
-                        setCurrentUser(response.data.user);
-                        localStorage.removeItem('ikiru_user_email');
-                    })
-                    .catch(() => {
-                        console.log("\"[Dashboard] Authentication via button flow - showing clean access message\"");
-                        localStorage.removeItem('ikiru_user_email');
-                    })
-                    .finally(() => {
-                        setIsLoadingToken(false);
-                    });
-            } else {
-                setIsLoadingToken(false);
-                if (!currentUser) {
-                  console.log("\"[Dashboard] No authentication found, will redirect to main site.\"");
-                }
-            }
+                ],
+                preferences: {}
+            };
+            setCurrentUser(demoUser);
         }
     }, [searchParams]);
 
     if (isLoadingToken || isCheckingSession) {
-        console.log('[Dashboard] Rendering LoadingFallback, isLoadingToken, or isCheckingSession is true.');
         return <LoadingFallback />;
     }
 
     if (!currentUser) {
-        console.log('[Dashboard] No user authenticated, showing demo mode.');
-        // Demo mode - create a sample user for UI demonstration
-        const demoUser: User = {
-            tracking_code: 'DEMO123',
-            name: 'Demo User',
-            email: 'demo@ikiru.com',
-            address: '123 Demo Street, Demo City',
-            phone_number: '+1 (555) 123-4567',
-            bedrooms: 3,
-            bathrooms: 2,
-            service_history: [
-                {
-                    date: '2024-01-15',
-                    service_type: 'House Cleaning',
-                    notes: 'Deep cleaning service completed successfully'
-                },
-                {
-                    date: '2024-01-08',
-                    service_type: 'Plumbing Repair',
-                    notes: 'Fixed kitchen sink leak'
-                }
-            ],
-            preferences: {}
-        };
-        
-        // Set demo user and continue to render dashboard
-        setCurrentUser(demoUser);
         return <LoadingFallback />;
     }
 
-    console.log(`[Dashboard] Rendering main dashboard overview for user: ${currentUser.email}`);
+    const getServiceIcon = (serviceType: string) => {
+        const type = serviceType.toLowerCase();
+        if (type.includes('clean')) return '🧹';
+        if (type.includes('repair')) return '🔧';
+        if (type.includes('plumb')) return '🚿';
+        if (type.includes('electric')) return '⚡';
+        if (type.includes('garden')) return '🌿';
+        return '🏠';
+    };
+
+    const formatDate = (dateString: string) => {
+        try {
+            return new Date(dateString).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                year: 'numeric'
+            });
+        } catch {
+            return dateString;
+        }
+    };
+
+    const recentServices = currentUser.service_history?.slice(0, 3) || [];
+    const totalServices = currentUser.service_history?.length || 0;
     
     return (
         <div className="min-h-screen flex w-full bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
@@ -326,7 +168,7 @@ function DashboardContent() {
                                 </svg>
                             </div>
                             <h1 className="text-lg font-semibold text-slate-800">
-                                Welcome back, {currentUser.name?.split(' ')[0] || 'User'}
+                                Dashboard Overview
                             </h1>
                         </div>
                     </div>
@@ -344,14 +186,17 @@ function DashboardContent() {
                                     {currentUser.name || 'User'}
                                 </div>
                                 <div className="text-xs text-slate-500">
-                                    {currentUser.email || 'No email'}
+                                    {currentUser.email || 'user@example.com'}
                                 </div>
                             </div>
+                            <svg className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
                         </button>
                         
                         {isProfileDropdownOpen && (
-                            <ProfileDropdown
-                                email={currentUser.email || 'No email'}
+                            <ProfileDropdown 
+                                email={currentUser.email}
                                 onSettingsClick={handleSettingsClick}
                                 onLogoutClick={handleLogoutClick}
                             />
@@ -359,34 +204,150 @@ function DashboardContent() {
                     </div>
                 </header>
                 
-                {/* Main Chat Interface */}
-                <div className="flex-1 flex overflow-hidden bg-transparent">
-                    <div className="flex-1 relative">
-                        <ChatInterface 
-                            trackingCode={currentUser.tracking_code} 
-                            userName={currentUser.name} 
-                        />
-                        
-                        {/* Subtle Background Pattern */}
-                        <div className="absolute inset-0 -z-10 opacity-30">
-                            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-indigo-50/50"></div>
-                            <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
-                            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl"></div>
+                {/* Dashboard Content */}
+                <div className="flex-1 overflow-y-auto p-8">
+                    {/* Welcome Section */}
+                    <div className="mb-8">
+                        <h2 className="text-3xl font-bold text-slate-800 mb-2">
+                            Welcome back, {currentUser.name?.split(' ')[0] || 'User'}!
+                        </h2>
+                        <p className="text-slate-600">Here's an overview of your home services and account.</p>
+                    </div>
+
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        {/* Total Services */}
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                                    <CheckCircle className="w-6 h-6 text-white" />
+                                </div>
+                                <TrendingUp className="w-5 h-5 text-green-500" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800">{totalServices}</h3>
+                            <p className="text-sm text-slate-600">Total Services</p>
+                        </div>
+
+                        {/* Property Info */}
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                                    <Home className="w-6 h-6 text-white" />
+                                </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800">{currentUser.bedrooms || 0}</h3>
+                            <p className="text-sm text-slate-600">Bedrooms</p>
+                        </div>
+
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                    <Home className="w-6 h-6 text-white" />
+                                </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-slate-800">{currentUser.bathrooms || 0}</h3>
+                            <p className="text-sm text-slate-600">Bathrooms</p>
+                        </div>
+
+                        {/* Recent Activity */}
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                                    <Clock className="w-6 h-6 text-white" />
+                                </div>
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-800">
+                                {recentServices.length > 0 ? formatDate(recentServices[0].date) : 'No services'}
+                            </h3>
+                            <p className="text-sm text-slate-600">Last Service</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Profile Information */}
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg">
+                            <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                                <UserIcon className="w-5 h-5 mr-2" />
+                                Profile Information
+                            </h3>
+                            <div className="space-y-4">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-sm font-medium">
+                                        {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
+                                    </div>
+                                    <div>
+                                        <p className="font-medium text-slate-800">{currentUser.name}</p>
+                                        <p className="text-sm text-slate-600">{currentUser.email}</p>
+                                    </div>
+                                </div>
+                                
+                                {currentUser.address && (
+                                    <div className="flex items-start space-x-3 pt-2">
+                                        <MapPin className="w-5 h-5 text-slate-400 mt-0.5" />
+                                        <p className="text-sm text-slate-600">{currentUser.address}</p>
+                                    </div>
+                                )}
+                                
+                                {currentUser.phone_number && (
+                                    <div className="flex items-center space-x-3">
+                                        <Phone className="w-5 h-5 text-slate-400" />
+                                        <p className="text-sm text-slate-600">{currentUser.phone_number}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Recent Services */}
+                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-slate-200/60 shadow-lg">
+                            <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                                <Calendar className="w-5 h-5 mr-2" />
+                                Recent Services
+                            </h3>
+                            {recentServices.length > 0 ? (
+                                <div className="space-y-4">
+                                    {recentServices.map((service, index) => (
+                                        <div key={index} className="flex items-start space-x-4 p-4 bg-slate-50/50 rounded-xl border border-slate-200/40">
+                                            <div className="text-2xl mt-1">
+                                                {getServiceIcon(service.service_type)}
+                                            </div>
+                                            <div className="flex-1">
+                                                <h4 className="font-medium text-slate-800">{service.service_type}</h4>
+                                                <p className="text-sm text-slate-500 mb-1">{formatDate(service.date)}</p>
+                                                {service.notes && (
+                                                    <p className="text-sm text-slate-600">{service.notes}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                        <Calendar className="w-8 h-8 text-slate-400" />
+                                    </div>
+                                    <p className="text-slate-500">No services yet</p>
+                                    <p className="text-sm text-slate-400">Your service history will appear here</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </main>
             
-            {/* Enhanced Settings Modal */}
-            <SettingsModal 
-                isOpen={isSettingsModalOpen} 
-                onClose={() => setIsSettingsModalOpen(false)} 
-                currentUser={currentUser}
-            />
+            {/* Settings Modal */}
+            {isSettingsModalOpen && (
+                <SettingsModal
+                    isOpen={isSettingsModalOpen}
+                    onClose={() => setIsSettingsModalOpen(false)}
+                    currentUser={currentUser}
+                />
+            )}
         </div>
     );
 }
 
-export default function Dashboard() {
+const Dashboard: FunctionComponent = () => {
     return <DashboardContent />;
-}
+};
+
+export default Dashboard;

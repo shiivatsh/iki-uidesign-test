@@ -45,7 +45,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
 
   const navigationItems = [
     { id: 'dashboard', icon: Home, label: 'Dashboard', path: '/dashboard', count: null },
-    { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/dashboard', count: null },
+    { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/new-booking', count: null },
     { id: 'history', icon: History, label: 'Service History', path: '/dashboard', count: userData?.service_history?.length || 0 },
     { id: 'profile', icon: User, label: 'My Profile', path: '/dashboard', count: null },
     { id: 'settings', icon: Settings, label: 'Settings', path: '/dashboard', count: null },
@@ -132,7 +132,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
           
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path && item.id === 'dashboard';
+            const isActive = location.pathname === item.path;
             
             return (
               <button
