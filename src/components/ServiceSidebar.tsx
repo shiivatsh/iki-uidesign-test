@@ -108,9 +108,15 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
     <div className="w-80 bg-white/95 backdrop-blur-xl border-r border-slate-200/60 h-screen flex flex-col shadow-2xl">
       {/* Header */}
       <div className="p-6 border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white">
-        {/* Close Sidebar Button */}
+        {/* Header with Logo and Close Button */}
         <div className="flex justify-between items-center mb-4">
-          <button className="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-xl flex items-center justify-center transition-colors group">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">I</span>
+            </div>
+            <span className="text-lg font-bold text-slate-800">Ikiru</span>
+          </div>
+          <button className="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-lg flex items-center justify-center transition-colors group">
             <Menu className="w-4 h-4 text-slate-600 group-hover:text-slate-800" />
           </button>
         </div>
