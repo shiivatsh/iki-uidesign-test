@@ -18,7 +18,13 @@ import {
   Check,
   CreditCard,
   Receipt,
-  Lock
+  Lock,
+  Repeat,
+  Play,
+  Pause,
+  X,
+  Calendar,
+  DollarSign
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,6 +62,18 @@ interface ServicePreferences {
   specialInstructions: string;
   autoBookingSuggestions: boolean;
   ratingReminders: boolean;
+}
+
+interface RecurringBooking {
+  id: string;
+  serviceName: string;
+  frequency: 'weekly' | 'bi-weekly' | 'monthly' | 'quarterly';
+  status: 'active' | 'paused' | 'cancelled';
+  nextBookingDate: string;
+  amount: number;
+  address: string;
+  lastBookingDate?: string;
+  totalBookings: number;
 }
 
 const AccountSettings: React.FC = () => {
@@ -118,6 +136,43 @@ const AccountSettings: React.FC = () => {
     autoBookingSuggestions: true,
     ratingReminders: true
   });
+
+  // Recurring bookings state
+  const [recurringBookings, setRecurringBookings] = useState<RecurringBooking[]>([
+    {
+      id: '1',
+      serviceName: 'House Cleaning',
+      frequency: 'bi-weekly',
+      status: 'active',
+      nextBookingDate: '2024-02-15',
+      amount: 150,
+      address: '123 Main Street, Apt 4B',
+      lastBookingDate: '2024-01-15',
+      totalBookings: 6
+    },
+    {
+      id: '2',
+      serviceName: 'Garden Maintenance',
+      frequency: 'monthly',
+      status: 'active',
+      nextBookingDate: '2024-02-20',
+      amount: 80,
+      address: '123 Main Street, Apt 4B',
+      lastBookingDate: '2024-01-20',
+      totalBookings: 12
+    },
+    {
+      id: '3',
+      serviceName: 'Window Cleaning',
+      frequency: 'quarterly',
+      status: 'paused',
+      nextBookingDate: '2024-04-01',
+      amount: 60,
+      address: '123 Main Street, Apt 4B',
+      lastBookingDate: '2024-01-01',
+      totalBookings: 4
+    }
+  ]);
 
   const [activeTab, setActiveTab] = useState('profile');
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
@@ -190,6 +245,68 @@ const AccountSettings: React.FC = () => {
     }
   };
 
+  // Recurring bookings handlers
+  const handlePauseRecurringBooking = (bookingId: string) => {
+    setRecurringBookings(bookings => 
+      bookings.map(booking => 
+        booking.id === bookingId 
+          ? { ...booking, status: 'paused' }
+          : booking
+      )
+    );
+    toast({
+      title: "Booking Paused",
+      description: "Your recurring booking has been paused successfully.",
+    });
+  };
+
+  const handleResumeRecurringBooking = (bookingId: string) => {
+    setRecurringBookings(bookings => 
+      bookings.map(booking => 
+        booking.id === bookingId 
+          ? { ...booking, status: 'active' }
+          : booking
+      )
+    );
+    toast({
+      title: "Booking Resumed",
+      description: "Your recurring booking has been resumed successfully.",
+    });
+  };
+
+  const handleCancelRecurringBooking = (bookingId: string) => {
+    setRecurringBookings(bookings => 
+      bookings.map(booking => 
+        booking.id === bookingId 
+          ? { ...booking, status: 'cancelled' }
+          : booking
+      )
+    );
+    toast({
+      title: "Booking Cancelled",
+      description: "Your recurring booking has been cancelled.",
+    });
+  };
+
+  const getStatusColor = (status: RecurringBooking['status']) => {
+    switch (status) {
+      case 'active': return 'bg-green-100 text-green-700';
+      case 'paused': return 'bg-yellow-100 text-yellow-700';
+      case 'cancelled': return 'bg-red-100 text-red-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getFrequencyLabel = (frequency: RecurringBooking['frequency']) => {
+    switch (frequency) {
+      case 'weekly': return 'Every week';
+      case 'bi-weekly': return 'Every 2 weeks';
+      case 'monthly': return 'Every month';
+      case 'quarterly': return 'Every 3 months';
+      default: return frequency;
+    }
+  };
+
   const timeSlotOptions = [
     { value: 'early-morning', label: 'Early Morning (7AM-9AM)' },
     { value: 'morning', label: 'Morning (9AM-12PM)' },
@@ -224,7 +341,7 @@ const AccountSettings: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="w-4 h-4" />
               <span>Profile</span>
@@ -233,8 +350,12 @@ const AccountSettings: React.FC = () => {
               <MapPin className="w-4 h-4" />
               <span>Addresses</span>
             </TabsTrigger>
+            <TabsTrigger value="recurring" className="flex items-center space-x-2">
+              <Repeat className="w-4 h-4" />
+              <span>Recurring</span>
+            </TabsTrigger>
             <TabsTrigger value="payment" className="flex items-center space-x-2">
-              <Shield className="w-4 h-4" />
+              <CreditCard className="w-4 h-4" />
               <span>Payment</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center space-x-2">
@@ -476,6 +597,154 @@ const AccountSettings: React.FC = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Recurring Bookings Tab */}
+          <TabsContent value="recurring" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Repeat className="w-5 h-5" />
+                  <span>Recurring Bookings</span>
+                </CardTitle>
+                <p className="text-sm text-slate-600 mt-2">
+                  Manage your recurring service bookings and subscription status
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {recurringBookings.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-slate-700 mb-2">No Recurring Bookings</h3>
+                      <p className="text-slate-500 mb-4">Set up recurring bookings to automate your regular services.</p>
+                      <Button className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600">
+                        <Plus className="w-4 h-4 mr-2" />
+                        Create Recurring Booking
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {recurringBookings.map((booking) => (
+                        <div key={booking.id} className="p-6 border border-slate-200 rounded-lg bg-gradient-to-br from-white to-slate-50">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-3 mb-3">
+                                <h4 className="text-lg font-semibold text-slate-800">{booking.serviceName}</h4>
+                                <Badge className={getStatusColor(booking.status)}>
+                                  {booking.status}
+                                </Badge>
+                              </div>
+                              
+                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                                <div className="flex items-center space-x-2">
+                                  <Clock className="w-4 h-4 text-slate-400" />
+                                  <span className="text-slate-600">Frequency:</span>
+                                  <span className="font-medium">{getFrequencyLabel(booking.frequency)}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Calendar className="w-4 h-4 text-slate-400" />
+                                  <span className="text-slate-600">Next booking:</span>
+                                  <span className="font-medium">{new Date(booking.nextBookingDate).toLocaleDateString()}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <DollarSign className="w-4 h-4 text-slate-400" />
+                                  <span className="text-slate-600">Amount:</span>
+                                  <span className="font-medium">${booking.amount}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <MapPin className="w-4 h-4 text-slate-400" />
+                                  <span className="text-slate-600">Address:</span>
+                                  <span className="font-medium text-sm">{booking.address}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                  <Receipt className="w-4 h-4 text-slate-400" />
+                                  <span className="text-slate-600">Total bookings:</span>
+                                  <span className="font-medium">{booking.totalBookings}</span>
+                                </div>
+                                {booking.lastBookingDate && (
+                                  <div className="flex items-center space-x-2">
+                                    <Check className="w-4 h-4 text-slate-400" />
+                                    <span className="text-slate-600">Last booking:</span>
+                                    <span className="font-medium">{new Date(booking.lastBookingDate).toLocaleDateString()}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center space-x-2 ml-4">
+                              {booking.status === 'active' && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handlePauseRecurringBooking(booking.id)}
+                                  className="text-yellow-600 hover:text-yellow-700 border-yellow-300 hover:bg-yellow-50"
+                                >
+                                  <Pause className="w-4 h-4 mr-1" />
+                                  Pause
+                                </Button>
+                              )}
+                              {booking.status === 'paused' && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleResumeRecurringBooking(booking.id)}
+                                  className="text-green-600 hover:text-green-700 border-green-300 hover:bg-green-50"
+                                >
+                                  <Play className="w-4 h-4 mr-1" />
+                                  Resume
+                                </Button>
+                              )}
+                              {booking.status !== 'cancelled' && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleCancelRecurringBooking(booking.id)}
+                                  className="text-red-600 hover:text-red-700 border-red-300 hover:bg-red-50"
+                                >
+                                  <X className="w-4 h-4 mr-1" />
+                                  Cancel
+                                </Button>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-slate-600 hover:text-slate-700"
+                              >
+                                <Edit2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  {/* Subscription Status Integration */}
+                  <Separator />
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div className="flex items-start space-x-3">
+                      <CreditCard className="w-5 h-5 text-blue-600 mt-0.5" />
+                      <div>
+                        <h4 className="font-semibold text-blue-800">Payment Status</h4>
+                        <p className="text-sm text-blue-700 mt-1">
+                          All recurring bookings are automatically charged to your default payment method. 
+                          You can view payment history and update your payment method in the Payment tab.
+                        </p>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="mt-3 border-blue-300 text-blue-700 hover:bg-blue-100"
+                          onClick={() => setActiveTab('payment')}
+                        >
+                          Manage Payment Method
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
