@@ -74,8 +74,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
   const navigationItems = [
     { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/new-booking', count: null },
     { id: 'history', icon: History, label: 'Service History', path: '/service-history', count: userData?.service_history?.length || 0 },
-    { id: 'profile', icon: User, label: 'My Profile', path: null, count: null },
-    { id: 'settings', icon: Settings, label: 'Settings', path: null, count: null },
+    { id: 'settings', icon: Settings, label: 'Account & Settings', path: null, count: null },
   ];
 
   const handleNavigation = (item: any) => {
@@ -87,10 +86,8 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
       setActiveSection(item.id);
       // You could show modals, different content, etc. here
       if (item.id === 'settings') {
-        // Could trigger settings modal here
-        console.log('Settings clicked - could open settings modal');
-      } else if (item.id === 'profile') {
-        console.log('Profile clicked - could show profile editor');
+        // Could trigger combined account & settings modal here
+        console.log('Account & Settings clicked - could open profile editor and settings modal');
       } else if (item.id === 'history') {
         console.log('History clicked - could show detailed history view');
       }
