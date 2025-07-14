@@ -16,12 +16,23 @@ import {
   Building,
   Waves,
   X,
-  PanelLeft
+  PanelLeft,
+  Clock,
+  MessageCircle,
+  PlayCircle
 } from 'lucide-react';
 
 interface Booking {
   date: string;
   service_type: string;
+  notes?: string;
+}
+
+interface ActiveChat {
+  id: string;
+  service_type: string;
+  status: 'draft' | 'pending_confirmation' | 'awaiting_details';
+  last_updated: string;
   notes?: string;
 }
 
@@ -34,6 +45,7 @@ interface UserData {
   bedrooms?: number;
   bathrooms?: number;
   service_history: Booking[];
+  active_chats?: ActiveChat[];
   preferences?: unknown;
 }
 
@@ -49,6 +61,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
   const navigate = useNavigate();
   const location = useLocation();
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(true);
+  const [isActiveChatsExpanded, setIsActiveChatsExpanded] = useState(true);
   const [activeSection, setActiveSection] = useState('new-booking');
   const [showImpactPopup, setShowImpactPopup] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -112,6 +125,43 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
       return dateString;
     }
   };
+
+  const getStatusBadge = (status: 'draft' | 'pending_confirmation' | 'awaiting_details') => {
+    switch (status) {
+      case 'draft':
+        return { text: 'Draft', color: 'bg-amber-100 text-amber-700' };
+      case 'pending_confirmation':
+        return { text: 'Pending', color: 'bg-orange-100 text-orange-700' };
+      case 'awaiting_details':
+        return { text: 'Details', color: 'bg-yellow-100 text-yellow-700' };
+      default:
+        return { text: 'Active', color: 'bg-amber-100 text-amber-700' };
+    }
+  };
+
+  const handleResumeChat = (chatId: string) => {
+    // Navigate to chat interface with the specific chat ID
+    console.log('Resuming chat:', chatId);
+    // This would navigate to the chat interface in a real implementation
+  };
+
+  // Mock data for demonstration - replace with real data from props
+  const mockActiveChats: ActiveChat[] = userData?.active_chats || [
+    {
+      id: 'chat-1',
+      service_type: 'house cleaning',
+      status: 'draft',
+      last_updated: '2024-01-15T10:30:00Z',
+      notes: 'Looking for weekly cleaning service'
+    },
+    {
+      id: 'chat-2',
+      service_type: 'plumbing repair',
+      status: 'pending_confirmation',
+      last_updated: '2024-01-14T15:45:00Z',
+      notes: 'Kitchen sink needs fixing'
+    }
+  ];
 
   return (
     <>
@@ -241,6 +291,72 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                 </button>
               );
             })}
+          </div>
+        )}
+
+        {/* Active Bookings Section - Only when expanded */}
+        {!isCollapsed && mockActiveChats.length > 0 && (
+          <div className="mb-8">
+            <button
+              onClick={() => setIsActiveChatsExpanded(!isActiveChatsExpanded)}
+              className="w-full flex items-center justify-between px-3 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors group"
+            >
+              <span>Active Bookings</span>
+              {isActiveChatsExpanded ? (
+                <ChevronDown className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              ) : (
+                <ChevronRight className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              )}
+            </button>
+            
+            {isActiveChatsExpanded && (
+              <div className="mt-3 space-y-2">
+                {mockActiveChats.map((chat) => {
+                  const statusBadge = getStatusBadge(chat.status);
+                  return (
+                    <div 
+                      key={chat.id} 
+                      className="p-4 bg-gradient-to-r from-amber-50/80 via-orange-50/40 to-amber-50/80 rounded-xl border border-amber-200/60 hover:border-amber-300 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
+                    >
+                      <div className="flex items-start justify-between space-x-3">
+                        <div className="flex items-start space-x-3 flex-1 min-w-0">
+                          <div className="text-xl mt-1 group-hover:scale-110 transition-transform">
+                            <MessageCircle className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-2 mb-1">
+                              <h4 className="text-sm font-semibold text-slate-800 capitalize truncate group-hover:text-amber-600 transition-colors">
+                                {chat.service_type}
+                              </h4>
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusBadge.color}`}>
+                                {statusBadge.text}
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-500 mt-1 font-medium flex items-center space-x-1">
+                              <Clock className="w-3 h-3" />
+                              <span>{formatDate(chat.last_updated)}</span>
+                            </p>
+                            {chat.notes && (
+                              <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">
+                                {chat.notes}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleResumeChat(chat.id)}
+                          className="flex items-center space-x-1 px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg text-xs font-medium transition-colors group-hover:scale-105 transform"
+                          title="Resume Chat"
+                        >
+                          <PlayCircle className="w-3 h-3" />
+                          <span>Resume</span>
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
