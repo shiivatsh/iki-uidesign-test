@@ -457,33 +457,33 @@ const AccountSettings: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-7 h-auto p-1">
-            <TabsTrigger value="profile" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <User className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Profile</span>
+            <TabsTrigger value="profile" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <User className="w-4 h-4" />
+              <span>Profile</span>
             </TabsTrigger>
-            <TabsTrigger value="addresses" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Addresses</span>
+            <TabsTrigger value="addresses" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <MapPin className="w-4 h-4" />
+              <span>Address</span>
             </TabsTrigger>
-            <TabsTrigger value="recurring" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <Repeat className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Recurring</span>
+            <TabsTrigger value="recurring" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <Repeat className="w-4 h-4" />
+              <span>Recurring</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Security</span>
+            <TabsTrigger value="security" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <Shield className="w-4 h-4" />
+              <span>Security</span>
             </TabsTrigger>
-            <TabsTrigger value="payment" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Payment</span>
+            <TabsTrigger value="payment" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <CreditCard className="w-4 h-4" />
+              <span>Payment</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <Bell className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Notifications</span>
+            <TabsTrigger value="notifications" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <Bell className="w-4 h-4" />
+              <span>Notify</span>
             </TabsTrigger>
-            <TabsTrigger value="preferences" className="flex items-center space-x-1 text-xs sm:text-sm px-2 py-2">
-              <Palette className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Preferences</span>
+            <TabsTrigger value="preferences" className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-1 text-xs px-2 py-2">
+              <Palette className="w-4 h-4" />
+              <span>Prefs</span>
             </TabsTrigger>
           </TabsList>
 
