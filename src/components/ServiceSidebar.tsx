@@ -248,29 +248,29 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
           </button>
           </div>
         </div>
+      </div>
 
-        {/* Your Impact Section */}
-        <div className="mt-6">
-          <button
-            onClick={() => setShowImpactPopup(true)}
-            className="w-full p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 rounded-2xl border border-blue-100/60 hover:border-blue-200 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-200" style={{background: 'linear-gradient(135deg, #0067E5, #4F46E5)'}}>
-                <Waves className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1 text-left">
-                <p className="text-sm font-semibold text-slate-800">Your Impact</p>
-                <p className="text-xs font-medium" style={{color: '#0067E5'}}>80g Plastic Removed</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
+      {/* Fixed Your Impact Section at Bottom */}
+      <div className="p-5 border-t border-slate-200/60 bg-white/95">
+        <button
+          onClick={() => setShowImpactPopup(true)}
+          className="w-full p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 rounded-2xl border border-blue-100/60 hover:border-blue-200 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
+        >
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-200" style={{background: 'linear-gradient(135deg, #0067E5, #4F46E5)'}}>
+              <Waves className="w-5 h-5 text-white" />
             </div>
-          </button>
-          
-          {/* Version Text */}
-          <div className="mt-3 text-center">
-            <p className="text-xs text-slate-400 font-medium">v2.1.0 • AI Powered</p>
+            <div className="flex-1 text-left">
+              <p className="text-sm font-semibold text-slate-800">Your Impact</p>
+              <p className="text-xs font-medium" style={{color: '#0067E5'}}>80g Plastic Removed</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
           </div>
+        </button>
+        
+        {/* Version Text */}
+        <div className="mt-3 text-center">
+          <p className="text-xs text-slate-400 font-medium">v2.1.0 • AI Powered</p>
         </div>
       </div>
 
