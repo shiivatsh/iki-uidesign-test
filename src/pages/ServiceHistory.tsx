@@ -192,13 +192,9 @@ const ServiceHistory: React.FC = () => {
   };
 
   const handleBackNavigation = () => {
-    // Check if there's browser history to go back to
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      // If no history, navigate to new-booking page (main page)
-      navigate('/new-booking');
-    }
+    // Always navigate to new-booking as the main page
+    // This ensures consistent behavior regardless of how user reached this page
+    navigate('/new-booking');
   };
 
   return (
