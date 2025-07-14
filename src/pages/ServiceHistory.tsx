@@ -163,16 +163,23 @@ const ServiceHistory: React.FC = () => {
     ));
   };
 
-  const filteredHistory = mockServiceHistory.filter(item => {
-    const matchesSearch = item.service_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (item.notes && item.notes.toLowerCase().includes(searchTerm.toLowerCase())) ||
-                         (item.provider && item.provider.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesFilter = filterStatus === 'all' || item.status === filterStatus;
-    const matchesTab = activeTab === 'all' || item.type === activeTab;
-    
-    return matchesSearch && matchesFilter && matchesTab;
-  });
+  const filteredHistory = mockServiceHistory
+    .filter(item => {
+      const matchesSearch = item.service_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (item.notes && item.notes.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                           (item.provider && item.provider.toLowerCase().includes(searchTerm.toLowerCase()));
+      
+      const matchesFilter = filterStatus === 'all' || item.status === filterStatus;
+      const matchesTab = activeTab === 'all' || item.type === activeTab;
+      
+      return matchesSearch && matchesFilter && matchesTab;
+    })
+    .sort((a, b) => {
+      // Sort by date (newest first)
+      const dateA = new Date(a.last_updated || a.date);
+      const dateB = new Date(b.last_updated || b.date);
+      return dateB.getTime() - dateA.getTime();
+    });
 
   const handleResumeChat = (chatId: string) => {
     console.log('Resuming chat:', chatId);
