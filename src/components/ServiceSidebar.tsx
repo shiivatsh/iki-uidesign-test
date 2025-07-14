@@ -44,7 +44,6 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(true);
 
   const navigationItems = [
-    { id: 'dashboard', icon: Home, label: 'Dashboard', path: '/dashboard', count: null },
     { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/new-booking', count: null },
     { id: 'history', icon: History, label: 'Service History', path: '/dashboard', count: userData?.service_history?.length || 0 },
     { id: 'profile', icon: User, label: 'My Profile', path: '/dashboard', count: null },
