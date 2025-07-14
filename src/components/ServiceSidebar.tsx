@@ -133,9 +133,9 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
           )}
           <button 
             onClick={handleToggleCollapse}
-            className="w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-lg flex items-center justify-center transition-colors group"
+            className="p-1 hover:bg-slate-100/50 rounded-md transition-colors group"
           >
-            <PanelLeftClose className="w-4 h-4 text-slate-600 group-hover:text-slate-800" />
+            <PanelLeftClose className="w-5 h-5 text-slate-500 group-hover:text-slate-700" />
           </button>
         </div>
         
