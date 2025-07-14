@@ -191,6 +191,16 @@ const ServiceHistory: React.FC = () => {
     // Open detailed view modal or navigate to details page
   };
 
+  const handleBackNavigation = () => {
+    // Check if there's browser history to go back to
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      // If no history, navigate to new-booking page (main page)
+      navigate('/new-booking');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
       {/* Header */}
@@ -201,7 +211,7 @@ const ServiceHistory: React.FC = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => navigate(-1)}
+                onClick={handleBackNavigation}
                 className="hover:bg-slate-100"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
