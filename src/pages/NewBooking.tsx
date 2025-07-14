@@ -148,6 +148,13 @@ function NewBookingContent() {
                     </div>
                     
                     <div className="flex items-center space-x-3">
+                        {/* Notification Icon */}
+                        <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
+                            <Bell className="w-5 h-5 text-slate-600" />
+                            {/* Notification Badge */}
+                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                        </button>
+                        
                         {/* User Profile Circle */}
                         <div className="relative" ref={dropdownRef}>
                             <button
@@ -165,13 +172,6 @@ function NewBookingContent() {
                                 />
                             )}
                         </div>
-                        
-                        {/* Notification Icon */}
-                        <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
-                            <Bell className="w-5 h-5 text-slate-600" />
-                            {/* Notification Badge */}
-                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-                        </button>
                     </div>
                 </header>
                 
