@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
-import { Send, Sparkles, User, Bot } from 'lucide-react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { Send, Sparkles, User, Bot, AlertCircle, WifiOff } from 'lucide-react';
+import { useChatApi } from '@/hooks/useChatApi';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { Message, ChatStatus } from '@/services/chatApi';
+import { useToast } from '@/hooks/use-toast';
 
-// Use hardcoded API endpoint that works in Vite
-const API_ENDPOINTS = {
-    askLLM: 'https://ikiru-backend-515600662686.us-central1.run.app/ask-llm'
-};
-
-interface Message {
+// Legacy message interface for compatibility
+interface LegacyMessage {
     id: string;
     sender: 'user' | 'llm';
     content: string;
@@ -20,100 +19,190 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName }) => {
-    const [messages, setMessages] = useState<Message[]>([]);
+    // Local state for input and UI
     const [input, setInput] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [legacyMessages, setLegacyMessages] = useState<LegacyMessage[]>([]);
+    const [useLegacyMode, setUseLegacyMode] = useState(true); // Start with legacy for compatibility
+    
+    // Refs
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    
+    // Hooks
+    const { toast } = useToast();
+    const { handleError } = useErrorHandler();
+    
+    // Chat API hook (for new chat system)
+    const {
+        currentChat,
+        messages: apiMessages,
+        isLoading,
+        isConnecting,
+        lastError,
+        sendMessage,
+        sendLegacyMessage,
+        createNewChat,
+        canSendMessage
+    } = useChatApi({
+        userId: trackingCode || 'demo-user',
+        onChatCreated: (chat) => {
+            console.log('New chat created:', chat.id);
+            setUseLegacyMode(false);
+        },
+        onMessageSent: (message) => {
+            console.log('Message sent:', message.id);
+        },
+        onError: (error) => {
+            console.error('Chat API error:', error);
+        }
+    });
 
-    const scrollToBottom = () => {
+    // Memoized messages for performance
+    const displayMessages = useMemo(() => {
+        if (useLegacyMode) {
+            return legacyMessages.map(msg => ({
+                ...msg,
+                sender: msg.sender === 'llm' ? 'ai' as const : msg.sender
+            }));
+        }
+        return apiMessages;
+    }, [useLegacyMode, legacyMessages, apiMessages]);
+
+    // Auto-scroll to bottom
+    const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    }, []);
 
-    useEffect(scrollToBottom, [messages]);
+    useEffect(() => {
+        scrollToBottom();
+    }, [displayMessages, scrollToBottom]);
 
-    // Welcome message
+    // Clear messages when tracking code changes
     useEffect(() => {
         if (trackingCode) {
-            setMessages([]);
+            setLegacyMessages([]);
         }
     }, [trackingCode, userName]);
 
-    const handleSendMessage = async () => {
+    // Enhanced message sending with error handling
+    const handleSendMessage = useCallback(async () => {
         if (input.trim() === '' || !trackingCode) {
             if (!trackingCode) {
-                setError("Please ensure you're properly authenticated to chat.");
+                toast({
+                    title: 'Authentication Required',
+                    description: "Please ensure you're properly authenticated to chat.",
+                    variant: 'destructive',
+                });
             }
             return;
         }
 
-        const userMessage: Message = {
-            id: `user-${Date.now()}`,
-            sender: 'user',
-            content: input,
-            timestamp: new Date()
-        };
-        
-        setMessages(prev => [...prev, userMessage]);
-        setInput('');
-        setIsLoading(true);
-        setError(null);
+        const messageContent = input.trim();
+        setInput(''); // Clear input immediately for better UX
 
         try {
-            const response = await axios.post(API_ENDPOINTS.askLLM, {
-                tracking_code: trackingCode,
-                question: userMessage.content
+            if (useLegacyMode) {
+                // Legacy mode for backward compatibility
+                const userMessage: LegacyMessage = {
+                    id: `user-${Date.now()}`,
+                    sender: 'user',
+                    content: messageContent,
+                    timestamp: new Date()
+                };
+                
+                setLegacyMessages(prev => [...prev, userMessage]);
+
+                const response = await sendLegacyMessage(trackingCode, messageContent);
+                
+                if (response) {
+                    const aiMessage: LegacyMessage = {
+                        id: `ai-${Date.now()}`,
+                        sender: 'llm',
+                        content: response,
+                        timestamp: new Date()
+                    };
+                    setLegacyMessages(prev => [...prev, aiMessage]);
+                } else {
+                    // Error message already handled by useChatApi
+                    const errorMessage: LegacyMessage = {
+                        id: `error-${Date.now()}`,
+                        sender: 'llm',
+                        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
+                        timestamp: new Date()
+                    };
+                    setLegacyMessages(prev => [...prev, errorMessage]);
+                }
+            } else {
+                // New API mode
+                await sendMessage(messageContent);
+            }
+        } catch (error) {
+            handleError(error, {
+                fallbackMessage: 'Failed to send message',
+                showToast: true,
             });
             
-            const llmResponseContent = response.data.response;
-
-            const llmMessage: Message = {
-                id: `llm-${Date.now()}`,
-                sender: 'llm',
-                content: llmResponseContent,
-                timestamp: new Date()
-            };
-            setMessages(prev => [...prev, llmMessage]);
-
-        } catch (err) {
-            console.error("Error fetching LLM response:", err);
-            const errorMessage: Message = {
-                id: `error-${Date.now()}`,
-                sender: 'llm',
-                content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
-                timestamp: new Date()
-            };
-            setMessages(prev => [...prev, errorMessage]);
-            setError("Failed to get a response from the assistant.");
-        } finally {
-            setIsLoading(false);
+            // Restore input if message failed
+            setInput(messageContent);
         }
-    };
+    }, [input, trackingCode, useLegacyMode, sendMessage, sendLegacyMessage, toast, handleError]);
 
-    const handleKeyPress = (e: React.KeyboardEvent) => {
+    // Keyboard handling
+    const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             handleSendMessage();
         }
-    };
+    }, [handleSendMessage]);
 
-    const autoResize = () => {
+    // Auto-resize textarea
+    const autoResize = useCallback(() => {
         const textarea = inputRef.current;
         if (textarea) {
             textarea.style.height = 'auto';
             textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
         }
-    };
+    }, []);
 
     useEffect(() => {
         autoResize();
-    }, [input]);
+    }, [input, autoResize]);
+
+    // Connection status indicator
+    const getConnectionStatus = () => {
+        if (isConnecting) return { status: 'connecting', text: 'Connecting...', icon: WifiOff };
+        if (lastError) return { status: 'error', text: 'Connection error', icon: AlertCircle };
+        if (!trackingCode) return { status: 'disconnected', text: 'Not authenticated', icon: WifiOff };
+        return { status: 'connected', text: 'Connected', icon: null };
+    };
+
+    const connectionStatus = getConnectionStatus();
+    const currentLoading = isLoading || isConnecting;
 
     return (
         <div className="flex flex-col h-full bg-background">
+            {/* Connection Status Bar */}
+            {(connectionStatus.status !== 'connected' || lastError) && (
+                <div className={`px-4 py-2 text-sm border-b flex items-center justify-center gap-2 ${
+                    connectionStatus.status === 'error' 
+                        ? 'bg-destructive/10 text-destructive border-destructive/20' 
+                        : 'bg-muted text-muted-foreground border-border'
+                }`}>
+                    {connectionStatus.icon && <connectionStatus.icon className="w-4 h-4" />}
+                    <span>{connectionStatus.text}</span>
+                    {lastError && (
+                        <button 
+                            onClick={() => window.location.reload()}
+                            className="ml-2 px-2 py-1 text-xs bg-background rounded border hover:bg-muted transition-colors"
+                        >
+                            Retry
+                        </button>
+                    )}
+                </div>
+            )}
+
             {/* Empty State / Welcome */}
-            {messages.length === 0 && !isLoading && (
+            {displayMessages.length === 0 && !currentLoading && (
                 <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-8">
                     <div className="text-center w-full max-w-4xl mx-auto animate-fade-in">
                         {/* Welcome Text */}
@@ -139,7 +228,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                         onKeyPress={handleKeyPress}
                                         placeholder="Assign a task or ask anything"
                                         className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground h-full"
-                                        disabled={!trackingCode || isLoading}
+                                        disabled={!canSendMessage || !trackingCode}
                                         rows={1}
                                     />
                                     
@@ -147,11 +236,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     <div className="absolute right-3 bottom-3">
                                         <button
                                             onClick={handleSendMessage}
-                                            disabled={isLoading || !trackingCode || input.trim() === ''}
+                                            disabled={!canSendMessage || !trackingCode || input.trim() === ''}
                                             className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
-                                            title="Send message"
+                                            title={currentLoading ? 'Sending...' : 'Send message'}
                                         >
-                                            {isLoading ? (
+                                            {currentLoading ? (
                                                 <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
                                             ) : (
                                                 <svg 
@@ -165,13 +254,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                         </button>
                                     </div>
                                 </div>
-                                
-                                {/* Error Message */}
-                                {error && (
-                                    <div className="mt-4 p-4 bg-destructive/10 border border-destructive/20 text-destructive text-sm font-body rounded-xl animate-fade-in">
-                                        {error}
-                                    </div>
-                                )}
                             </div>
                         </div>
                         
@@ -231,11 +313,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             )}
 
             {/* Messages Area */}
-            {messages.length > 0 && (
+            {displayMessages.length > 0 && (
                 <div className="flex-1 overflow-y-auto">
                     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         <div className="space-y-6 sm:space-y-8">
-                            {messages.map((msg, index) => (
+                            {displayMessages.map((msg, index) => (
                                 <div
                                     key={msg.id}
                                     className={`group transition-all duration-300 animate-fade-in ${
@@ -243,19 +325,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     }`}
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
-                                    <div className={`flex items-start gap-3 sm:gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                                        {/* Avatar */}
-                                        <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-sm ${
-                                            msg.sender === 'user' 
-                                                ? 'bg-primary text-primary-foreground' 
-                                                : 'bg-accent text-accent-foreground'
-                                        }`}>
-                                            {msg.sender === 'user' ? (
-                                                <User className="w-4 h-4 sm:w-5 sm:h-5" />
-                                            ) : (
-                                                <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
-                                            )}
-                                        </div>
+                                        <div className={`flex items-start gap-3 sm:gap-4 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
+                                            {/* Avatar */}
+                                            <div className={`flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-sm ${
+                                                msg.sender === 'user' 
+                                                    ? 'bg-primary text-primary-foreground' 
+                                                    : 'bg-accent text-accent-foreground'
+                                            }`}>
+                                                {msg.sender === 'user' ? (
+                                                    <User className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                ) : (
+                                                    <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
+                                                )}
+                                            </div>
 
                                         {/* Message Bubble */}
                                         <div className={`flex-1 max-w-xs sm:max-w-2xl ${msg.sender === 'user' ? 'text-right' : ''}`}>
@@ -283,7 +365,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                             <div className={`text-xs font-body text-muted-foreground mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ${
                                                 msg.sender === 'user' ? 'text-right' : 'text-left'
                                             }`}>
-                                                {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </div>
                                     </div>
@@ -291,7 +373,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             ))}
 
                             {/* Typing Indicator */}
-                            {isLoading && (
+                            {currentLoading && (
                                 <div className="animate-fade-in">
                                     <div className="flex items-start gap-3 sm:gap-4">
                                         {/* AI Avatar */}
@@ -312,7 +394,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                                         <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                                                     </div>
                                                     <span className="text-xs font-body text-muted-foreground ml-2">
-                                                        Thinking...
+                                                        {isConnecting ? 'Connecting...' : 'Thinking...'}
                                                     </span>
                                                 </div>
                                             </div>
@@ -328,7 +410,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             )}
 
             {/* Fixed Input at Bottom for Active Conversations */}
-            {messages.length > 0 && (
+            {displayMessages.length > 0 && (
                 <div className="border-t border-border bg-background">
                     <div className="w-full max-w-[765px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
                         <div 
@@ -346,7 +428,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                 onKeyPress={handleKeyPress}
                                 placeholder="Type your message..."
                                 className="w-full pr-16 border-0 bg-transparent resize-none focus:outline-none font-body text-base text-foreground placeholder:text-muted-foreground h-full"
-                                disabled={!trackingCode || isLoading}
+                                disabled={!canSendMessage || !trackingCode}
                                 rows={1}
                             />
                             
@@ -354,11 +436,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             <div className="absolute right-3 bottom-3">
                                 <button
                                     onClick={handleSendMessage}
-                                    disabled={isLoading || !trackingCode || input.trim() === ''}
+                                    disabled={!canSendMessage || !trackingCode || input.trim() === ''}
                                     className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
-                                    title="Send message"
+                                    title={currentLoading ? 'Sending...' : 'Send message'}
                                 >
-                                    {isLoading ? (
+                                    {currentLoading ? (
                                         <div className="w-4 h-4 border-2 border-background/30 border-t-background rounded-full animate-spin" />
                                     ) : (
                                         <svg 
