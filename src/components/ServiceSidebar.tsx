@@ -170,6 +170,26 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
 
       {/* Enhanced Navigation */}
       <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'p-2' : 'p-5'} space-y-3`}>
+        {/* Enhanced Quick Actions - Now on top */}
+        {!isCollapsed && (
+          <div className="mb-8">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
+              Quick Actions
+            </h3>
+            <div className="space-y-3">
+              <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform">
+                <Plus className="w-5 h-5" />
+                <span>Book New Service</span>
+              </button>
+              
+              <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
+                <Star className="w-5 h-5" />
+                <span>Rate Last Service</span>
+              </button>
+            </div>
+          </div>
+        )}
+
         {!isCollapsed && (
           <div className="mb-8">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
@@ -288,26 +308,6 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                 )}
               </div>
             )}
-          </div>
-        )}
-
-        {/* Enhanced Quick Actions - Only when expanded */}
-        {!isCollapsed && (
-          <div className="border-t border-slate-200/60 pt-6">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
-              Quick Actions
-            </h3>
-            <div className="space-y-3">
-              <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform">
-                <Plus className="w-5 h-5" />
-                <span>Book New Service</span>
-              </button>
-              
-              <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
-                <Star className="w-5 h-5" />
-                <span>Rate Last Service</span>
-              </button>
-            </div>
           </div>
         )}
       </div>
