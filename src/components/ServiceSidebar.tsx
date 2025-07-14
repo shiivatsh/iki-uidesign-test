@@ -16,8 +16,7 @@ import {
   Building,
   Waves,
   X,
-  PanelLeftClose,
-  PanelLeftOpen
+  PanelLeft
 } from 'lucide-react';
 
 interface Booking {
@@ -135,7 +134,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
             onClick={handleToggleCollapse}
             className="p-1 hover:bg-slate-100/50 rounded-md transition-colors group"
           >
-            <PanelLeftClose className="w-5 h-5 text-slate-500 group-hover:text-slate-700" />
+            <PanelLeft className="w-5 h-5 text-slate-500 group-hover:text-slate-700" />
           </button>
         </div>
         
