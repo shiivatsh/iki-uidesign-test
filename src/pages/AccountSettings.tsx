@@ -15,7 +15,10 @@ import {
   Plus,
   Edit2,
   Trash2,
-  Check
+  Check,
+  CreditCard,
+  Receipt,
+  Lock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,12 +62,18 @@ const AccountSettings: React.FC = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  // Profile state
+  // Profile state - matching the User interface from NewBooking
   const [profile, setProfile] = useState({
     firstName: 'John',
     lastName: 'Doe',
+    name: 'John Doe', // Full name for compatibility
     email: 'john.doe@email.com',
     phone: '+1 (555) 123-4567',
+    phoneNumber: '+1 (555) 123-4567', // Alternative field name
+    address: '123 Main Street, Apt 4B',
+    postalCode: '10001',
+    bedrooms: 3,
+    bathrooms: 2,
     emergencyContact: '+1 (555) 987-6543'
   });
 
@@ -215,7 +224,7 @@ const AccountSettings: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-6 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="profile" className="flex items-center space-x-2">
               <User className="w-4 h-4" />
               <span>Profile</span>
@@ -223,6 +232,10 @@ const AccountSettings: React.FC = () => {
             <TabsTrigger value="addresses" className="flex items-center space-x-2">
               <MapPin className="w-4 h-4" />
               <span>Addresses</span>
+            </TabsTrigger>
+            <TabsTrigger value="payment" className="flex items-center space-x-2">
+              <Shield className="w-4 h-4" />
+              <span>Payment</span>
             </TabsTrigger>
             <TabsTrigger value="notifications" className="flex items-center space-x-2">
               <Bell className="w-4 h-4" />
@@ -260,7 +273,7 @@ const AccountSettings: React.FC = () => {
                     <Input
                       id="firstName"
                       value={profile.firstName}
-                      onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+                      onChange={(e) => setProfile({ ...profile, firstName: e.target.value, name: `${e.target.value} ${profile.lastName}` })}
                       disabled={!isEditing.profile}
                     />
                   </div>
@@ -269,14 +282,14 @@ const AccountSettings: React.FC = () => {
                     <Input
                       id="lastName"
                       value={profile.lastName}
-                      onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+                      onChange={(e) => setProfile({ ...profile, lastName: e.target.value, name: `${profile.firstName} ${e.target.value}` })}
                       disabled={!isEditing.profile}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">Email Address *</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
@@ -286,20 +299,81 @@ const AccountSettings: React.FC = () => {
                       onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                       disabled={!isEditing.profile}
                       className="pl-10"
+                      required
                     />
                   </div>
+                  <p className="text-xs text-slate-500">This email is used for service confirmations and notifications</p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">Phone Number *</Label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
                     <Input
                       id="phone"
                       value={profile.phone}
-                      onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
+                      onChange={(e) => setProfile({ ...profile, phone: e.target.value, phoneNumber: e.target.value })}
                       disabled={!isEditing.profile}
                       className="pl-10"
+                      placeholder="+1 (555) 123-4567"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="address">Precise Address *</Label>
+                  <div className="relative">
+                    <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                    <Input
+                      id="address"
+                      value={profile.address}
+                      onChange={(e) => setProfile({ ...profile, address: e.target.value })}
+                      disabled={!isEditing.profile}
+                      className="pl-10"
+                      placeholder="123 Main Street, Apt 4B"
+                      required
+                    />
+                  </div>
+                  <p className="text-xs text-slate-500">Include apartment/unit number for accurate service delivery</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="postalCode">Postal/ZIP Code *</Label>
+                  <Input
+                    id="postalCode"
+                    value={profile.postalCode}
+                    onChange={(e) => setProfile({ ...profile, postalCode: e.target.value })}
+                    disabled={!isEditing.profile}
+                    placeholder="10001"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="bedrooms">Number of Bedrooms</Label>
+                    <Input
+                      id="bedrooms"
+                      type="number"
+                      min="0"
+                      max="20"
+                      value={profile.bedrooms}
+                      onChange={(e) => setProfile({ ...profile, bedrooms: parseInt(e.target.value) || 0 })}
+                      disabled={!isEditing.profile}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bathrooms">Number of Bathrooms</Label>
+                    <Input
+                      id="bathrooms"
+                      type="number"
+                      min="0"
+                      max="10"
+                      step="0.5"
+                      value={profile.bathrooms}
+                      onChange={(e) => setProfile({ ...profile, bathrooms: parseFloat(e.target.value) || 0 })}
+                      disabled={!isEditing.profile}
                     />
                   </div>
                 </div>
@@ -314,16 +388,18 @@ const AccountSettings: React.FC = () => {
                       onChange={(e) => setProfile({ ...profile, emergencyContact: e.target.value })}
                       disabled={!isEditing.profile}
                       className="pl-10"
+                      placeholder="+1 (555) 987-6543"
                     />
                   </div>
+                  <p className="text-xs text-slate-500">Optional: Alternative contact for emergencies</p>
                 </div>
 
                 {isEditing.profile && (
-                  <div className="flex justify-end space-x-3">
+                  <div className="flex justify-end space-x-3 pt-4 border-t">
                     <Button variant="outline" onClick={() => setIsEditing({ profile: false })}>
                       Cancel
                     </Button>
-                    <Button onClick={handleSaveProfile}>
+                    <Button onClick={handleSaveProfile} className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600">
                       Save Changes
                     </Button>
                   </div>
@@ -403,6 +479,140 @@ const AccountSettings: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Payment Tab */}
+          <TabsContent value="payment" className="mt-6">
+            <div className="space-y-6">
+              {/* Payment Method Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <CreditCard className="w-5 h-5" />
+                    <span>Payment Method</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="p-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-lg border border-slate-200">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded flex items-center justify-center">
+                          <span className="text-white text-xs font-bold">••••</span>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-slate-800">•••• •••• •••• 4242</p>
+                          <p className="text-sm text-slate-600">Expires 12/2028</p>
+                        </div>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        <Edit2 className="w-4 h-4 mr-2" />
+                        Update
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div className="flex items-start space-x-3">
+                      <Lock className="w-5 h-5 text-yellow-600 mt-0.5" />
+                      <div>
+                        <h4 className="font-semibold text-yellow-800">Secure Payment Integration</h4>
+                        <p className="text-sm text-yellow-700 mt-1">
+                          To implement secure payment functionality, we need to integrate with Stripe. 
+                          This requires setting up Supabase backend integration first.
+                        </p>
+                        <Button variant="outline" size="sm" className="mt-3 border-yellow-300 text-yellow-700 hover:bg-yellow-100">
+                          Setup Payment Integration
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Payment History Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Receipt className="w-5 h-5" />
+                    <span>Payment History</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Mock payment history entries */}
+                    <div className="p-4 border border-slate-200 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <Badge className="bg-green-100 text-green-700">Completed</Badge>
+                            <span className="text-sm text-slate-600">Jan 15, 2024</span>
+                          </div>
+                          <h4 className="font-semibold text-slate-800">House Cleaning Service</h4>
+                          <p className="text-sm text-slate-600">3-bedroom deep cleaning</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-slate-800">$150.00</p>
+                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                            <Receipt className="w-4 h-4 mr-1" />
+                            Receipt
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 border border-slate-200 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <Badge className="bg-green-100 text-green-700">Completed</Badge>
+                            <span className="text-sm text-slate-600">Dec 20, 2023</span>
+                          </div>
+                          <h4 className="font-semibold text-slate-800">Garden Maintenance</h4>
+                          <p className="text-sm text-slate-600">Seasonal garden cleanup</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-slate-800">$80.00</p>
+                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                            <Receipt className="w-4 h-4 mr-1" />
+                            Receipt
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="p-4 border border-slate-200 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <Badge className="bg-green-100 text-green-700">Completed</Badge>
+                            <span className="text-sm text-slate-600">Nov 15, 2023</span>
+                          </div>
+                          <h4 className="font-semibold text-slate-800">Appliance Repair</h4>
+                          <p className="text-sm text-slate-600">Washing machine drainage fix</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-slate-800">$120.00</p>
+                          <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
+                            <Receipt className="w-4 h-4 mr-1" />
+                            Receipt
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-slate-800">Total Spent</h4>
+                        <p className="text-sm text-slate-600">Last 12 months</p>
+                      </div>
+                      <p className="text-2xl font-bold text-slate-800">$350.00</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Notifications Tab */}
