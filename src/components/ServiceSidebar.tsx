@@ -137,35 +137,6 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
             <PanelLeft className="w-5 h-5 text-slate-500 group-hover:text-slate-700" />
           </button>
         </div>
-        
-        {/* Enhanced User Info Card */}
-        {!isCollapsed && userData && (
-          <div className="p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 rounded-2xl border border-blue-100/60 shadow-sm">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-sm font-medium shadow-lg">
-                {userData.name?.charAt(0)?.toUpperCase() || 'U'}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800 truncate">
-                  {userData.name || 'User'}
-                </p>
-                <p className="text-xs text-slate-500 truncate mt-0.5">
-                  {userData.address ? (
-                    <span className="flex items-center">
-                      <Building className="w-3 h-3 mr-1.5" />
-                      {userData.address}
-                    </span>
-                  ) : (
-                    <span className="flex items-center text-slate-400">
-                      <Building className="w-3 h-3 mr-1.5" />
-                      Add your address
-                    </span>
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Enhanced Navigation */}
