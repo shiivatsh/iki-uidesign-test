@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Calendar, 
   Plus, 
@@ -38,16 +39,23 @@ interface ServiceSidebarProps {
 }
 
 const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(true);
-  const [activeSection, setActiveSection] = useState('dashboard');
 
   const navigationItems = [
-    { id: 'dashboard', icon: Home, label: 'Dashboard', count: null },
-    { id: 'new-booking', icon: Plus, label: 'New Booking', count: null },
-    { id: 'history', icon: History, label: 'Service History', count: userData?.service_history?.length || 0 },
-    { id: 'profile', icon: User, label: 'My Profile', count: null },
-    { id: 'settings', icon: Settings, label: 'Settings', count: null },
+    { id: 'dashboard', icon: Home, label: 'Dashboard', path: '/dashboard', count: null },
+    { id: 'new-booking', icon: Plus, label: 'New Booking', path: '/dashboard', count: null },
+    { id: 'history', icon: History, label: 'Service History', path: '/dashboard', count: userData?.service_history?.length || 0 },
+    { id: 'profile', icon: User, label: 'My Profile', path: '/dashboard', count: null },
+    { id: 'settings', icon: Settings, label: 'Settings', path: '/dashboard', count: null },
   ];
+
+  const handleNavigation = (item: any) => {
+    if (item.path) {
+      navigate(item.path);
+    }
+  };
 
   const getServiceIcon = (serviceType: string) => {
     const type = serviceType.toLowerCase();
@@ -124,12 +132,12 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
           
           {navigationItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeSection === item.id;
+            const isActive = location.pathname === item.path && item.id === 'dashboard';
             
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveSection(item.id)}
+                onClick={() => handleNavigation(item)}
                 className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-300 group ${
                   isActive 
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-xl shadow-blue-500/25 scale-105' 
