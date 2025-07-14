@@ -1,4 +1,5 @@
 import React, { useState, useEffect, FunctionComponent, useRef } from 'react';
+import { Bell } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import ServiceSidebar from '../components/ServiceSidebar';
@@ -146,34 +147,31 @@ function NewBookingContent() {
                         </div>
                     </div>
                     
-                    <div className="relative" ref={dropdownRef}>
-                        <button
-                            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                            className="flex items-center space-x-3 p-2 rounded-xl hover:bg-slate-100/80 transition-all duration-200 group"
-                        >
-                            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-sm font-medium shadow-lg group-hover:shadow-xl transition-all duration-200">
+                    <div className="flex items-center space-x-3">
+                        {/* User Profile Circle */}
+                        <div className="relative" ref={dropdownRef}>
+                            <button
+                                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                                className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-200 group"
+                            >
                                 {currentUser.name?.charAt(0)?.toUpperCase() || 'U'}
-                            </div>
-                            <div className="text-left hidden sm:block">
-                                <div className="text-sm font-medium text-slate-800">
-                                    {currentUser.name || 'User'}
-                                </div>
-                                <div className="text-xs text-slate-500">
-                                    {currentUser.email || 'user@example.com'}
-                                </div>
-                            </div>
-                            <svg className="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
+                            </button>
+                            
+                            {isProfileDropdownOpen && (
+                                <ProfileDropdown 
+                                    email={currentUser.email}
+                                    onSettingsClick={handleSettingsClick}
+                                    onLogoutClick={handleLogoutClick}
+                                />
+                            )}
+                        </div>
                         
-                        {isProfileDropdownOpen && (
-                            <ProfileDropdown 
-                                email={currentUser.email}
-                                onSettingsClick={handleSettingsClick}
-                                onLogoutClick={handleLogoutClick}
-                            />
-                        )}
+                        {/* Notification Icon */}
+                        <button className="relative p-2 hover:bg-slate-100 rounded-full transition-colors">
+                            <Bell className="w-5 h-5 text-slate-600" />
+                            {/* Notification Badge */}
+                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+                        </button>
                     </div>
                 </header>
                 
