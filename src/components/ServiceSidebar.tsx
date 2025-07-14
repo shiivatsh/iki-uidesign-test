@@ -113,11 +113,11 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
   };
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-80'} bg-white/95 backdrop-blur-xl border-r border-slate-200/60 h-screen flex flex-col shadow-2xl transition-all duration-300`}>
+    <div className={`${isCollapsed ? 'w-20' : 'w-80'} bg-white/95 backdrop-blur-xl border-r border-slate-200/60 h-screen flex flex-col shadow-2xl transition-all duration-300`}>
       {/* Header */}
-      <div className="p-6 border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white">
+      <div className={`${isCollapsed ? 'p-3' : 'p-6'} border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white`}>
         {/* Header with Logo and Close Button */}
-        <div className="flex justify-between items-center mb-4">
+        <div className={`flex ${isCollapsed ? 'flex-col items-center space-y-3' : 'justify-between items-center mb-4'}`}>
           {!isCollapsed && (
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -170,7 +170,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
       </div>
 
       {/* Enhanced Navigation */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-3">
+      <div className={`flex-1 overflow-y-auto ${isCollapsed ? 'p-2' : 'p-5'} space-y-3`}>
         {!isCollapsed && (
           <div className="mb-8">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
