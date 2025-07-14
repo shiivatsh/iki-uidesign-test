@@ -131,24 +131,24 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-      <div className="w-full max-w-5xl h-full max-h-[95vh] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-md">
+      <div className="w-full max-w-sm sm:max-w-4xl lg:max-w-5xl h-full max-h-[98vh] sm:max-h-[95vh] bg-white/95 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-slate-200/60">
         {/* Enhanced Header */}
-        <div className="flex items-center justify-between p-8 border-b border-slate-200/60 bg-gradient-to-r from-blue-50/50 via-white to-indigo-50/50">
-          <div className="flex items-center space-x-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-xl">
-              <User className="w-7 h-7 text-white" />
+        <div className="flex items-center justify-between p-4 sm:p-6 lg:p-8 border-b border-slate-200/60 bg-gradient-to-r from-blue-50/50 via-white to-indigo-50/50">
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl">
+              <User className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" />
             </div>
-            <div>
-              <h2 className="text-2xl font-bold text-slate-800">Account Settings</h2>
-              <p className="text-sm text-slate-500 font-medium">Manage your profile and preferences</p>
+            <div className="min-w-0">
+              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-slate-800 truncate">Account Settings</h2>
+              <p className="text-xs sm:text-sm text-slate-500 font-medium hidden sm:block">Manage your profile and preferences</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-12 h-12 flex items-center justify-center rounded-2xl text-slate-400 hover:text-slate-600 hover:bg-slate-100/80 transition-all duration-200 hover:scale-105"
+            className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center rounded-xl sm:rounded-2xl text-slate-400 hover:text-slate-600 hover:bg-slate-100/80 transition-all duration-200 hover:scale-105"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
@@ -170,28 +170,28 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
           </div>
         )}
 
-        <div className="flex flex-1 overflow-hidden">
-          {/* Enhanced Sidebar */}
-          <div className="w-72 bg-gradient-to-b from-slate-50/80 to-blue-50/30 border-r border-slate-200/60 p-6">
-            <nav className="space-y-3">
+        <div className="flex flex-1 overflow-hidden flex-col sm:flex-row">
+          {/* Enhanced Sidebar - Horizontal on mobile, vertical on desktop */}
+          <div className="w-full sm:w-56 lg:w-72 bg-gradient-to-b from-slate-50/80 to-blue-50/30 border-b sm:border-b-0 sm:border-r border-slate-200/60 p-3 sm:p-4 lg:p-6">
+            <nav className="flex sm:flex-col space-x-2 sm:space-x-0 sm:space-y-2 lg:space-y-3 overflow-x-auto sm:overflow-x-visible">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center space-x-4 px-5 py-4 rounded-2xl text-sm font-semibold transition-all duration-300 transform ${
+                    className={`flex items-center justify-center sm:justify-start space-x-0 sm:space-x-3 lg:space-x-4 px-3 sm:px-4 lg:px-5 py-3 sm:py-3 lg:py-4 rounded-xl sm:rounded-2xl text-xs sm:text-sm font-semibold transition-all duration-300 transform whitespace-nowrap min-w-0 ${
                       activeTab === tab.id
                         ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-xl scale-105'
                         : 'text-slate-600 hover:bg-white/80 hover:text-slate-800 hover:shadow-lg hover:scale-105'
                     }`}
                   >
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                    <div className={`w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-lg sm:rounded-xl flex items-center justify-center ${
                       activeTab === tab.id ? 'bg-white/20' : 'bg-slate-100'
                     }`}>
-                      <Icon className="w-4 h-4" />
+                      <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                     </div>
-                    <span>{tab.label}</span>
+                    <span className="hidden sm:block">{tab.label}</span>
                   </button>
                 );
               })}
@@ -201,13 +201,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
           {/* Content */}
           <div className="flex-1 overflow-y-auto">
             {activeTab === 'profile' && (
-              <div className="p-6 space-y-6">
+              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Personal Information</h3>
-                  <p className="text-sm text-slate-500 mb-6">Update your personal details and contact information.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-1 sm:mb-2">Personal Information</h3>
+                  <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-6">Update your personal details and contact information.</p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                   <div className="space-y-2">
                     <label className="flex items-center space-x-2 text-sm font-medium text-slate-700">
                       <User className="w-4 h-4" />
@@ -311,10 +311,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
             )}
 
             {activeTab === 'security' && (
-              <div className="p-6 space-y-6">
+              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Security Settings</h3>
-                  <p className="text-sm text-slate-500 mb-6">Manage your password and security preferences.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-1 sm:mb-2">Security Settings</h3>
+                  <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-6">Manage your password and security preferences.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -384,10 +384,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
             )}
 
             {activeTab === 'notifications' && (
-              <div className="p-6 space-y-6">
+              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Notification Preferences</h3>
-                  <p className="text-sm text-slate-500 mb-6">Choose how you want to receive notifications.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-1 sm:mb-2">Notification Preferences</h3>
+                  <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-6">Choose how you want to receive notifications.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -431,10 +431,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
             )}
 
             {activeTab === 'preferences' && (
-              <div className="p-6 space-y-6">
+              <div className="p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">App Preferences</h3>
-                  <p className="text-sm text-slate-500 mb-6">Customize your app experience.</p>
+                  <h3 className="text-base sm:text-lg font-semibold text-slate-800 mb-1 sm:mb-2">App Preferences</h3>
+                  <p className="text-xs sm:text-sm text-slate-500 mb-4 sm:mb-6">Customize your app experience.</p>
                 </div>
 
                 <div className="space-y-4">
