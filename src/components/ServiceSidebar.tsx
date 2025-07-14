@@ -133,9 +133,9 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
         lg:${isCollapsed ? 'w-20' : 'w-80'}
       `}>
       {/* Header */}
-      <div className={`${isCollapsed ? 'p-3' : 'p-6'} border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white`}>
+      <div className={`${isCollapsed ? 'px-3 py-4' : 'px-6 py-4'} h-16 border-b border-slate-200/60 bg-gradient-to-r from-white via-blue-50/30 to-white flex items-center`}>
         {/* Header with Logo and Close Button */}
-        <div className={`flex ${isCollapsed ? 'flex-col items-center space-y-3' : 'justify-between items-center mb-4'}`}>
+        <div className={`flex w-full ${isCollapsed ? 'flex-col items-center space-y-1' : 'justify-between items-center'}`}>
           {!isCollapsed && (
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
