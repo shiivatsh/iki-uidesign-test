@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Calendar, 
@@ -273,9 +274,9 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
         </div>
       </div>
 
-      {/* Impact Popup Modal - Portal to body to avoid sidebar constraints */}
-      {showImpactPopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      {/* Impact Popup Modal - Using Portal to render outside sidebar */}
+      {showImpactPopup && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowImpactPopup(false)} />
           <div className="relative bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden z-10">
               {/* Header */}
@@ -326,7 +327,8 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
                 </div>
                </div>
             </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
