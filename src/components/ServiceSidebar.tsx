@@ -252,17 +252,17 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
         <div className="mt-6">
           <button
             onClick={() => setShowImpactPopup(true)}
-            className="w-full p-4 bg-gradient-to-r from-green-50/80 via-blue-50/40 to-green-50/80 rounded-2xl border border-green-100/60 hover:border-green-200 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
+            className="w-full p-4 bg-gradient-to-r from-blue-50/80 via-indigo-50/40 to-blue-50/80 rounded-2xl border border-blue-100/60 hover:border-blue-200 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
           >
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-200">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-200" style={{background: 'linear-gradient(135deg, #0067E5, #4F46E5)'}}>
                 <Waves className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1 text-left">
                 <p className="text-sm font-semibold text-slate-800">Your Impact</p>
-                <p className="text-xs text-green-600 font-medium">80g Plastic Removed</p>
+                <p className="text-xs font-medium" style={{color: '#0067E5'}}>80g Plastic Removed</p>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-green-500 transition-colors" />
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
             </div>
           </button>
           
@@ -273,59 +273,62 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData 
         </div>
       </div>
 
-      {/* Impact Popup Modal */}
+      {/* Impact Popup Modal - Fixed to cover full page */}
       {showImpactPopup && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-green-500 to-blue-500 p-6 text-white relative">
-              <button
-                onClick={() => setShowImpactPopup(false)}
-                className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              <div className="flex items-center space-x-3 mb-2">
-                <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
-                  <Waves className="w-6 h-6 text-white" />
+        <>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999]" onClick={() => setShowImpactPopup(false)} />
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 pointer-events-none">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden pointer-events-auto">
+              {/* Header */}
+              <div className="p-6 text-white relative" style={{background: 'linear-gradient(135deg, #0067E5, #4F46E5)'}}>
+                <button
+                  onClick={() => setShowImpactPopup(false)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <Waves className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold">Your Impact</h3>
                 </div>
-                <h3 className="text-xl font-bold">Your Impact</h3>
               </div>
-            </div>
             
-            {/* Content */}
-            <div className="p-6">
-              {/* Main Impact Stats */}
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-blue-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Waves className="w-8 h-8 text-white" />
+              {/* Content */}
+              <div className="p-6">
+                {/* Main Impact Stats */}
+                <div className="text-center mb-6">
+                  <div className="w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-lg" style={{background: 'linear-gradient(135deg, #0067E5, #4F46E5)'}}>
+                    <Waves className="w-8 h-8 text-white" />
+                  </div>
+                  <h4 className="text-3xl font-bold text-slate-800 mb-1">80g</h4>
+                  <p className="text-slate-600 font-medium">Plastic Removed</p>
+                  <p className="text-sm text-slate-500">(4 bottles)</p>
                 </div>
-                <h4 className="text-3xl font-bold text-slate-800 mb-1">80g</h4>
-                <p className="text-slate-600 font-medium">Plastic Removed</p>
-                <p className="text-sm text-slate-500">(4 bottles)</p>
-              </div>
 
-              {/* Additional Stats */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="text-center p-4 bg-green-50 rounded-xl">
-                  <p className="text-2xl font-bold text-green-600">1.5%</p>
-                  <p className="text-xs text-slate-600">Of Your Booking</p>
+                {/* Additional Stats */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="text-center p-4 bg-blue-50 rounded-xl">
+                    <p className="text-2xl font-bold" style={{color: '#0067E5'}}>1.5%</p>
+                    <p className="text-xs text-slate-600">Of Your Booking</p>
+                  </div>
+                  <div className="text-center p-4 bg-indigo-50 rounded-xl">
+                    <p className="text-2xl font-bold text-indigo-600">4</p>
+                    <p className="text-xs text-slate-600">Cleaner Ocean</p>
+                  </div>
                 </div>
-                <div className="text-center p-4 bg-blue-50 rounded-xl">
-                  <p className="text-2xl font-bold text-blue-600">4</p>
-                  <p className="text-xs text-slate-600">Cleaner Ocean</p>
-                </div>
-              </div>
 
-              {/* Message */}
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 p-4 rounded-xl">
-                <p className="text-sm text-slate-700 text-center leading-relaxed">
-                  Together, we're working toward cleaner oceans. Thanks for being a part of it! 🌊
-                </p>
+                {/* Message */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl">
+                  <p className="text-sm text-slate-700 text-center leading-relaxed">
+                    Together, we're working toward cleaner oceans. Thanks for being a part of it! 🌊
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
