@@ -262,7 +262,7 @@ const ServiceHistory: React.FC = () => {
 
           {/* Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 h-auto">
+            <TabsList className="grid w-full grid-cols-3 h-auto">
               <TabsTrigger value="all" className="text-xs sm:text-sm py-2">
                 <span className="hidden sm:inline">All Records ({mockServiceHistory.length})</span>
                 <span className="sm:hidden">All ({mockServiceHistory.length})</span>
