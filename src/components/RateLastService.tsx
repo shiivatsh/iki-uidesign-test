@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Clock, MessageCircle, CheckCircle, SkipForward, Calendar, Repeat } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +26,7 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
   const [feedback, setFeedback] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [quickFeedback, setQuickFeedback] = useState('');
+  const [hasExistingRating, setHasExistingRating] = useState(false);
 
   // Mock data for the last service
   const lastService = {
@@ -42,6 +43,23 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
     duration: '2 hours',
     cost: 89.99
   };
+
+  // Load existing rating on component mount and when dialog opens
+  useEffect(() => {
+    if (open) {
+      const savedRating = localStorage.getItem(`rating-${lastService.id}`);
+      if (savedRating) {
+        const rating = JSON.parse(savedRating);
+        setOverallRating(rating.overallRating);
+        setCategoryRatings(rating.categoryRatings);
+        setFeedback(rating.feedback);
+        setQuickFeedback(rating.quickFeedback);
+        setHasExistingRating(true);
+      } else {
+        setHasExistingRating(false);
+      }
+    }
+  }, [open, lastService.id]);
 
   const quickFeedbackOptions = [
     'Excellent work!',
@@ -91,19 +109,21 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
       return;
     }
 
+    // Save rating to localStorage
+    const ratingData = {
+      overallRating,
+      categoryRatings,
+      feedback,
+      quickFeedback,
+      submittedAt: new Date().toISOString()
+    };
+    localStorage.setItem(`rating-${lastService.id}`, JSON.stringify(ratingData));
+
     setIsSubmitted(true);
-    toast({
-      title: "Thank you for your feedback!",
-      description: "Your rating helps us maintain quality service.",
-    });
+    setHasExistingRating(true);
 
     setTimeout(() => {
       setOpen(false);
-      // Reset form
-      setOverallRating(0);
-      setCategoryRatings({ quality: 0, timeliness: 0, communication: 0 });
-      setFeedback('');
-      setQuickFeedback('');
       setIsSubmitted(false);
     }, 2000);
   };
@@ -140,30 +160,29 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
     setFeedback(text);
   };
 
-  if (isSubmitted) {
-    return (
-      <Card className="max-w-md mx-auto animate-scale-in">
-        <CardContent className="pt-8 text-center">
-          <div className="mb-4">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto animate-scale-in" />
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
-          <p className="text-muted-foreground mb-6">
-            Your feedback has been submitted and helps us maintain quality service.
-          </p>
-          <div className="space-y-2">
-            <Button onClick={handleRebook} variant="default" className="w-full">
-              <Repeat className="h-4 w-4 mr-2" />
-              Book Again with Sarah
-            </Button>
-            <Button onClick={() => setOpen(false)} variant="outline" className="w-full">
-              Close
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Thank you content - only shows within the modal
+  const thankYouContent = (
+    <div className="max-w-lg mx-auto space-y-6 animate-fade-in p-4">
+      <div className="text-center">
+        <div className="mb-4">
+          <CheckCircle className="h-16 w-16 text-green-500 mx-auto animate-scale-in" />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">Thank You!</h3>
+        <p className="text-muted-foreground mb-6">
+          Your feedback has been submitted and helps us maintain quality service.
+        </p>
+        <div className="space-y-2">
+          <Button onClick={handleRebook} variant="default" className="w-full">
+            <Repeat className="h-4 w-4 mr-2" />
+            Book Again with Sarah
+          </Button>
+          <Button onClick={() => setOpen(false)} variant="outline" className="w-full">
+            Close
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -171,14 +190,20 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
         {children}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        {isSubmitted ? thankYouContent : (
         <div className="max-w-lg mx-auto space-y-6 animate-fade-in p-4">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h2 className="text-2xl font-semibold">Rate Your Service</h2>
+            <h2 className="text-2xl font-semibold">
+              {hasExistingRating ? 'Edit Your Rating' : 'Rate Your Service'}
+            </h2>
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
               <span>{lastService.type} • {lastService.date} at {lastService.time}</span>
             </div>
+            {hasExistingRating && (
+              <p className="text-sm text-primary">You can update your previous rating below.</p>
+            )}
           </div>
 
           {/* Provider Info */}
@@ -290,21 +315,29 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
               size="lg"
             >
               <CheckCircle className="h-4 w-4 mr-2" />
-              Submit Rating
+              {hasExistingRating ? 'Update Rating' : 'Submit Rating'}
             </Button>
             
-            <div className="grid grid-cols-2 gap-2">
-              <Button onClick={handleSkip} variant="outline" size="sm">
-                <SkipForward className="h-4 w-4 mr-2" />
-                Skip for Now
-              </Button>
-              <Button onClick={handleRebook} variant="outline" size="sm">
+            <div className={hasExistingRating ? "w-full" : "grid grid-cols-2 gap-2"}>
+              {!hasExistingRating && (
+                <Button onClick={handleSkip} variant="outline" size="sm">
+                  <SkipForward className="h-4 w-4 mr-2" />
+                  Skip for Now
+                </Button>
+              )}
+              <Button 
+                onClick={handleRebook} 
+                variant="outline" 
+                size="sm"
+                className={hasExistingRating ? "w-full" : ""}
+              >
                 <Repeat className="h-4 w-4 mr-2" />
                 Rebook Service
               </Button>
             </div>
           </div>
         </div>
+        )}
       </DialogContent>
     </Dialog>
   );
