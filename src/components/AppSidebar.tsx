@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageSquare, Settings, History, Plus, Home, Search, ChevronDown, ChevronRight, Star, Calendar, Building, Sparkles, Waves, Recycle, Info } from 'lucide-react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 import {
@@ -102,10 +102,10 @@ export function AppSidebar({ onNewChat, onDashboardClick, userData }: AppSidebar
               </button>
               
               {!collapsed && (
-                <button className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-muted-foreground bg-muted rounded-xl hover:bg-muted/80 transition-colors">
+                <Link to="/rate-service" className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-muted-foreground bg-muted rounded-xl hover:bg-muted/80 transition-colors">
                   <Star className="w-4 h-4" />
                   <span>Rate Last Service</span>
-                </button>
+                </Link>
               )}
             </div>
           </div>
