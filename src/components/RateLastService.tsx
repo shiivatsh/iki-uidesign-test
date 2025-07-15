@@ -121,11 +121,6 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
 
     setIsSubmitted(true);
     setHasExistingRating(true);
-
-    setTimeout(() => {
-      setOpen(false);
-      setIsSubmitted(false);
-    }, 2000);
   };
 
   const handleSkip = () => {
