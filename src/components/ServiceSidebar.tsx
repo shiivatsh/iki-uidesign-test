@@ -215,7 +215,10 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
               Quick Actions
             </h3>
             <div className="space-y-3">
-              <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform">
+              <button 
+                onClick={() => navigate('/new-booking')} 
+                className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform"
+              >
                 <Plus className="w-5 h-5" />
                 <span>Book New Service</span>
               </button>
