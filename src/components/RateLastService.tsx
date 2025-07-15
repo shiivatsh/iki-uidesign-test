@@ -163,15 +163,13 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="max-w-lg mx-auto space-y-6 animate-fade-in p-4">
           {/* Header */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-center">Rate Your Service</CardTitle>
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                <span>{lastService.type} • {lastService.date} at {lastService.time}</span>
-              </div>
-            </CardHeader>
-          </Card>
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-semibold">Rate Your Service</h2>
+            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <span>{lastService.type} • {lastService.date} at {lastService.time}</span>
+            </div>
+          </div>
 
           {/* Provider Info */}
           <Card>
