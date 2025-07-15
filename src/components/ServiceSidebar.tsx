@@ -56,9 +56,10 @@ interface ServiceSidebarProps {
   onToggleCollapse?: () => void;
   isOpen?: boolean;
   onClose?: () => void;
+  onNewChat?: () => void;
 }
 
-const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData, onToggleCollapse, isOpen = true, onClose }) => {
+const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData, onToggleCollapse, isOpen = true, onClose, onNewChat }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(true);
@@ -217,8 +218,13 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
             <div className="space-y-3">
               <button 
                 onClick={() => {
-                  navigate('/new-booking', { replace: true });
-                  window.location.reload();
+                  if (location.pathname === '/new-booking' && onNewChat) {
+                    // If already on new-booking page, just reset the chat
+                    onNewChat();
+                  } else {
+                    // Navigate to new-booking page normally
+                    navigate('/new-booking');
+                  }
                 }} 
                 className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform"
               >

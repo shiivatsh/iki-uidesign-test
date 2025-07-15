@@ -3,7 +3,7 @@ import { Bell, Menu } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import ServiceSidebar from '../components/ServiceSidebar';
-import ChatInterface from '../components/ChatInterface';
+import ChatInterface, { ChatInterfaceRef } from '../components/ChatInterface';
 import ProfileDropdown from '../components/ProfileDropdown';
 import SettingsModal from '../components/SettingsModal';
 
@@ -41,10 +41,12 @@ const LoadingFallback = () => (
 );
 
 function NewBookingContent() {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const rebookParam = searchParams.get('rebook');
+    const newChatParam = searchParams.get('newChat');
     const rebookData = rebookParam ? JSON.parse(decodeURIComponent(rebookParam)) : null;
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const chatInterfaceRef = useRef<ChatInterfaceRef>(null);
 
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [isLoadingToken, setIsLoadingToken] = useState(true);
@@ -123,6 +125,29 @@ function NewBookingContent() {
         }
     }, [searchParams]);
 
+    // Handle new chat request from URL parameter
+    useEffect(() => {
+        if (newChatParam === 'true' && chatInterfaceRef.current) {
+            chatInterfaceRef.current.startNewChat();
+            // Clear the newChat parameter from URL
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.delete('newChat');
+                newParams.delete('rebook'); // Also clear any rebook data
+                return newParams;
+            });
+        }
+    }, [newChatParam, setSearchParams]);
+
+    // Function to handle new chat requests from sidebar
+    const handleNewChat = () => {
+        if (chatInterfaceRef.current) {
+            chatInterfaceRef.current.startNewChat();
+        }
+        // Clear URL parameters
+        setSearchParams({});
+    };
+
     if (isLoadingToken || isCheckingSession) {
         return <LoadingFallback />;
     }
@@ -139,6 +164,7 @@ function NewBookingContent() {
                 userData={currentUser}
                 isOpen={isMobileSidebarOpen}
                 onClose={() => setIsMobileSidebarOpen(false)}
+                onNewChat={handleNewChat}
             />
             
             <main className="flex-1 flex flex-col overflow-hidden relative lg:ml-0">
@@ -196,7 +222,7 @@ function NewBookingContent() {
                 
                 {/* Chat Interface */}
                 <div className="flex-1 overflow-hidden relative">
-                    <ChatInterface trackingCode={currentUser.tracking_code} userName={currentUser.name} rebookData={rebookData} />
+                    <ChatInterface ref={chatInterfaceRef} trackingCode={currentUser.tracking_code} userName={currentUser.name} rebookData={rebookData} />
                 </div>
             </main>
             

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { Send, Sparkles, User, Bot, AlertCircle, WifiOff } from 'lucide-react';
 import { useChatApi } from '@/hooks/useChatApi';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
@@ -17,9 +17,15 @@ interface ChatInterfaceProps {
     trackingCode: string | null;
     userName?: string;
     rebookData?: any;
+    onNewChat?: () => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName, rebookData }) => {
+// Add a ref interface for external access
+export interface ChatInterfaceRef {
+    startNewChat: () => void;
+}
+
+const ChatInterface = forwardRef<ChatInterfaceRef, ChatInterfaceProps>(({ trackingCode, userName, rebookData }, ref) => {
     // Local state for input and UI
     const [input, setInput] = useState('');
     const [legacyMessages, setLegacyMessages] = useState<LegacyMessage[]>([]);
@@ -143,6 +149,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName, r
             setInput(messageContent);
         }
     }, [input, trackingCode, useLegacyMode, sendMessage, sendLegacyMessage, toast, handleError]);
+
+    // Function to start a new chat (clear all messages and state)
+    const startNewChat = useCallback(() => {
+        setLegacyMessages([]);
+        setInput('');
+        setRebookMessageSent(false);
+        setUseLegacyMode(true);
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, []);
+
+    // Expose methods to parent component
+    useImperativeHandle(ref, () => ({
+        startNewChat
+    }), [startNewChat]);
 
     // Handle rebook data if present
     useEffect(() => {
@@ -484,6 +505,6 @@ Please help me schedule this service again. I'd like to keep the same provider i
             )}
         </div>
     );
-};
+});
 
 export default ChatInterface;
