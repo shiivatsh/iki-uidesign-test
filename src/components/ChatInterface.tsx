@@ -206,6 +206,25 @@ Please help me schedule this service again. I'd like to keep the same provider i
 
     return (
         <div className="flex flex-col h-full bg-background">
+            {/* Connection Status Bar */}
+            {(connectionStatus.status !== 'connected' || lastError) && (
+                <div className={`px-4 py-2 text-sm border-b flex items-center justify-center gap-2 ${
+                    connectionStatus.status === 'error' 
+                        ? 'bg-destructive/10 text-destructive border-destructive/20' 
+                        : 'bg-muted text-muted-foreground border-border'
+                }`}>
+                    {connectionStatus.icon && <connectionStatus.icon className="w-4 h-4" />}
+                    <span>{connectionStatus.text}</span>
+                    {lastError && (
+                        <button 
+                            onClick={() => window.location.reload()}
+                            className="ml-2 px-2 py-1 text-xs bg-background rounded border hover:bg-muted transition-colors"
+                        >
+                            Retry
+                        </button>
+                    )}
+                </div>
+            )}
 
             {/* Empty State / Welcome */}
             {displayMessages.length === 0 && !currentLoading && (
