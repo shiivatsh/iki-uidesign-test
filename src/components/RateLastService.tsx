@@ -118,10 +118,20 @@ const RateLastService: React.FC<RateLastServiceProps> = ({ children }) => {
 
   const handleRebook = () => {
     setOpen(false);
-    navigate('/new-booking');
+    // Pass provider data as URL params for rebooking
+    const rebookData = encodeURIComponent(JSON.stringify({
+      providerId: lastService.provider.name,
+      providerAvatar: lastService.provider.avatar,
+      providerRating: lastService.provider.rating,
+      serviceType: lastService.type,
+      duration: lastService.duration,
+      cost: lastService.cost,
+      isRebook: true
+    }));
+    navigate(`/new-booking?rebook=${rebookData}`);
     toast({
-      title: "Rebooking service",
-      description: "Taking you to book the same service again.",
+      title: "Rebooking with " + lastService.provider.name,
+      description: "Pre-filling your booking details...",
     });
   };
 

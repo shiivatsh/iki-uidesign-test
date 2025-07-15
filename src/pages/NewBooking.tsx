@@ -42,6 +42,8 @@ const LoadingFallback = () => (
 
 function NewBookingContent() {
     const [searchParams] = useSearchParams();
+    const rebookParam = searchParams.get('rebook');
+    const rebookData = rebookParam ? JSON.parse(decodeURIComponent(rebookParam)) : null;
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -194,7 +196,7 @@ function NewBookingContent() {
                 
                 {/* Chat Interface */}
                 <div className="flex-1 overflow-hidden relative">
-                    <ChatInterface trackingCode={currentUser.tracking_code} userName={currentUser.name} />
+                    <ChatInterface trackingCode={currentUser.tracking_code} userName={currentUser.name} rebookData={rebookData} />
                 </div>
             </main>
             

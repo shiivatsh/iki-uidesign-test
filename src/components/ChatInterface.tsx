@@ -16,9 +16,10 @@ interface LegacyMessage {
 interface ChatInterfaceProps {
     trackingCode: string | null;
     userName?: string;
+    rebookData?: any;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName }) => {
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName, rebookData }) => {
     // Local state for input and UI
     const [input, setInput] = useState('');
     const [legacyMessages, setLegacyMessages] = useState<LegacyMessage[]>([]);
@@ -77,6 +78,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
         scrollToBottom();
     }, [displayMessages, scrollToBottom]);
 
+    // Handle rebook data if present
+    useEffect(() => {
+        if (rebookData && rebookData.isRebook) {
+            const rebookMessage = `I'd like to rebook the same service with ${rebookData.providerId}. Here are the previous details:
+            
+Service: ${rebookData.serviceType}
+Provider: ${rebookData.providerId}
+Duration: ${rebookData.duration}
+Previous Cost: $${rebookData.cost}
+
+Please help me schedule this service again. I'd like to keep the same provider if possible.`;
+            
+            // Auto-send the rebook request after a short delay
+            setTimeout(() => {
+                handleSendMessage(rebookMessage);
+            }, 1000);
+        }
+    }, [rebookData]);
+
     // Clear messages when tracking code changes
     useEffect(() => {
         if (trackingCode) {
@@ -85,8 +105,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
     }, [trackingCode, userName]);
 
     // Enhanced message sending with error handling
-    const handleSendMessage = useCallback(async () => {
-        if (input.trim() === '' || !trackingCode) {
+    const handleSendMessage = useCallback(async (messageToSend?: string) => {
+        const messageContent = messageToSend || input.trim();
+        if (messageContent === '' || !trackingCode) {
             if (!trackingCode) {
                 toast({
                     title: 'Authentication Required',
@@ -97,8 +118,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
             return;
         }
 
-        const messageContent = input.trim();
-        setInput(''); // Clear input immediately for better UX
+        if (!messageToSend) {
+            setInput(''); // Only clear input if it's from user input
+        }
 
         try {
             if (useLegacyMode) {
@@ -235,7 +257,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                                     {/* Send Button */}
                                     <div className="absolute right-3 bottom-3">
                                         <button
-                                            onClick={handleSendMessage}
+                                            onClick={() => handleSendMessage()}
                                             disabled={!canSendMessage || !trackingCode || input.trim() === ''}
                                             className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
                                             title={currentLoading ? 'Sending...' : 'Send message'}
@@ -435,7 +457,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName })
                             {/* Send Button */}
                             <div className="absolute right-3 bottom-3">
                                 <button
-                                    onClick={handleSendMessage}
+                                    onClick={() => handleSendMessage()}
                                     disabled={!canSendMessage || !trackingCode || input.trim() === ''}
                                     className="w-10 h-10 flex items-center justify-center bg-foreground text-background hover:bg-foreground/90 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 rounded-full shadow-sm hover:scale-105 active:scale-95"
                                     title={currentLoading ? 'Sending...' : 'Send message'}
