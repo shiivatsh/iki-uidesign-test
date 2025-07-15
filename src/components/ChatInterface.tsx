@@ -24,6 +24,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName, r
     const [input, setInput] = useState('');
     const [legacyMessages, setLegacyMessages] = useState<LegacyMessage[]>([]);
     const [useLegacyMode, setUseLegacyMode] = useState(true); // Start with legacy for compatibility
+    const [rebookMessageSent, setRebookMessageSent] = useState(false);
     
     // Refs
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -77,32 +78,6 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ trackingCode, userName, r
     useEffect(() => {
         scrollToBottom();
     }, [displayMessages, scrollToBottom]);
-
-    // Handle rebook data if present
-    useEffect(() => {
-        if (rebookData && rebookData.isRebook) {
-            const rebookMessage = `I'd like to rebook the same service with ${rebookData.providerId}. Here are the previous details:
-            
-Service: ${rebookData.serviceType}
-Provider: ${rebookData.providerId}
-Duration: ${rebookData.duration}
-Previous Cost: $${rebookData.cost}
-
-Please help me schedule this service again. I'd like to keep the same provider if possible.`;
-            
-            // Auto-send the rebook request after a short delay
-            setTimeout(() => {
-                handleSendMessage(rebookMessage);
-            }, 1000);
-        }
-    }, [rebookData]);
-
-    // Clear messages when tracking code changes
-    useEffect(() => {
-        if (trackingCode) {
-            setLegacyMessages([]);
-        }
-    }, [trackingCode, userName]);
 
     // Enhanced message sending with error handling
     const handleSendMessage = useCallback(async (messageToSend?: string) => {
@@ -168,6 +143,34 @@ Please help me schedule this service again. I'd like to keep the same provider i
             setInput(messageContent);
         }
     }, [input, trackingCode, useLegacyMode, sendMessage, sendLegacyMessage, toast, handleError]);
+
+    // Handle rebook data if present
+    useEffect(() => {
+        if (rebookData && rebookData.isRebook && !rebookMessageSent) {
+            const rebookMessage = `I'd like to rebook the same service with ${rebookData.providerId}. Here are the previous details:
+            
+Service: ${rebookData.serviceType}
+Provider: ${rebookData.providerId}
+Duration: ${rebookData.duration}
+Previous Cost: $${rebookData.cost}
+
+Please help me schedule this service again. I'd like to keep the same provider if possible.`;
+            
+            setRebookMessageSent(true);
+            
+            // Auto-send the rebook request after a short delay
+            setTimeout(() => {
+                handleSendMessage(rebookMessage);
+            }, 1000);
+        }
+    }, [rebookData, rebookMessageSent, handleSendMessage]);
+
+    // Clear messages when tracking code changes
+    useEffect(() => {
+        if (trackingCode) {
+            setLegacyMessages([]);
+        }
+    }, [trackingCode, userName]);
 
     // Keyboard handling
     const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
