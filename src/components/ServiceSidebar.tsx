@@ -211,7 +211,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
         {/* Enhanced Quick Actions - Now on top */}
         {!isCollapsed && (
           <div className="mb-8">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
+            <h3 className="text-sm font-medium text-slate-600 mb-4 px-3">
               Quick Actions
             </h3>
             <div className="space-y-3">
@@ -225,14 +225,14 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                     navigate('/new-booking');
                   }
                 }} 
-                className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform"
+                className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-medium text-white bg-[#0067E5] rounded-[var(--squircle)] hover:bg-[#0056C7] transition-colors duration-200"
               >
                 <Plus className="w-5 h-5" />
                 <span>New Booking</span>
               </button>
               
               <RateLastService>
-                <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
+                <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-medium text-slate-600 bg-slate-100 rounded-[var(--squircle)] hover:bg-slate-200 hover:text-slate-800 transition-colors duration-200">
                   <Star className="w-5 h-5" />
                   <span>Rate Service</span>
                 </button>
@@ -243,7 +243,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
 
         {!isCollapsed && (
           <div className="mb-8">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
+            <h3 className="text-sm font-medium text-slate-600 mb-4 px-3">
               My Services
             </h3>
             
@@ -255,21 +255,21 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                 <button
                   key={item.id}
                   onClick={() => handleNavigation(item)}
-                  className={`w-full flex items-center justify-between px-4 py-4 rounded-2xl text-sm font-medium transition-all duration-300 group ${
+                  className={`w-full flex items-center justify-between px-4 py-4 rounded-[var(--squircle)] text-sm font-medium transition-colors duration-200 ${
                     isActive 
-                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-xl shadow-blue-500/25 scale-105' 
-                      : 'text-slate-600 hover:bg-gradient-to-r hover:from-slate-50 hover:to-blue-50/50 hover:text-slate-800 hover:shadow-md'
+                      ? 'bg-slate-200 text-[#0067E5]' 
+                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-500'} transition-colors`} />
+                           <Icon className={`w-5 h-5 ${isActive ? 'text-[#0067E5]' : 'text-slate-400 group-hover:text-slate-600'} transition-colors`} />
                     <span className="font-semibold">{item.label}</span>
                   </div>
                   {item.count !== null && item.count > 0 && (
                     <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                       isActive 
-                        ? 'bg-white/25 text-white' 
-                        : 'bg-blue-100 text-blue-600 group-hover:bg-blue-200'
+                        ? 'bg-[#0067E5]/10 text-[#0067E5]' 
+                        : 'bg-slate-100 text-slate-600'
                     } transition-colors`}>
                       {item.count}
                     </span>
@@ -327,7 +327,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                   return (
                     <div 
                       key={chat.id} 
-                      className="p-4 bg-gradient-to-r from-amber-50/80 via-orange-50/40 to-amber-50/80 rounded-xl border border-amber-200/60 hover:border-amber-300 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
+                      className="p-4 bg-slate-100 rounded-[var(--squircle)] border border-slate-200 hover:bg-slate-200 transition-colors duration-200 cursor-pointer"
                     >
                       <div className="flex items-start justify-between space-x-3">
                         <div className="flex items-start space-x-3 flex-1 min-w-0">
@@ -392,7 +392,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                   userData.service_history.slice(0, 5).map((booking, index) => (
                     <div 
                       key={index} 
-                      className="p-4 bg-gradient-to-r from-white via-blue-50/20 to-white rounded-xl border border-slate-200/60 hover:border-blue-200 hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-105"
+                      className="p-4 bg-slate-100 rounded-[var(--squircle)] border border-slate-200 hover:bg-slate-200 transition-colors duration-200 cursor-pointer"
                     >
                       <div className="flex items-start space-x-3">
                         <div className="text-xl mt-1 group-hover:scale-110 transition-transform">
