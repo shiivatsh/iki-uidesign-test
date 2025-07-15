@@ -9,7 +9,6 @@ import NewBooking from "./pages/NewBooking";
 import ServiceHistory from "./pages/ServiceHistory";
 import AccountSettings from "./pages/AccountSettings";
 import NotFound from "./pages/NotFound";
-import RateLastService from "./components/RateLastService";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +23,6 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/new-booking" element={<NewBooking />} />
           <Route path="/service-history" element={<ServiceHistory />} />
-          <Route path="/rate-service" element={<RateLastService />} />
           <Route path="/account-settings" element={<AccountSettings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

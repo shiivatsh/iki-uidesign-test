@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import RateLastService from './RateLastService';
 import { 
   Calendar, 
   Plus, 
@@ -219,10 +220,12 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                 <span>Book New Service</span>
               </button>
               
-              <Link to="/rate-service" className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
-                <Star className="w-5 h-5" />
-                <span>Rate Last Service</span>
-              </Link>
+              <RateLastService>
+                <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
+                  <Star className="w-5 h-5" />
+                  <span>Rate Last Service</span>
+                </button>
+              </RateLastService>
             </div>
           </div>
         )}
