@@ -74,7 +74,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
   };
 
   const navigationItems = [
-    { id: 'history', icon: History, label: 'Service History', path: '/service-history', count: userData?.service_history?.length || 0 },
+    { id: 'history', icon: History, label: 'Booking History', path: '/service-history', count: userData?.service_history?.length || 0 },
     { id: 'settings', icon: Settings, label: 'Account & Settings', path: '/account-settings', count: null },
   ];
 
@@ -228,13 +228,13 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
                 className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-xl shadow-green-500/25 hover:shadow-2xl hover:scale-105 transform"
               >
                 <Plus className="w-5 h-5" />
-                <span>Book New Service</span>
+                <span>New Booking</span>
               </button>
               
               <RateLastService>
                 <button className="w-full flex items-center justify-center space-x-3 px-4 py-4 text-sm font-semibold text-slate-600 bg-gradient-to-r from-slate-100 to-blue-50 rounded-2xl hover:from-slate-200 hover:to-blue-100 hover:text-slate-800 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 transform">
                   <Star className="w-5 h-5" />
-                  <span>Rate Last Service</span>
+                  <span>Rate Service</span>
                 </button>
               </RateLastService>
             </div>
@@ -244,7 +244,7 @@ const ServiceSidebar: React.FC<ServiceSidebarProps> = ({ trackingCode, userData,
         {!isCollapsed && (
           <div className="mb-8">
             <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4 px-3">
-              Main Menu
+              My Services
             </h3>
             
             {navigationItems.map((item) => {
