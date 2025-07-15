@@ -457,7 +457,7 @@ Please help me schedule this service again. I'd like to keep the same provider i
 
             {/* Fixed Input at Bottom for Active Conversations */}
             {displayMessages.length > 0 && (
-                <div className="border-t border-red-500 bg-background">
+                <div className="bg-background">
                     <div className="w-full max-w-[765px] mx-auto px-4 sm:px-6 py-4 sm:py-6">
                         <div 
                             className="relative bg-white border border-border shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all duration-200 px-6 py-4 w-full h-[116px]"
